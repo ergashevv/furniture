@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { title, subtitle, description, imageUrl, buttonText, buttonLink, overlay, visible, order } = body
+    const { title, subtitle, description, imageUrl, link, buttonText, visible, order } = body
 
     const banner = await prisma.banner.create({
       data: {
@@ -32,9 +32,8 @@ export async function POST(request: NextRequest) {
         subtitle: subtitle || null,
         description: description || null,
         imageUrl,
+        link: link || null,
         buttonText: buttonText || null,
-        buttonLink: buttonLink || null,
-        overlay: overlay || 0.5,
         visible: visible !== false,
         order: order || 0,
       },

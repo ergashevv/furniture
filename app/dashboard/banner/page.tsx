@@ -12,9 +12,8 @@ interface Banner {
   subtitle: string | null
   description: string | null
   imageUrl: string
+  link: string | null
   buttonText: string | null
-  buttonLink: string | null
-  overlay: number
   visible: boolean
   order: number
   createdAt: string
@@ -33,9 +32,8 @@ export default function BannerPage() {
     subtitle: '',
     description: '',
     imageUrl: '',
+    link: '',
     buttonText: '',
-    buttonLink: '',
-    overlay: 0.5,
     visible: true,
     order: 0,
   })
@@ -77,9 +75,8 @@ export default function BannerPage() {
           ...formData,
           subtitle: formData.subtitle || null,
           description: formData.description || null,
+          link: formData.link || null,
           buttonText: formData.buttonText || null,
-          buttonLink: formData.buttonLink || null,
-          overlay: parseFloat(formData.overlay.toString()) || 0.5,
           order: parseInt(formData.order.toString()) || 0,
         }),
       })
@@ -119,9 +116,8 @@ export default function BannerPage() {
       subtitle: banner.subtitle || '',
       description: banner.description || '',
       imageUrl: banner.imageUrl,
+      link: banner.link || '',
       buttonText: banner.buttonText || '',
-      buttonLink: banner.buttonLink || '',
-      overlay: banner.overlay,
       visible: banner.visible,
       order: banner.order,
     })
