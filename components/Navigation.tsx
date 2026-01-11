@@ -52,19 +52,55 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`${
-                  isScrolled || !isHomePage ? 'text-text' : 'text-white'
-                } hover:text-secondary transition-colors duration-200 font-medium`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative px-1 py-2 font-medium transition-all duration-200 ${
+                    isScrolled || !isHomePage
+                      ? isActive
+                        ? 'text-secondary'
+                        : 'text-text hover:text-secondary'
+                      : isActive
+                        ? 'text-white'
+                        : 'text-white/90 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                  {isActive && (
+                    <span
+                      className={`absolute bottom-0 left-0 right-0 h-0.5 ${
+                        isScrolled || !isHomePage ? 'bg-secondary' : 'bg-white'
+                      }`}
+                    />
+                  )}
+                </Link>
+              )
+            })}
           </div>
+
+          {/* Cart Icon Desktop */}
+          <Link
+            href="/cart"
+            className={`hidden md:flex relative ml-4 ${isScrolled || !isHomePage ? 'text-text hover:text-secondary' : 'text-white hover:text-white/80'} transition-colors duration-200`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {totalItems > 9 ? '9+' : totalItems}
+              </span>
+            )}
+          </Link>
 
           {/* Cart Icon Mobile */}
           <Link
@@ -79,11 +115,11 @@ export default function Navigation() {
                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
               />
             </svg>
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {totalItems > 9 ? '9+' : totalItems}
-                </span>
-              )}
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {totalItems > 9 ? '9+' : totalItems}
+              </span>
+            )}
           </Link>
 
           {/* Mobile Menu Button */}
@@ -120,17 +156,24 @@ export default function Navigation() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-background border-t border-primary/10"
           >
-            <div className="px-4 py-4 space-y-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-text hover:text-secondary transition-colors duration-200 font-medium py-2"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div className="px-4 py-4 space-y-1">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block px-3 py-2 rounded-lg font-medium transition-colors duration-200 ${
+                      isActive
+                        ? 'bg-primary/10 text-secondary'
+                        : 'text-text hover:bg-primary/5 hover:text-secondary'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
             </div>
           </motion.div>
         )}
