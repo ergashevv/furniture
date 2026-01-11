@@ -133,15 +133,17 @@ export default function HomePage() {
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center pt-20 px-4">
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: banner
-              ? `url('${banner.imageUrl}')`
-              : "url('https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1920&q=80')",
-          }}
-        >
+        {/* Background Image - Optimized with next/image */}
+        <div className="absolute inset-0">
+          <Image
+            src={banner?.imageUrl || 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1920&q=80'}
+            alt="Hero background"
+            fill
+            priority
+            quality={85}
+            sizes="100vw"
+            className="object-cover object-center"
+          />
           <div
             className="absolute inset-0"
             style={{
@@ -154,36 +156,40 @@ export default function HomePage() {
           <div className="text-white">
             {banner?.subtitle && (
               <motion.p
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
                 className="text-sm uppercase tracking-wider mb-4 text-gray-300"
+                style={{ willChange: 'transform, opacity' }}
               >
                 {banner.subtitle}
               </motion.p>
             )}
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
               className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-6 leading-tight"
+              style={{ willChange: 'transform, opacity' }}
             >
               {banner ? banner.title : 'Bayramona\ninteryer'}
             </motion.h1>
             {banner?.description && (
               <motion.p
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
                 className="text-lg md:text-xl mb-6 text-gray-200"
+                style={{ willChange: 'transform, opacity' }}
               >
                 {banner.description}
               </motion.p>
             )}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.5, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+              style={{ willChange: 'transform, opacity' }}
             >
               {banner?.buttonText && banner?.buttonLink ? (
                 <Link
@@ -283,7 +289,8 @@ export default function HomePage() {
                               src={categoryImages[category.slug]}
                               alt={category.name}
                               fill
-                              className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                              loading="lazy"
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
                               sizes="(max-width: 768px) 100vw, 33vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -369,7 +376,8 @@ export default function HomePage() {
                             src={categoryImages[category.slug]}
                             alt={category.name}
                             fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                             sizes="(max-width: 768px) 100vw, 33vw"
                           />
                         )}
@@ -429,6 +437,7 @@ export default function HomePage() {
                             src={product.imageUrl}
                             alt={product.name}
                             fill
+                            loading="lazy"
                             className="object-cover"
                             sizes="(max-width: 768px) 100vw, 33vw"
                           />
@@ -543,7 +552,8 @@ export default function HomePage() {
                               src={item.imageUrl}
                               alt={item.title}
                               fill
-                              className="object-cover group-hover:scale-110 transition-transform duration-500"
+                              loading="lazy"
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

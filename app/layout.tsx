@@ -1,5 +1,19 @@
 import type { Metadata } from 'next'
+import { Inter, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
+
+const inter = Inter({
+  subsets: ['latin', 'cyrillic'],
+  display: 'swap',
+  variable: '--font-inter',
+})
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-cormorant',
+})
 
 export const metadata: Metadata = {
   title: 'Premium Custom Furniture | Artisan Craftsmanship',
@@ -13,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
       <body>{children}</body>
     </html>
   )

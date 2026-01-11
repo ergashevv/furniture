@@ -76,6 +76,10 @@ export default function ProductDetailPage() {
                 ? data.product.images[0]
                 : null)
           )
+          // Set first color as selected if colors exist
+          if (data.product.colors && data.product.colors.length > 0) {
+            setSelectedColor(data.product.colors[0])
+          }
           
           // Fetch related products
           fetchRelatedProducts(data.product.id, data.product.category?.id || null)
@@ -432,7 +436,8 @@ export default function ProductDetailPage() {
                               src={relatedProduct.imageUrl}
                               alt={relatedProduct.name}
                               fill
-                              className="object-cover group-hover:scale-110 transition-transform duration-500"
+                              loading="lazy"
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                             />
                           )}

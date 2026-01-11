@@ -12,8 +12,6 @@
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
-
 @layer base {
   html {
     @apply scroll-smooth;
@@ -21,15 +19,15 @@
 
   body {
     @apply bg-background text-text antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-cormorant), Georgia, serif;
   }
-  
+
   .font-display {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-cormorant), Georgia, serif;
   }
 }
 
@@ -37,11 +35,45 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* GPU Acceleration for smooth animations */
+  .gpu-accelerate {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Optimize image rendering */
+  .optimize-image {
+    image-rendering: -webkit-optimize-contrast;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
 /* Smooth scroll animations */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimize hover transitions for smooth interactions */
+@layer base {
+  a, button {
+    @apply transition-colors duration-200;
+  }
+
+  img {
+    content-visibility: auto;
   }
 }

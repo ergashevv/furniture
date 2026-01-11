@@ -41,11 +41,16 @@ export async function PATCH(
       slug,
       description,
       price,
+      originalPrice,
       imageUrl,
       images,
       categoryId,
       featured,
       visible,
+      size,
+      material,
+      warranty,
+      colors,
     } = body
 
     const product = await prisma.product.update({
@@ -55,11 +60,16 @@ export async function PATCH(
         ...(slug && { slug }),
         ...(description && { description }),
         ...(price !== undefined && { price: price ? parseFloat(price) : null }),
+        ...(originalPrice !== undefined && { originalPrice: originalPrice ? parseFloat(originalPrice) : null }),
         ...(imageUrl !== undefined && { imageUrl }),
         ...(images && { images }),
         ...(categoryId !== undefined && { categoryId }),
         ...(featured !== undefined && { featured }),
         ...(visible !== undefined && { visible }),
+        ...(size !== undefined && { size }),
+        ...(material !== undefined && { material }),
+        ...(warranty !== undefined && { warranty }),
+        ...(colors !== undefined && { colors }),
       },
       include: {
         category: true,

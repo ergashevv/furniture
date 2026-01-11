@@ -267,10 +267,9 @@ export default function BannerPage() {
             ))}
           </div>
           <Pagination
-            perPage={bannersPerPage}
-            totalItems={banners.length}
-            paginate={paginate}
             currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={paginate}
           />
         </>
       )}

@@ -37,11 +37,16 @@ export async function POST(request: NextRequest) {
       slug,
       description,
       price,
+      originalPrice,
       imageUrl,
       images,
       categoryId,
       featured,
       visible,
+      size,
+      material,
+      warranty,
+      colors,
     } = body
 
     const product = await prisma.product.create({
@@ -50,11 +55,16 @@ export async function POST(request: NextRequest) {
         slug,
         description,
         price: price ? parseFloat(price) : null,
+        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
         imageUrl: imageUrl || null,
         images: images || [],
         categoryId: categoryId || null,
         featured: featured || false,
         visible: visible !== false,
+        size: size || null,
+        material: material || null,
+        warranty: warranty || null,
+        colors: colors || [],
       },
       include: {
         category: true,
