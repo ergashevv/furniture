@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import FurniGlassLogo from './FurniGlassLogo'
 
 export default function Footer() {
   return (
@@ -6,7 +7,9 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-2xl font-serif font-semibold mb-4">Furni Glass</h3>
+            <div className="mb-4">
+              <FurniGlassLogo width={150} height={60} className="h-auto" />
+            </div>
             <p className="text-white/80 text-sm mb-4">
               Biz sifatli va arzon mebellarni taqdim etishga intilamiz.
             </p>

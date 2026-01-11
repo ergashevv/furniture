@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useNotification } from '@/components/Notification'
 
 interface GalleryItem {
   id: string
@@ -19,6 +20,7 @@ export default function GalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const { showNotification } = useNotification()
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null)
   const [formData, setFormData] = useState({
     title: '',
@@ -99,13 +101,14 @@ export default function GalleryPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this item?')) return
+    if (!window.confirm('Bu elementni o\'chirishni tasdiqlaysizmi?')) return
 
     try {
       const response = await fetch(`/api/gallery/${id}`, {
         method: 'DELETE',
       })
       if (response.ok) {
+        showNotification('Element muvaffaqiyatli o\'chirildi', 'success')
         fetchItems()
       }
     } catch (error) {

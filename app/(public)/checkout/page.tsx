@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import ScrollReveal from '@/components/ScrollReveal'
+import { useNotification } from '@/components/Notification'
 
 const checkoutSchema = z.object({
   customerName: z.string().min(2, 'Ism kamida 2 ta belgi bo\'lishi kerak'),
@@ -26,6 +27,7 @@ export default function CheckoutPage() {
   const { cartItems, totalPrice, clearCart } = useCart()
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { showNotification } = useNotification()
 
   const {
     register,

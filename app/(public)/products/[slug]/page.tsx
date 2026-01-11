@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import ScrollReveal from '@/components/ScrollReveal'
 import { useCart } from '@/contexts/CartContext'
+import { useNotification } from '@/components/Notification'
 
 interface Product {
   id: string
@@ -28,6 +29,7 @@ export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
   const { addToCart } = useCart()
+  const { showNotification } = useNotification()
   const slug = typeof params?.slug === 'string' ? params.slug : ''
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
@@ -255,7 +257,7 @@ export default function ProductDetailPage() {
                           price: product.price!,
                           imageUrl: product.imageUrl,
                         })
-                        alert('Savatchaga qo\'shildi!')
+                        showNotification('Savatchaga qo\'shildi!', 'success')
                       }}
                       className="block w-full bg-primary text-white text-center py-4 rounded-none hover:bg-secondary transition-colors font-semibold uppercase tracking-wide"
                     >

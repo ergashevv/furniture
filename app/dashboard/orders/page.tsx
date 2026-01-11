@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useNotification } from '@/components/Notification'
 
 interface Order {
   id: string
@@ -16,6 +17,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const { showNotification } = useNotification()
 
   useEffect(() => {
     fetchOrders()
@@ -119,7 +121,7 @@ export default function OrdersPage() {
                   <button
                     onClick={() => {
                       // Could open a modal with order details
-                      alert(`Order details for ${order.customerName}`)
+                      showNotification(`Buyurtma: ${order.customerName} - ${order.productName || 'N/A'}`, 'info')
                     }}
                     className="text-secondary hover:text-secondary-dark text-sm font-medium"
                   >

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useNotification } from '@/components/Notification'
 
 interface Product {
   id: string
@@ -18,6 +19,7 @@ interface Product {
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { showNotification } = useNotification()
 
   useEffect(() => {
     fetchProducts()
@@ -38,17 +40,21 @@ export default function ProductsPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return
+    if (!window.confirm('Mahsulotni o\'chirishni tasdiqlaysizmi?')) return
 
     try {
       const response = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
       })
       if (response.ok) {
+        showNotification('Mahsulot muvaffaqiyatli o\'chirildi', 'success')
         fetchProducts()
+      } else {
+        showNotification('Xatolik yuz berdi', 'error')
       }
     } catch (error) {
       console.error('Failed to delete product:', error)
+      showNotification('Xatolik yuz berdi', 'error')
     }
   }
 

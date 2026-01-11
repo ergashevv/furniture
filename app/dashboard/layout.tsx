@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { NotificationProvider } from '@/components/Notification'
 
 export default function DashboardLayout({
   children,
@@ -53,8 +54,9 @@ export default function DashboardLayout({
   ]
 
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="bg-primary text-white">
+    <NotificationProvider>
+      <div className="min-h-screen bg-background">
+        <nav className="bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/dashboard" className="text-xl font-serif font-semibold">
@@ -90,6 +92,7 @@ export default function DashboardLayout({
         </div>
       </nav>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
-    </div>
+      </div>
+    </NotificationProvider>
   )
 }
