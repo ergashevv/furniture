@@ -21,11 +21,12 @@ export default function Navigation() {
   const isHomePage = pathname === '/'
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/why-us', label: 'Why Us' },
-    { href: '/gallery', label: 'Gallery' },
-    { href: '/faq', label: 'FAQ' },
-    { href: '/order', label: 'Order' },
+    { href: '/', label: 'Bosh Sahifa' },
+    { href: '/products', label: 'Mahsulotlar' },
+    { href: '/services', label: 'Xizmatlar' },
+    { href: '/gallery', label: 'Galereya' },
+    { href: '/why-us', label: 'Nima Uchun Biz' },
+    { href: '/contact', label: 'Aloqa' },
   ]
 
   return (

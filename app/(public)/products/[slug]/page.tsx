@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import ScrollReveal from '@/components/ScrollReveal'
+import { useCart } from '@/contexts/CartContext'
 
 interface Product {
   id: string
@@ -26,6 +27,7 @@ interface Product {
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
+  const { addToCart } = useCart()
   const slug = typeof params?.slug === 'string' ? params.slug : ''
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
