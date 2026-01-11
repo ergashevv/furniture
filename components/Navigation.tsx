@@ -5,13 +5,16 @@ import { useState, useEffect, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { useCart } from '@/contexts/CartContext'
+import { useI18n } from '@/contexts/I18nContext'
 import FurniGlassLogo from './FurniGlassLogo'
 
 function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false)
   const pathname = usePathname()
   const { totalItems } = useCart()
+  const { language, setLanguage, t } = useI18n()
 
   useEffect(() => {
     let ticking = false
@@ -44,12 +47,12 @@ function Navigation() {
   const isHomePage = pathname === '/'
 
   const navLinks = [
-    { href: '/', label: 'Bosh Sahifa' },
-    { href: '/products', label: 'Mahsulotlar' },
-    { href: '/services', label: 'Xizmatlar' },
-    { href: '/gallery', label: 'Galereya' },
-    { href: '/why-us', label: 'Nima Uchun Biz' },
-    { href: '/contact', label: 'Aloqa' },
+    { href: '/', label: t('nav.home') },
+    { href: '/products', label: t('nav.products') },
+    { href: '/services', label: t('nav.services') },
+    { href: '/gallery', label: t('nav.gallery') },
+    { href: '/why-us', label: t('nav.whyUs') },
+    { href: '/contact', label: t('nav.contact') },
   ]
 
   return (
@@ -105,25 +108,141 @@ function Navigation() {
               })}
             </div>
 
-            {/* Cart Icon Desktop */}
-            <Link
-              href="/cart"
-              className={`relative ml-4 ${isScrolled || !isHomePage ? 'text-text hover:text-secondary' : 'text-white hover:text-white/80'} transition-colors duration-200`}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                />
-              </svg>
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {totalItems > 9 ? '9+' : totalItems}
-                </span>
-              )}
-            </Link>
+            {/* Language Switcher & Cart Desktop */}
+            <div className="flex items-center gap-4 ml-4">
+              {/* Language Switcher */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    isScrolled || !isHomePage
+                      ? 'text-text hover:bg-primary/10 hover:text-secondary'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}
+                  aria-label="Change language"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+                    />
+                  </svg>
+                  <span className="text-sm font-semibold uppercase">{language}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      isLanguageDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {/* Language Dropdown */}
+                <AnimatePresence>
+                  {isLanguageDropdownOpen && (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-40"
+                        onClick={() => setIsLanguageDropdownOpen(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-lg border border-primary/10 py-2 min-w-[120px] z-50"
+                      >
+                        <button
+                          onClick={() => {
+                            setLanguage('uz')
+                            setIsLanguageDropdownOpen(false)
+                          }}
+                          className={`w-full px-4 py-2 text-left text-sm font-medium transition-colors ${
+                            language === 'uz'
+                              ? 'bg-primary/10 text-secondary'
+                              : 'text-text hover:bg-primary/5'
+                          }`}
+                        >
+                          <span className="flex items-center justify-between">
+                            O&apos;zbek
+                            {language === 'uz' && (
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            )}
+                          </span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setLanguage('ru')
+                            setIsLanguageDropdownOpen(false)
+                          }}
+                          className={`w-full px-4 py-2 text-left text-sm font-medium transition-colors ${
+                            language === 'ru'
+                              ? 'bg-primary/10 text-secondary'
+                              : 'text-text hover:bg-primary/5'
+                          }`}
+                        >
+                          <span className="flex items-center justify-between">
+                            Русский
+                            {language === 'ru' && (
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            )}
+                          </span>
+                        </button>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Cart Icon Desktop */}
+              <Link
+                href="/cart"
+                className={`relative ${isScrolled || !isHomePage ? 'text-text hover:text-secondary' : 'text-white hover:text-white/80'} transition-colors duration-200`}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  />
+                </svg>
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {totalItems > 9 ? '9+' : totalItems}
+                  </span>
+                )}
+              </Link>
+            </div>
           </div>
         </div>
       </motion.nav>
@@ -148,25 +267,41 @@ function Navigation() {
               />
             </Link>
 
-            {/* Cart Icon Mobile */}
-            <Link
-              href="/cart"
-              className={`relative ${isScrolled || !isHomePage ? 'text-primary' : 'text-white'} transition-colors duration-200`}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                />
-              </svg>
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {totalItems > 9 ? '9+' : totalItems}
-                </span>
-              )}
-            </Link>
+            {/* Language Switcher & Cart Mobile */}
+            <div className="flex items-center gap-3">
+              {/* Language Switcher Mobile */}
+              <button
+                onClick={() => setLanguage(language === 'uz' ? 'ru' : 'uz')}
+                className={`flex items-center gap-1 px-2 py-1.5 rounded-lg font-semibold text-sm uppercase transition-all duration-200 ${
+                  isScrolled || !isHomePage
+                    ? 'text-primary hover:bg-primary/10'
+                    : 'text-white hover:bg-white/10'
+                }`}
+                aria-label="Change language"
+              >
+                {language === 'uz' ? 'RU' : 'UZ'}
+              </button>
+
+              {/* Cart Icon Mobile */}
+              <Link
+                href="/cart"
+                className={`relative ${isScrolled || !isHomePage ? 'text-primary' : 'text-white'} transition-colors duration-200`}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  />
+                </svg>
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {totalItems > 9 ? '9+' : totalItems}
+                  </span>
+                )}
+              </Link>
+            </div>
           </div>
         </div>
       </motion.nav>
@@ -225,24 +360,34 @@ function Navigation() {
               {/* Header */}
               <div className="px-6 pb-4 border-b border-primary/10">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-serif font-bold text-primary">Menu</h2>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 -mr-2 text-text hover:text-primary transition-colors duration-200"
-                    aria-label="Close menu"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  <h2 className="text-xl font-serif font-bold text-primary">{t('common.menu')}</h2>
+                  <div className="flex items-center gap-3">
+                    {/* Language Switcher in Mobile Menu */}
+                    <button
+                      onClick={() => setLanguage(language === 'uz' ? 'ru' : 'uz')}
+                      className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary font-semibold text-sm uppercase transition-all duration-200 hover:bg-primary/20"
+                      aria-label="Change language"
                     >
-                      <path d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                      {language === 'uz' ? 'RU' : 'UZ'}
+                    </button>
+                    <button
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-2 -mr-2 text-text hover:text-primary transition-colors duration-200"
+                      aria-label="Close menu"
+                    >
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
 
