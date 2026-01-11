@@ -296,7 +296,7 @@ async function main() {
 
   // Create Banner (1 banner)
   const banner = await prisma.banner.create({
-    data: {
+      data: {
       titleUz: 'Bayramona\ninteryer',
       titleRu: 'Праздничный\nинтерьер',
       subtitleUz: 'Premium Mebel',
@@ -307,9 +307,9 @@ async function main() {
       buttonTextUz: 'KO\'PROQ KO\'RISH',
       buttonTextRu: 'УЗНАТЬ БОЛЬШЕ',
       buttonLink: '/products',
-      visible: true,
-      order: 1,
-    },
+        visible: true,
+        order: 1,
+      },
   })
 
   console.log('✅ Created banner')

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import ScrollReveal from '@/components/ScrollReveal'
+import { useI18n } from '@/contexts/I18nContext'
 
 interface Category {
   id: string
@@ -51,6 +52,7 @@ interface Banner {
 }
 
 export default function HomePage() {
+  const { language, t } = useI18n()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
@@ -61,10 +63,10 @@ export default function HomePage() {
     async function fetchData() {
       try {
         const [categoriesRes, productsRes, galleryRes, bannerRes] = await Promise.all([
-          fetch('/api/categories'),
-          fetch('/api/products?featured=true&visible=true'),
-          fetch('/api/gallery?visible=true&featured=true'),
-          fetch('/api/banner?includeHidden=false'),
+          fetch(`/api/categories?lang=${language}`),
+          fetch(`/api/products?featured=true&visible=true&lang=${language}`),
+          fetch(`/api/gallery?visible=true&featured=true&lang=${language}`),
+          fetch(`/api/banner?includeHidden=false&lang=${language}`),
         ])
 
         const categoriesData = await categoriesRes.json()
@@ -96,7 +98,7 @@ export default function HomePage() {
     }
 
     fetchData()
-  }, [])
+  }, [language])
 
   // Category images mapping (you can replace with real images from database later)
   const categoryImages: Record<string, string> = {
@@ -122,10 +124,10 @@ export default function HomePage() {
   ]
 
   const stats = [
-    { number: '25+', label: 'Yillik tajriba' },
-    { number: '5K+', label: 'Mamnun mijozlar' },
-    { number: '2.5K', label: 'Bajarilgan loyihalar' },
-    { number: '100%', label: 'Sifat kafolati' },
+    { number: '25+', label: t('home.stats.experience') },
+    { number: '5K+', label: t('home.stats.customers') },
+    { number: '2.5K', label: t('home.stats.projects') },
+    { number: '100%', label: t('home.stats.quality') },
   ]
 
   return (
@@ -214,8 +216,8 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-3 bg-primary/10 rounded-full flex items-center justify-center">
                   <span className="text-primary font-bold text-xl">✓</span>
                 </div>
-                <h3 className="font-semibold text-primary mb-1">Bepul yetkazish</h3>
-                <p className="text-sm text-text-light">Free delivery</p>
+                <h3 className="font-semibold text-primary mb-1">{t('home.services.freeDelivery')}</h3>
+                <p className="text-sm text-text-light">{t('home.services.freeDelivery')}</p>
               </div>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
@@ -223,8 +225,8 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-3 bg-primary/10 rounded-full flex items-center justify-center">
                   <span className="text-primary font-bold text-xl">✓</span>
                 </div>
-                <h3 className="font-semibold text-primary mb-1">3 yil kafolat</h3>
-                <p className="text-sm text-text-light">3 years warranty</p>
+                <h3 className="font-semibold text-primary mb-1">{t('home.services.warranty')}</h3>
+                <p className="text-sm text-text-light">{t('home.services.warranty')}</p>
               </div>
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
@@ -232,8 +234,8 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-3 bg-primary/10 rounded-full flex items-center justify-center">
                   <span className="text-primary font-bold text-xl">✓</span>
                 </div>
-                <h3 className="font-semibold text-primary mb-1">14 kun qaytarish</h3>
-                <p className="text-sm text-text-light">14 days return</p>
+                <h3 className="font-semibold text-primary mb-1">{t('home.services.return')}</h3>
+                <p className="text-sm text-text-light">{t('home.services.return')}</p>
               </div>
             </ScrollReveal>
             <ScrollReveal delay={0.3}>
@@ -241,8 +243,8 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-3 bg-primary/10 rounded-full flex items-center justify-center">
                   <span className="text-primary font-bold text-xl">✓</span>
                 </div>
-                <h3 className="font-semibold text-primary mb-1">Tez o&apos;rnatish</h3>
-                <p className="text-sm text-text-light">Fast installation</p>
+                <h3 className="font-semibold text-primary mb-1">{t('home.services.installation')}</h3>
+                <p className="text-sm text-text-light">{t('home.services.installation')}</p>
               </div>
             </ScrollReveal>
           </div>
@@ -255,10 +257,10 @@ export default function HomePage() {
           <ScrollReveal>
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-primary mb-4">
-                Nima qidiryapsiz?
+                {t('home.whatLookingFor')}
               </h2>
               <p className="text-text-light text-lg max-w-2xl mx-auto">
-                O&apos;z xohishingizga mos kategoriyani tanlang va ajoyib dizayn yechimlarini kashf eting
+                {t('home.categories.description')}
               </p>
             </div>
           </ScrollReveal>
@@ -313,7 +315,7 @@ export default function HomePage() {
                         
                         {/* Arrow indicator */}
                         <div className="mt-6 flex items-center text-secondary font-medium group-hover:gap-3 gap-2 transition-all duration-300">
-                          <span className="text-sm uppercase tracking-wider">Batafsil</span>
+                          <span className="text-sm uppercase tracking-wider">{t('common.readMore')}</span>
                           <svg
                             className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
                             fill="none"
@@ -403,7 +405,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center mb-12">
             <ScrollReveal>
               <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary">
-                Mashhur mahsulotlar
+                {t('home.popularProducts.title')}
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
@@ -411,7 +413,7 @@ export default function HomePage() {
                 href="/products"
                 className="text-primary hover:text-secondary transition-colors font-medium"
               >
-                Barchasini ko&apos;rish →
+                {t('home.popularProducts.viewAll')} →
               </Link>
             </ScrollReveal>
           </div>
