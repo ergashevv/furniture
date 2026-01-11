@@ -325,7 +325,7 @@ function Navigation() {
             >
               <path d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            <span>Menu</span>
+            <span>{t('common.menu')}</span>
           </button>
         </div>
       </div>
