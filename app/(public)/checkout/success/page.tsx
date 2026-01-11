@@ -1,21 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import ScrollReveal from '@/components/ScrollReveal'
 
 export default function CheckoutSuccessPage() {
-  const [showSuccessPopup, setShowSuccessPopup] = useState(true)
-
-  // Auto-hide popup after 5 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSuccessPopup(false)
-    }, 5000)
-    return () => clearTimeout(timer)
-  }, [])
-
   const steps = [
     {
       number: '1',
@@ -35,75 +24,33 @@ export default function CheckoutSuccessPage() {
   ]
 
   return (
-    <div className="pt-20 min-h-screen bg-background">
-      {/* Success Popup Notification */}
-      <AnimatePresence>
-        {showSuccessPopup && (
+    <div className="pt-16 md:pt-20 min-h-screen bg-background pb-20 md:pb-0">
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        {/* Success Banner */}
+        <ScrollReveal>
           <motion.div
-            initial={{ opacity: 0, y: -100, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -50, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed top-24 left-1/2 -translate-x-1/2 z-50"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-green-50 border-2 border-green-200 rounded-2xl p-4 mb-8"
           >
-            <div className="bg-white rounded-2xl shadow-2xl p-6 border-2 border-green-500 min-w-[320px] max-w-md">
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <motion.svg
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2, type: 'spring', damping: 10 }}
-                    className="w-8 h-8 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <motion.path
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ delay: 0.3, duration: 0.5 }}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={3}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </motion.svg>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-green-700 mb-1">
-                    Buyurtma qabul qilindi!
-                  </h3>
-                  <p className="text-sm text-text-light">
-                    Tez orada siz bilan bog&apos;lanamiz
-                  </p>
-                </div>
-                <button
-                  onClick={() => setShowSuccessPopup(false)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              {/* Progress bar */}
-              <motion.div
-                initial={{ width: '100%' }}
-                animate={{ width: '0%' }}
-                transition={{ duration: 5, ease: 'linear' }}
-                className="h-1 bg-green-500 rounded-full mt-4"
-              />
-            </div>
+            <p className="text-center text-green-800 font-medium">
+              Buyurtmangiz qabul qilindi! Tez orada siz bilan bog&apos;lanamiz.
+            </p>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </ScrollReveal>
 
-      <div className="max-w-4xl mx-auto px-4 py-20">
+        {/* Main Success Message */}
         <ScrollReveal>
           <div className="text-center mb-12">
-            <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring', damping: 10 }}
+              className="w-24 h-24 md:w-28 md:h-28 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6"
+            >
               <svg
-                className="w-12 h-12 text-green-600"
+                className="w-12 h-12 md:w-14 md:h-14 text-green-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -111,49 +58,61 @@ export default function CheckoutSuccessPage() {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
-              Buyurtma qabul qilindi!
+            </motion.div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-primary mb-4">
+              Buyurtmangiz qabul qilindi!
             </h1>
-            <p className="text-text-light text-lg">
-              Buyurtmangiz muvaffaqiyatli qabul qilindi. Tez orada siz bilan bog&apos;lanamiz.
+            <p className="text-text-light text-lg md:text-xl max-w-2xl mx-auto">
+              Rahmat! Sizning buyurtmangiz muvaffaqiyatli qabul qilindi. Tez orada operatorlarimiz siz bilan bog&apos;lanishadi.
             </p>
           </div>
         </ScrollReveal>
 
         {/* Next Steps */}
         <ScrollReveal delay={0.2}>
-          <div className="bg-white rounded-2xl p-8 shadow-soft mb-8">
-            <h2 className="text-2xl font-serif font-bold text-primary mb-6">Keyingi qadamlar:</h2>
+          <div className="bg-white rounded-2xl p-6 md:p-8 shadow-soft mb-8">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-primary mb-6 md:mb-8">
+              Keyingi qadamlar:
+            </h2>
             <div className="space-y-6">
               {steps.map((step, index) => (
-                <div key={step.number} className="flex gap-4">
-                  <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white font-serif font-bold text-xl flex-shrink-0">
+                <motion.div
+                  key={step.number}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                  className="flex gap-4 md:gap-6"
+                >
+                  <div className="w-12 h-12 md:w-14 md:h-14 bg-primary rounded-xl flex items-center justify-center text-white font-serif font-bold text-xl md:text-2xl flex-shrink-0">
                     {step.number}
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-primary mb-2">{step.title}</h3>
-                    <p className="text-text-light">{step.description}</p>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-lg md:text-xl font-semibold text-primary mb-2">
+                      {step.title}
+                    </h3>
+                    <p className="text-text-light text-sm md:text-base">
+                      {step.description}
+                    </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </ScrollReveal>
 
         {/* Contact Info */}
-        <ScrollReveal delay={0.3}>
-          <div className="bg-primary/5 rounded-2xl p-6 mb-8">
-            <p className="text-center text-text-light mb-4">
+        <ScrollReveal delay={0.4}>
+          <div className="bg-gray-50 rounded-2xl p-6 md:p-8 mb-8">
+            <p className="text-center text-text-light mb-4 md:mb-6 text-base md:text-lg">
               Savollaringiz bo&apos;lsa, biz bilan bog&apos;laning:
             </p>
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-3">
               <svg
-                className="w-5 h-5 text-primary"
+                className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -167,7 +126,7 @@ export default function CheckoutSuccessPage() {
               </svg>
               <a
                 href="tel:+998901234567"
-                className="text-2xl font-bold text-primary hover:text-secondary transition-colors"
+                className="text-xl md:text-2xl font-bold text-primary hover:text-secondary transition-colors"
               >
                 +998 90 123 45 67
               </a>
@@ -176,11 +135,11 @@ export default function CheckoutSuccessPage() {
         </ScrollReveal>
 
         {/* Action Buttons */}
-        <ScrollReveal delay={0.4}>
+        <ScrollReveal delay={0.5}>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-lg hover:bg-secondary transition-colors font-semibold"
+              className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-secondary transition-colors font-semibold text-base md:text-lg"
             >
               <svg
                 className="w-5 h-5"
@@ -199,7 +158,7 @@ export default function CheckoutSuccessPage() {
             </Link>
             <Link
               href="/products"
-              className="inline-flex items-center justify-center gap-2 bg-white text-primary border-2 border-primary px-8 py-4 rounded-lg hover:bg-primary/5 transition-colors font-semibold"
+              className="inline-flex items-center justify-center gap-2 bg-white text-primary border-2 border-primary px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-primary/5 transition-colors font-semibold text-base md:text-lg"
             >
               <svg
                 className="w-5 h-5"
