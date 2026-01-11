@@ -103,7 +103,7 @@ export default function DashboardLayout({
           <div className="sticky top-0 h-screen flex flex-col">
             <div className="p-6 border-b border-white/10">
               <Link href="/dashboard" className="flex items-center">
-                <FurniGlassLogo width={140} height={50} className="h-auto" />
+                <FurniGlassLogo width={140} height={50} className="h-auto" variant="white" />
               </Link>
             </div>
             <nav className="flex-1 p-4 space-y-2 overflow-y-auto">

@@ -43,7 +43,13 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center">
-            <FurniGlassLogo width={150} height={60} priority className="h-auto" />
+            <FurniGlassLogo 
+              width={150} 
+              height={60} 
+              priority 
+              className="h-auto" 
+              variant={isScrolled || !isHomePage ? 'default' : 'white'} 
+            />
           </Link>
 
           {/* Desktop Navigation */}

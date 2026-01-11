@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="mb-4">
-              <FurniGlassLogo width={150} height={60} className="h-auto" />
+              <FurniGlassLogo width={150} height={60} className="h-auto" variant="white" />
             </div>
             <p className="text-white/80 text-sm mb-4">
               Biz sifatli va arzon mebellarni taqdim etishga intilamiz.
