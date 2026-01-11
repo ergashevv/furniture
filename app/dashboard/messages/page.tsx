@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Card, Table, Tag, Space, Modal, Button, Descriptions, Tabs, message, Spin, Empty } from 'antd'
+import { useEffect, useState, useMemo } from 'react'
+import { Card, Table, Tag, Space, Modal, Button, Descriptions, Tabs, message, Spin, Empty, Input } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { EyeOutlined, DeleteOutlined, CheckOutlined } from '@ant-design/icons'
+import { EyeOutlined, DeleteOutlined, CheckOutlined, SearchOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
+
+const { Search } = Input
 
 interface ContactMessage {
   id: string
@@ -20,7 +22,9 @@ interface ContactMessage {
 export default function MessagesPage() {
   const [messages, setMessages] = useState<ContactMessage[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isFiltering, setIsFiltering] = useState(false)
   const [filter, setFilter] = useState<'all' | 'read' | 'unread'>('all')
+  const [searchText, setSearchText] = useState('')
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { showNotification } = useNotification()
@@ -30,6 +34,8 @@ export default function MessagesPage() {
   }, [filter])
 
   const fetchMessages = async () => {
+    setIsLoading(true)
+    setIsFiltering(true)
     try {
       const url =
         filter === 'all'
@@ -47,8 +53,22 @@ export default function MessagesPage() {
       message.error('Xabarlarni yuklashda xatolik')
     } finally {
       setIsLoading(false)
+      setIsFiltering(false)
     }
   }
+
+  const filteredMessages = useMemo(() => {
+    if (!searchText.trim()) return messages
+    const searchLower = searchText.toLowerCase()
+    return messages.filter(
+      (msg) =>
+        msg.name.toLowerCase().includes(searchLower) ||
+        (msg.email && msg.email.toLowerCase().includes(searchLower)) ||
+        (msg.phone && msg.phone.toLowerCase().includes(searchLower)) ||
+        (msg.subject && msg.subject.toLowerCase().includes(searchLower)) ||
+        msg.message.toLowerCase().includes(searchLower)
+    )
+  }, [messages, searchText])
 
   const handleMarkAsRead = async (id: string) => {
     try {
@@ -108,6 +128,10 @@ export default function MessagesPage() {
     if (!message.read) {
       handleMarkAsRead(message.id)
     }
+  }
+
+  const handleTabChange = (key: string) => {
+    setFilter(key as 'all' | 'read' | 'unread')
   }
 
   const columns: ColumnsType<ContactMessage> = [
@@ -207,22 +231,33 @@ export default function MessagesPage() {
       </div>
 
       <Card>
-        <Tabs
-          activeKey={filter}
-          onChange={(key) => setFilter(key as 'all' | 'read' | 'unread')}
-          items={tabItems}
-          style={{ marginBottom: 16 }}
-        />
-        {isLoading ? (
+        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+          <Tabs
+            activeKey={filter}
+            onChange={handleTabChange}
+            items={tabItems}
+            style={{ flex: 1 }}
+          />
+          <Search
+            placeholder="Qidirish..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            style={{ width: 300 }}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+        </div>
+        {isLoading || isFiltering ? (
           <div style={{ textAlign: 'center', padding: '50px 0' }}>
-            <Spin size="large" />
+            <Spin size="large" tip={isFiltering ? "Filtrlash..." : "Yuklanmoqda..."} />
           </div>
-        ) : messages.length === 0 ? (
-          <Empty description="Xabarlar topilmadi" />
+        ) : filteredMessages.length === 0 ? (
+          <Empty description={searchText ? "Qidiruv natijalari topilmadi" : "Xabarlar topilmadi"} />
         ) : (
           <Table
             columns={columns}
-            dataSource={messages}
+            dataSource={filteredMessages}
             rowKey="id"
             pagination={{
               pageSize: 10,

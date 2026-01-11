@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Button, Card, Table, Tag, Space, Modal, Form, Input, InputNumber, Switch, Avatar, Rate, message, Spin, Empty } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
+
+const { Search } = Input
 
 interface Review {
   id: string
@@ -24,6 +26,7 @@ export default function ReviewsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingReview, setEditingReview] = useState<Review | null>(null)
+  const [searchText, setSearchText] = useState('')
   const [form] = Form.useForm()
   const { showNotification } = useNotification()
 
@@ -32,6 +35,7 @@ export default function ReviewsPage() {
   }, [])
 
   const fetchReviews = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch('/api/reviews?visible=false')
       const data = await response.json()
@@ -45,6 +49,17 @@ export default function ReviewsPage() {
       setIsLoading(false)
     }
   }
+
+  const filteredReviews = useMemo(() => {
+    if (!searchText.trim()) return reviews
+    const searchLower = searchText.toLowerCase()
+    return reviews.filter(
+      (review) =>
+        review.customerName.toLowerCase().includes(searchLower) ||
+        review.comment.toLowerCase().includes(searchLower) ||
+        (review.location && review.location.toLowerCase().includes(searchLower))
+    )
+  }, [reviews, searchText])
 
   const handleSubmit = async (values: any) => {
     try {
@@ -194,22 +209,33 @@ export default function ReviewsPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Sharhlar</h1>
           <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>Mijoz sharhlarini boshqaring</p>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingReview(null)
-            form.resetFields()
-            setIsModalOpen(true)
-          }}
-        >
-          Yangi sharh
-        </Button>
+        <Space>
+          <Search
+            placeholder="Qidirish..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            style={{ width: 300 }}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingReview(null)
+              form.resetFields()
+              setIsModalOpen(true)
+            }}
+          >
+            Yangi sharh
+          </Button>
+        </Space>
       </div>
 
       <Card>
@@ -217,12 +243,12 @@ export default function ReviewsPage() {
           <div style={{ textAlign: 'center', padding: '50px 0' }}>
             <Spin size="large" />
           </div>
-        ) : reviews.length === 0 ? (
-          <Empty description="Sharhlar topilmadi" />
+        ) : filteredReviews.length === 0 ? (
+          <Empty description={searchText ? "Qidiruv natijalari topilmadi" : "Sharhlar topilmadi"} />
         ) : (
           <Table
             columns={columns}
-            dataSource={reviews}
+            dataSource={filteredReviews}
             rowKey="id"
             pagination={{
               pageSize: 10,

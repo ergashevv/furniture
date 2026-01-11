@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Button, Card, Table, Tag, Space, Modal, Form, Input, InputNumber, Switch, Image, message, Spin, Empty } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
+
+const { Search } = Input
 
 interface Banner {
   id: string
@@ -12,7 +14,7 @@ interface Banner {
   subtitle: string | null
   description: string | null
   imageUrl: string
-  buttonLink: string | null
+  link: string | null
   buttonText: string | null
   visible: boolean
   order: number
@@ -25,6 +27,7 @@ export default function BannerPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null)
+  const [searchText, setSearchText] = useState('')
   const [form] = Form.useForm()
   const { showNotification } = useNotification()
 
@@ -33,8 +36,9 @@ export default function BannerPage() {
   }, [])
 
   const fetchBanners = async () => {
+    setIsLoading(true)
     try {
-      const response = await fetch('/api/banner?includeHidden=true')
+      const response = await fetch('/api/banner')
       const data = await response.json()
       if (data.success) {
         setBanners(data.banners)
@@ -46,6 +50,17 @@ export default function BannerPage() {
       setIsLoading(false)
     }
   }
+
+  const filteredBanners = useMemo(() => {
+    if (!searchText.trim()) return banners
+    const searchLower = searchText.toLowerCase()
+    return banners.filter(
+      (banner) =>
+        banner.title.toLowerCase().includes(searchLower) ||
+        (banner.subtitle && banner.subtitle.toLowerCase().includes(searchLower)) ||
+        (banner.description && banner.description.toLowerCase().includes(searchLower))
+    )
+  }, [banners, searchText])
 
   const handleSubmit = async (values: any) => {
     try {
@@ -59,7 +74,7 @@ export default function BannerPage() {
           ...values,
           subtitle: values.subtitle || null,
           description: values.description || null,
-          buttonLink: values.buttonLink || null,
+          link: values.link || null,
           buttonText: values.buttonText || null,
           order: values.order || 0,
         }),
@@ -90,7 +105,7 @@ export default function BannerPage() {
       subtitle: banner.subtitle || '',
       description: banner.description || '',
       imageUrl: banner.imageUrl,
-      buttonLink: banner.buttonLink || '',
+      link: banner.link || '',
       buttonText: banner.buttonText || '',
       visible: banner.visible,
       order: banner.order,
@@ -199,22 +214,33 @@ export default function BannerPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Bannerlar</h1>
           <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>Bannerlarni boshqaring</p>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingBanner(null)
-            form.resetFields()
-            setIsModalOpen(true)
-          }}
-        >
-          Yangi banner
-        </Button>
+        <Space>
+          <Search
+            placeholder="Qidirish..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            style={{ width: 300 }}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingBanner(null)
+              form.resetFields()
+              setIsModalOpen(true)
+            }}
+          >
+            Yangi banner
+          </Button>
+        </Space>
       </div>
 
       <Card>
@@ -222,12 +248,12 @@ export default function BannerPage() {
           <div style={{ textAlign: 'center', padding: '50px 0' }}>
             <Spin size="large" />
           </div>
-        ) : banners.length === 0 ? (
-          <Empty description="Bannerlar topilmadi" />
+        ) : filteredBanners.length === 0 ? (
+          <Empty description={searchText ? "Qidiruv natijalari topilmadi" : "Bannerlar topilmadi"} />
         ) : (
           <Table
             columns={columns}
-            dataSource={banners}
+            dataSource={filteredBanners}
             rowKey="id"
             pagination={{
               pageSize: 10,
@@ -282,7 +308,7 @@ export default function BannerPage() {
             <Input placeholder="Ko'proq ko'rish" />
           </Form.Item>
 
-          <Form.Item name="buttonLink" label="Tugma linki">
+          <Form.Item name="link" label="Tugma linki">
             <Input placeholder="/order" />
           </Form.Item>
 

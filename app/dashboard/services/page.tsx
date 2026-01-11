@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Button, Card, Table, Tag, Space, Modal, Form, Input, InputNumber, Switch, message, Spin, Empty } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
+
+const { Search } = Input
 
 interface Service {
   id: string
@@ -24,6 +26,7 @@ export default function ServicesPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingService, setEditingService] = useState<Service | null>(null)
+  const [searchText, setSearchText] = useState('')
   const [form] = Form.useForm()
   const { showNotification } = useNotification()
 
@@ -32,6 +35,7 @@ export default function ServicesPage() {
   }, [])
 
   const fetchServices = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch('/api/services?visible=false')
       const data = await response.json()
@@ -45,6 +49,17 @@ export default function ServicesPage() {
       setIsLoading(false)
     }
   }
+
+  const filteredServices = useMemo(() => {
+    if (!searchText.trim()) return services
+    const searchLower = searchText.toLowerCase()
+    return services.filter(
+      (service) =>
+        service.name.toLowerCase().includes(searchLower) ||
+        service.slug.toLowerCase().includes(searchLower) ||
+        service.description.toLowerCase().includes(searchLower)
+    )
+  }, [services, searchText])
 
   const handleSubmit = async (values: any) => {
     try {
@@ -189,22 +204,33 @@ export default function ServicesPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Xizmatlar</h1>
           <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>Xizmatlarni boshqaring</p>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingService(null)
-            form.resetFields()
-            setIsModalOpen(true)
-          }}
-        >
-          Yangi xizmat
-        </Button>
+        <Space>
+          <Search
+            placeholder="Qidirish..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            style={{ width: 300 }}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingService(null)
+              form.resetFields()
+              setIsModalOpen(true)
+            }}
+          >
+            Yangi xizmat
+          </Button>
+        </Space>
       </div>
 
       <Card>
@@ -212,12 +238,12 @@ export default function ServicesPage() {
           <div style={{ textAlign: 'center', padding: '50px 0' }}>
             <Spin size="large" />
           </div>
-        ) : services.length === 0 ? (
-          <Empty description="Xizmatlar topilmadi" />
+        ) : filteredServices.length === 0 ? (
+          <Empty description={searchText ? "Qidiruv natijalari topilmadi" : "Xizmatlar topilmadi"} />
         ) : (
           <Table
             columns={columns}
-            dataSource={services}
+            dataSource={filteredServices}
             rowKey="id"
             pagination={{
               pageSize: 10,
