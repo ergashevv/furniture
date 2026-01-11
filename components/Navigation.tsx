@@ -66,8 +66,8 @@ function Navigation() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <Link href="/" className="flex items-center">
+          <div className="relative flex items-center justify-between h-20">
+            <Link href="/" className="flex items-center flex-shrink-0">
               <FurniGlassLogo 
                 width={150} 
                 height={60} 
@@ -77,8 +77,8 @@ function Navigation() {
               />
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="flex items-center space-x-6 lg:space-x-8">
+            {/* Desktop Navigation - Centered */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6 lg:space-x-8">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
                 return (
@@ -109,7 +109,7 @@ function Navigation() {
             </div>
 
             {/* Language Switcher & Cart Desktop */}
-            <div className="flex items-center gap-4 ml-4">
+            <div className="flex items-center gap-4 ml-4 flex-shrink-0">
               {/* Language Switcher */}
               <div className="relative">
                 <button
