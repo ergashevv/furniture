@@ -78,7 +78,7 @@ function Navigation() {
             </Link>
 
             {/* Desktop Navigation - Centered */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6 lg:space-x-8 z-10">
+            <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-4 lg:space-x-6 xl:space-x-8 z-10">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
               return (
