@@ -62,12 +62,12 @@ function Navigation() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-background/95 backdrop-blur-md shadow-soft' : isHomePage ? 'bg-transparent' : 'bg-background/95 backdrop-blur-md'
+          isScrolled || !isHomePage ? 'bg-background/95 backdrop-blur-md shadow-soft' : 'bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-20">
-            <Link href="/" className="flex items-center flex-shrink-0">
+            <Link href="/" className="flex items-center flex-shrink-0 z-10">
               <FurniGlassLogo 
                 width={150} 
                 height={60} 
@@ -78,34 +78,34 @@ function Navigation() {
             </Link>
 
             {/* Desktop Navigation - Centered */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6 lg:space-x-8">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`relative px-1 py-2 font-medium transition-all duration-200 ${
-                      isScrolled || !isHomePage
-                        ? isActive
-                          ? 'text-secondary'
-                          : 'text-text hover:text-secondary'
-                        : isActive
-                          ? 'text-white'
-                          : 'text-white/90 hover:text-white'
-                    }`}
-                  >
-                    {link.label}
-                    {isActive && (
-                      <span
-                        className={`absolute bottom-0 left-0 right-0 h-0.5 ${
-                          isScrolled || !isHomePage ? 'bg-secondary' : 'bg-white'
-                        }`}
-                      />
-                    )}
-                  </Link>
-                )
-              })}
+            <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6 lg:space-x-8 z-10">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative px-1 py-2 font-medium transition-all duration-200 ${
+                    isScrolled || !isHomePage
+                      ? isActive
+                        ? 'text-secondary'
+                        : 'text-text hover:text-secondary'
+                      : isActive
+                        ? 'text-white'
+                        : 'text-white/90 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                  {isActive && (
+                    <span
+                      className={`absolute bottom-0 left-0 right-0 h-0.5 ${
+                        isScrolled || !isHomePage ? 'bg-secondary' : 'bg-white'
+                      }`}
+                    />
+                  )}
+                </Link>
+              )
+            })}
             </div>
 
             {/* Language Switcher & Cart Desktop */}
@@ -221,27 +221,27 @@ function Navigation() {
                     </>
                   )}
                 </AnimatePresence>
-              </div>
+          </div>
 
-              {/* Cart Icon Desktop */}
-              <Link
-                href="/cart"
+          {/* Cart Icon Desktop */}
+          <Link
+            href="/cart"
                 className={`relative ${isScrolled || !isHomePage ? 'text-text hover:text-secondary' : 'text-white hover:text-white/80'} transition-colors duration-200`}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                  />
-                </svg>
-                {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {totalItems > 9 ? '9+' : totalItems}
-                  </span>
-                )}
-              </Link>
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {totalItems > 9 ? '9+' : totalItems}
+              </span>
+            )}
+          </Link>
             </div>
           </div>
         </div>
@@ -282,25 +282,25 @@ function Navigation() {
                 {language === 'uz' ? 'RU' : 'UZ'}
               </button>
 
-              {/* Cart Icon Mobile */}
-              <Link
-                href="/cart"
+          {/* Cart Icon Mobile */}
+          <Link
+            href="/cart"
                 className={`relative ${isScrolled || !isHomePage ? 'text-primary' : 'text-white'} transition-colors duration-200`}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                  />
-                </svg>
-                {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {totalItems > 9 ? '9+' : totalItems}
-                  </span>
-                )}
-              </Link>
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {totalItems > 9 ? '9+' : totalItems}
+              </span>
+            )}
+          </Link>
             </div>
           </div>
         </div>
@@ -323,7 +323,7 @@ function Navigation() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path d="M4 6h16M4 12h16M4 18h16" />
+                <path d="M4 6h16M4 12h16M4 18h16" />
             </svg>
             <span>{t('common.menu')}</span>
           </button>
@@ -345,7 +345,7 @@ function Navigation() {
             />
 
             {/* Bottom Sheet */}
-            <motion.div
+          <motion.div
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
@@ -367,7 +367,7 @@ function Navigation() {
                       onClick={() => setLanguage(language === 'uz' ? 'ru' : 'uz')}
                       className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary font-semibold text-sm uppercase transition-all duration-200 hover:bg-primary/20"
                       aria-label="Change language"
-                    >
+          >
                       {language === 'uz' ? 'RU' : 'UZ'}
                     </button>
                     <button
@@ -394,19 +394,19 @@ function Navigation() {
               {/* Menu Items */}
               <div className="flex-1 overflow-y-auto px-4 py-4">
                 <div className="space-y-2">
-                  {navLinks.map((link) => {
-                    const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                    return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
                         className={`block px-4 py-4 rounded-xl font-medium transition-all duration-200 ${
-                          isActive
+                      isActive
                             ? 'bg-primary/10 text-secondary border-2 border-primary/20'
                             : 'text-text hover:bg-primary/5 hover:text-secondary active:scale-95'
-                        }`}
-                      >
+                    }`}
+                  >
                         <div className="flex items-center justify-between">
                           <span className="text-base">{link.label}</span>
                           {isActive && (
@@ -425,15 +425,15 @@ function Navigation() {
                             </svg>
                           )}
                         </div>
-                      </Link>
-                    )
-                  })}
-                </div>
+                  </Link>
+                )
+              })}
+            </div>
               </div>
 
               {/* Bottom Padding for Safe Area */}
               <div className="h-4" />
-            </motion.div>
+          </motion.div>
           </>
         )}
       </AnimatePresence>
