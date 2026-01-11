@@ -144,12 +144,7 @@ export default function HomePage() {
             sizes="100vw"
             className="object-cover object-center"
           />
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: `rgba(0, 0, 0, ${banner ? banner.overlay : 0.5})`,
-            }}
-          />
+          <div className="absolute inset-0 bg-black/50" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -169,10 +164,10 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-              className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-6 leading-tight"
+              className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-6 leading-tight whitespace-pre-line"
               style={{ willChange: 'transform, opacity' }}
             >
-              {banner ? banner.title : 'Bayramona\ninteryer'}
+              {banner?.title || 'Bayramona\ninteryer'}
             </motion.h1>
             {banner?.description && (
               <motion.p
