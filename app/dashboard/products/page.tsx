@@ -1,11 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, Card, Table, Tag, Space, Image, message, Spin, Empty } from 'antd'
+import { Button, Card, Table, Tag, Space, Image, message, Spin, Empty, Input } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
+
+const { Search } = Input
 
 interface Product {
   id: string
@@ -22,6 +24,7 @@ interface Product {
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [searchText, setSearchText] = useState('')
   const router = useRouter()
   const { showNotification } = useNotification()
 
@@ -30,6 +33,7 @@ export default function ProductsPage() {
   }, [])
 
   const fetchProducts = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch('/api/products')
       const data = await response.json()
@@ -43,6 +47,17 @@ export default function ProductsPage() {
       setIsLoading(false)
     }
   }
+
+  const filteredProducts = useMemo(() => {
+    if (!searchText.trim()) return products
+    const searchLower = searchText.toLowerCase()
+    return products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchLower) ||
+        product.slug.toLowerCase().includes(searchLower) ||
+        product.description.toLowerCase().includes(searchLower)
+    )
+  }, [products, searchText])
 
   const handleDelete = async (id: string) => {
     const { Modal } = await import('antd')
@@ -153,18 +168,29 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Mahsulotlar</h1>
           <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>Mahsulotlarni boshqaring</p>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => router.push('/dashboard/products/new')}
-        >
-          Yangi mahsulot
-        </Button>
+        <Space>
+          <Search
+            placeholder="Qidirish..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            style={{ width: 300 }}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => router.push('/dashboard/products/new')}
+          >
+            Yangi mahsulot
+          </Button>
+        </Space>
       </div>
 
       <Card>
@@ -172,12 +198,12 @@ export default function ProductsPage() {
           <div style={{ textAlign: 'center', padding: '50px 0' }}>
             <Spin size="large" />
           </div>
-        ) : products.length === 0 ? (
-          <Empty description="Mahsulotlar topilmadi" />
+        ) : filteredProducts.length === 0 ? (
+          <Empty description={searchText ? "Qidiruv natijalari topilmadi" : "Mahsulotlar topilmadi"} />
         ) : (
           <Table
             columns={columns}
-            dataSource={products}
+            dataSource={filteredProducts}
             rowKey="id"
             pagination={{
               pageSize: 10,

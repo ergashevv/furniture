@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Button, Card, Table, Tag, Space, Modal, Form, Input, message, Spin, Empty } from 'antd'
+import { useEffect, useState, useMemo } from 'react'
+import { Button, Card, Table, Tag, Space, Modal, Form, Input, message, Spin, Empty, Input as AntInput } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
+
+const { Search } = AntInput
 
 interface Category {
   id: string
@@ -19,6 +21,7 @@ export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [searchText, setSearchText] = useState('')
   const [form] = Form.useForm()
   const { showNotification } = useNotification()
 
@@ -27,6 +30,7 @@ export default function CategoriesPage() {
   }, [])
 
   const fetchCategories = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch('/api/categories')
       const data = await response.json()
@@ -40,6 +44,17 @@ export default function CategoriesPage() {
       setIsLoading(false)
     }
   }
+
+  const filteredCategories = useMemo(() => {
+    if (!searchText.trim()) return categories
+    const searchLower = searchText.toLowerCase()
+    return categories.filter(
+      (cat) =>
+        cat.name.toLowerCase().includes(searchLower) ||
+        cat.slug.toLowerCase().includes(searchLower) ||
+        (cat.description && cat.description.toLowerCase().includes(searchLower))
+    )
+  }, [categories, searchText])
 
   const handleSubmit = async (values: any) => {
     try {
@@ -155,22 +170,33 @@ export default function CategoriesPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Kategoriyalar</h1>
           <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>Kategoriyalarni boshqaring</p>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingCategory(null)
-            form.resetFields()
-            setIsModalOpen(true)
-          }}
-        >
-          Yangi kategoriya
-        </Button>
+        <Space>
+          <Search
+            placeholder="Qidirish..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            style={{ width: 300 }}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingCategory(null)
+              form.resetFields()
+              setIsModalOpen(true)
+            }}
+          >
+            Yangi kategoriya
+          </Button>
+        </Space>
       </div>
 
       <Card>
@@ -178,12 +204,12 @@ export default function CategoriesPage() {
           <div style={{ textAlign: 'center', padding: '50px 0' }}>
             <Spin size="large" />
           </div>
-        ) : categories.length === 0 ? (
-          <Empty description="Kategoriyalar topilmadi" />
+        ) : filteredCategories.length === 0 ? (
+          <Empty description={searchText ? "Qidiruv natijalari topilmadi" : "Kategoriyalar topilmadi"} />
         ) : (
           <Table
             columns={columns}
-            dataSource={categories}
+            dataSource={filteredCategories}
             rowKey="id"
             pagination={{
               pageSize: 10,

@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Card, Table, Tag, Space, Select, Button, Modal, Descriptions, message, Spin, Empty, Tabs } from 'antd'
+import { useEffect, useState, useMemo } from 'react'
+import { Card, Table, Tag, Space, Select, Button, Modal, Descriptions, message, Spin, Empty, Tabs, Input } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { EyeOutlined } from '@ant-design/icons'
+import { EyeOutlined, SearchOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
+
+const { Search } = Input
 
 interface Order {
   id: string
@@ -37,7 +39,9 @@ const statusLabels: Record<string, string> = {
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isFiltering, setIsFiltering] = useState(false)
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [searchText, setSearchText] = useState('')
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { showNotification } = useNotification()
@@ -47,6 +51,8 @@ export default function OrdersPage() {
   }, [statusFilter])
 
   const fetchOrders = async () => {
+    setIsLoading(true)
+    setIsFiltering(true)
     try {
       const url = statusFilter === 'all' ? '/api/orders' : `/api/orders?status=${statusFilter}`
       const response = await fetch(url)
@@ -59,8 +65,21 @@ export default function OrdersPage() {
       message.error('Buyurtmalarni yuklashda xatolik')
     } finally {
       setIsLoading(false)
+      setIsFiltering(false)
     }
   }
+
+  const filteredOrders = useMemo(() => {
+    if (!searchText.trim()) return orders
+    const searchLower = searchText.toLowerCase()
+    return orders.filter(
+      (order) =>
+        order.customerName.toLowerCase().includes(searchLower) ||
+        order.email.toLowerCase().includes(searchLower) ||
+        (order.phone && order.phone.toLowerCase().includes(searchLower)) ||
+        (order.productName && order.productName.toLowerCase().includes(searchLower))
+    )
+  }, [orders, searchText])
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
@@ -86,6 +105,10 @@ export default function OrdersPage() {
   const handleViewOrder = (order: Order) => {
     setSelectedOrder(order)
     setIsModalOpen(true)
+  }
+
+  const handleTabChange = (key: string) => {
+    setStatusFilter(key)
   }
 
   const columns: ColumnsType<Order> = [
@@ -166,22 +189,33 @@ export default function OrdersPage() {
       </div>
 
       <Card>
-        <Tabs
-          activeKey={statusFilter}
-          onChange={setStatusFilter}
-          items={tabItems}
-          style={{ marginBottom: 16 }}
-        />
-        {isLoading ? (
+        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+          <Tabs
+            activeKey={statusFilter}
+            onChange={handleTabChange}
+            items={tabItems}
+            style={{ flex: 1 }}
+          />
+          <Search
+            placeholder="Qidirish..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            style={{ width: 300 }}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+        </div>
+        {isLoading || isFiltering ? (
           <div style={{ textAlign: 'center', padding: '50px 0' }}>
-            <Spin size="large" />
+            <Spin size="large" tip={isFiltering ? "Filtrlash..." : "Yuklanmoqda..."} />
           </div>
-        ) : orders.length === 0 ? (
-          <Empty description="Buyurtmalar topilmadi" />
+        ) : filteredOrders.length === 0 ? (
+          <Empty description={searchText ? "Qidiruv natijalari topilmadi" : "Buyurtmalar topilmadi"} />
         ) : (
           <Table
             columns={columns}
-            dataSource={orders}
+            dataSource={filteredOrders}
             rowKey="id"
             pagination={{
               pageSize: 10,
