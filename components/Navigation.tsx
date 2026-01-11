@@ -85,7 +85,7 @@ function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-1 py-2 font-medium transition-all duration-200 ${
+                  className={`relative px-2 py-2 text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     isScrolled || !isHomePage
                       ? isActive
                         ? 'text-secondary'
