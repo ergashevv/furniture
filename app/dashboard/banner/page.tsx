@@ -147,8 +147,11 @@ export default function BannerPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-text-light">Yuklanmoqda...</div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-text-light">Yuklanmoqda...</p>
+        </div>
       </div>
     )
   }
@@ -156,7 +159,10 @@ export default function BannerPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-serif font-bold text-primary">Banner</h1>
+        <div>
+          <h1 className="text-4xl font-serif font-bold text-primary mb-2">Bannerlar</h1>
+          <p className="text-text-light">Bannerlarni boshqaring</p>
+        </div>
         <button
           onClick={() => {
             setEditingBanner(null)
@@ -165,15 +171,14 @@ export default function BannerPage() {
               subtitle: '',
               description: '',
               imageUrl: '',
+              link: '',
               buttonText: '',
-              buttonLink: '',
-              overlay: 0.5,
               visible: true,
               order: 0,
             })
             setShowModal(true)
           }}
-          className="bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-primary-dark transition-colors flex items-center gap-2"
+          className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors flex items-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -183,16 +188,16 @@ export default function BannerPage() {
       </div>
 
       {banners.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-soft p-8 text-center text-text-light">
-          Bannerlar topilmadi. Birinchi bannerni qo&apos;shing.
+        <div className="bg-white rounded-2xl shadow-soft p-12 text-center">
+          <p className="text-text-light text-lg">Bannerlar topilmadi. Birinchi bannerni qo&apos;shing.</p>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {currentBanners.map((banner) => (
               <div
                 key={banner.id}
-                className="bg-white rounded-2xl shadow-soft overflow-hidden hover:shadow-medium transition-shadow duration-200"
+                className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 border border-gray-100"
               >
                 <div className="aspect-video bg-background-dark relative">
                   {banner.imageUrl ? (
@@ -221,8 +226,8 @@ export default function BannerPage() {
                     </div>
                   )}
                   {!banner.visible && (
-                    <div className="absolute top-3 right-3">
-                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-500 text-white">
+                    <div className="absolute top-2 right-2">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                         Yashirin
                       </span>
                     </div>
@@ -235,26 +240,26 @@ export default function BannerPage() {
                   {banner.subtitle && (
                     <p className="text-sm text-text-light mb-2 line-clamp-1">{banner.subtitle}</p>
                   )}
-                  <div className="flex items-center justify-between pt-3 border-t border-primary/10">
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                     <span
-                      className={`px-2 py-0.5 rounded text-xs font-medium ${
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         banner.visible
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-gray-100 text-gray-600'
                       }`}
                     >
                       {banner.visible ? "Ko'rinadi" : 'Yashirin'}
                     </span>
-                    <div className="flex gap-1">
+                    <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(banner)}
-                        className="px-2.5 py-1 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors text-xs font-medium"
+                        className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors text-sm font-medium"
                       >
-                        Tahrir
+                        Tahrirlash
                       </button>
                       <button
                         onClick={() => handleDelete(banner.id)}
-                        className="px-2.5 py-1 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-xs font-medium"
+                        className="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
                       >
                         {"O'chirish"}
                       </button>
@@ -283,9 +288,8 @@ export default function BannerPage() {
             subtitle: '',
             description: '',
             imageUrl: '',
+            link: '',
             buttonText: '',
-            buttonLink: '',
-            overlay: 0.5,
             visible: true,
             order: 0,
           })
@@ -406,9 +410,8 @@ export default function BannerPage() {
                   subtitle: '',
                   description: '',
                   imageUrl: '',
+                  link: '',
                   buttonText: '',
-                  buttonLink: '',
-                  overlay: 0.5,
                   visible: true,
                   order: 0,
                 })
