@@ -144,7 +144,7 @@ export default function OrdersPage() {
           onClick={() => handleViewOrder(record)}
           size="small"
         >
-          Ko'rish
+          {"Ko'rish"}
         </Button>
       ),
     },

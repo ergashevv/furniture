@@ -146,7 +146,7 @@ export default function CategoriesPage() {
             onClick={() => handleDelete(record.id)}
             size="small"
           >
-            O'chirish
+            {"O'chirish"}
           </Button>
         </Space>
       ),

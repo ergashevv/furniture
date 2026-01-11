@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Button, Card, Table, Tag, Space, Modal, Form, Input, InputNumber, Switch, Image, message, Spin, Empty } from 'antd'
+import type { ColumnsType } from 'antd/es/table'
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
 
 interface GalleryItem {
@@ -19,30 +22,14 @@ interface GalleryItem {
 export default function GalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
-  const [showModal, setShowModal] = useState(false)
-  const { showNotification } = useNotification()
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null)
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    imageUrl: '',
-    videoUrl: '',
-    category: '',
-    featured: false,
-    visible: true,
-    order: 0,
-  })
+  const [form] = Form.useForm()
+  const { showNotification } = useNotification()
 
   useEffect(() => {
     fetchItems()
   }, [])
-
-  const totalPages = Math.ceil(items.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentItems = items.slice(startIndex, endIndex)
 
   const fetchItems = async () => {
     try {
@@ -53,48 +40,50 @@ export default function GalleryPage() {
       }
     } catch (error) {
       console.error('Failed to fetch gallery items:', error)
+      message.error('Galereya elementlarini yuklashda xatolik')
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (values: any) => {
     try {
       const url = editingItem ? `/api/gallery/${editingItem.id}` : '/api/gallery'
       const method = editingItem ? 'PATCH' : 'POST'
 
       const response = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...values,
+          description: values.description || null,
+          videoUrl: values.videoUrl || null,
+          category: values.category || null,
+          order: values.order || 0,
+        }),
       })
 
       if (response.ok) {
-        setShowModal(false)
+        showNotification(
+          editingItem ? 'Element yangilandi' : 'Element muvaffaqiyatli yaratildi',
+          'success'
+        )
+        setIsModalOpen(false)
         setEditingItem(null)
-        setFormData({
-          title: '',
-          description: '',
-          imageUrl: '',
-          videoUrl: '',
-          category: '',
-          featured: false,
-          visible: true,
-          order: 0,
-        })
+        form.resetFields()
         fetchItems()
+      } else {
+        message.error('Xatolik yuz berdi')
       }
     } catch (error) {
       console.error('Failed to save gallery item:', error)
+      message.error('Xatolik yuz berdi')
     }
   }
 
   const handleEdit = (item: GalleryItem) => {
     setEditingItem(item)
-    setFormData({
+    form.setFieldsValue({
       title: item.title,
       description: item.description || '',
       imageUrl: item.imageUrl,
@@ -104,243 +93,229 @@ export default function GalleryPage() {
       visible: item.visible,
       order: item.order,
     })
-    setShowModal(true)
+    setIsModalOpen(true)
   }
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Bu elementni o\'chirishni tasdiqlaysizmi?')) return
-
-    try {
-      const response = await fetch(`/api/gallery/${id}`, {
-        method: 'DELETE',
-      })
-      if (response.ok) {
-        showNotification('Element muvaffaqiyatli o\'chirildi', 'success')
-        fetchItems()
-      }
-    } catch (error) {
-      console.error('Failed to delete item:', error)
-    }
+    Modal.confirm({
+      title: "Elementni o'chirishni tasdiqlaysizmi?",
+      okText: "Ha",
+      okType: 'danger',
+      cancelText: "Yo'q",
+      onOk: async () => {
+        try {
+          const response = await fetch(`/api/gallery/${id}`, {
+            method: 'DELETE',
+          })
+          if (response.ok) {
+            showNotification('Element muvaffaqiyatli o\'chirildi', 'success')
+            fetchItems()
+          } else {
+            message.error('Xatolik yuz berdi')
+          }
+        } catch (error) {
+          console.error('Failed to delete gallery item:', error)
+          message.error('Xatolik yuz berdi')
+        }
+      },
+    })
   }
 
-  if (isLoading) {
-    return <div className="text-text-light">Loading gallery items...</div>
-  }
+  const columns: ColumnsType<GalleryItem> = [
+    {
+      title: 'Rasm',
+      dataIndex: 'imageUrl',
+      key: 'imageUrl',
+      width: 120,
+      render: (url: string) => (
+        <Image
+          src={url}
+          alt="Gallery"
+          width={100}
+          height={60}
+          style={{ objectFit: 'cover', borderRadius: 4 }}
+        />
+      ),
+    },
+    {
+      title: 'Sarlavha',
+      dataIndex: 'title',
+      key: 'title',
+      ellipsis: true,
+    },
+    {
+      title: 'Kategoriya',
+      dataIndex: 'category',
+      key: 'category',
+      render: (category: string) => category || '-',
+    },
+    {
+      title: 'Tartib',
+      dataIndex: 'order',
+      key: 'order',
+      width: 80,
+      sorter: (a, b) => a.order - b.order,
+    },
+    {
+      title: 'Holat',
+      key: 'status',
+      width: 150,
+      render: (_, record) => (
+        <Space direction="vertical" size={4}>
+          {record.featured && <Tag color="gold">Tanlangan</Tag>}
+          <Tag color={record.visible ? 'green' : 'default'}>
+            {record.visible ? 'Ko\'rinadi' : 'Yashirin'}
+          </Tag>
+        </Space>
+      ),
+    },
+    {
+      title: 'Amallar',
+      key: 'actions',
+      width: 150,
+      render: (_, record) => (
+        <Space>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+            size="small"
+          >
+            Tahrir
+          </Button>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
+            size="small"
+          >
+            {"O'chirish"}
+          </Button>
+        </Space>
+      ),
+    },
+  ]
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-serif font-bold text-primary">Gallery</h1>
-        <button
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Galereya</h1>
+          <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>Galereya elementlarini boshqaring</p>
+        </div>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
           onClick={() => {
             setEditingItem(null)
-            setFormData({
-              title: '',
-              description: '',
-              imageUrl: '',
-              videoUrl: '',
-              category: '',
-              featured: false,
-              visible: true,
-              order: 0,
-            })
-            setShowModal(true)
+            form.resetFields()
+            setIsModalOpen(true)
           }}
-          className="bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-primary-dark transition-colors"
         >
-          Add Item
-        </button>
+          Yangi element
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="bg-white rounded-2xl shadow-soft overflow-hidden"
+      <Card>
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '50px 0' }}>
+            <Spin size="large" />
+          </div>
+        ) : items.length === 0 ? (
+          <Empty description="Elementlar topilmadi" />
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={items}
+            rowKey="id"
+            pagination={{
+              pageSize: 10,
+              showSizeChanger: true,
+              showTotal: (total) => `Jami ${total} ta`,
+            }}
+          />
+        )}
+      </Card>
+
+      <Modal
+        title={editingItem ? "Elementni tahrirlash" : "Yangi element"}
+        open={isModalOpen}
+        onCancel={() => {
+          setIsModalOpen(false)
+          setEditingItem(null)
+          form.resetFields()
+        }}
+        footer={null}
+        width={800}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={{
+            featured: false,
+            visible: true,
+            order: 0,
+          }}
+        >
+          <Form.Item
+            name="title"
+            label="Sarlavha"
+            rules={[{ required: true, message: 'Sarlavha kiritish majburiy' }]}
           >
-            <div className="aspect-square bg-background-dark relative">
-              {item.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-4xl opacity-20">🖼️</span>
-                </div>
-              )}
-            </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-primary mb-1">{item.title}</h3>
-              <div className="flex items-center gap-2 mb-2">
-                <span
-                  className={`px-2 py-1 rounded-full text-xs ${
-                    item.visible
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                  }`}
-                >
-                  {item.visible ? 'Visible' : 'Hidden'}
-                </span>
-                {item.featured && (
-                  <span className="px-2 py-1 rounded-full text-xs bg-secondary/20 text-secondary">
-                    Featured
-                  </span>
-                )}
-              </div>
-              <div className="flex space-x-2 mt-3">
-                <button
-                  onClick={() => handleEdit(item)}
-                  className="text-secondary hover:text-secondary-dark text-sm font-medium"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="text-red-600 hover:text-red-700 text-sm font-medium"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            <Input placeholder="Element sarlavhasi" />
+          </Form.Item>
 
-      {items.length === 0 && (
-        <div className="bg-white rounded-2xl shadow-soft p-12 text-center text-text-light">
-          No gallery items found. Add your first item to get started.
-        </div>
-      )}
+          <Form.Item name="description" label="Tavsif">
+            <Input.TextArea rows={4} placeholder="Element tavsifi (ixtiyoriy)" />
+          </Form.Item>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-serif font-bold text-primary mb-6">
-              {editingItem ? 'Edit Gallery Item' : 'Add Gallery Item'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  Title *
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 rounded-xl border border-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  rows={3}
-                  className="w-full px-4 py-2 rounded-xl border border-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary resize-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  Image URL *
-                </label>
-                <input
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  className="w-full px-4 py-2 rounded-xl border border-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  Video URL
-                </label>
-                <input
-                  type="url"
-                  value={formData.videoUrl}
-                  onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                  className="w-full px-4 py-2 rounded-xl border border-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  Category
-                </label>
-                <input
-                  type="text"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2 rounded-xl border border-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text mb-2">
-                  Order
-                </label>
-                <input
-                  type="number"
-                  value={formData.order}
-                  onChange={(e) =>
-                    setFormData({ ...formData, order: parseInt(e.target.value) || 0 })
-                  }
-                  className="w-full px-4 py-2 rounded-xl border border-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary"
-                />
-              </div>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) =>
-                      setFormData({ ...formData, featured: e.target.checked })
-                    }
-                    className="mr-2"
-                  />
-                  <span className="text-sm text-text">Featured</span>
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={formData.visible}
-                    onChange={(e) =>
-                      setFormData({ ...formData, visible: e.target.checked })
-                    }
-                    className="mr-2"
-                  />
-                  <span className="text-sm text-text">Visible</span>
-                </label>
-              </div>
-              <div className="flex space-x-4 pt-4">
-                <button
-                  type="submit"
-                  className="flex-1 bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-primary-dark transition-colors"
-                >
-                  {editingItem ? 'Update' : 'Create'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowModal(false)
-                    setEditingItem(null)
-                  }}
-                  className="flex-1 bg-background-dark text-text px-6 py-3 rounded-full font-semibold hover:bg-background transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+          <Form.Item
+            name="imageUrl"
+            label="Rasm URL"
+            rules={[{ required: true, message: 'Rasm URL kiritish majburiy' }]}
+          >
+            <Input placeholder="https://example.com/image.jpg" />
+          </Form.Item>
+
+          <Form.Item name="videoUrl" label="Video URL (ixtiyoriy)">
+            <Input placeholder="https://example.com/video.mp4" />
+          </Form.Item>
+
+          <Form.Item name="category" label="Kategoriya (ixtiyoriy)">
+            <Input placeholder="Kategoriya" />
+          </Form.Item>
+
+          <Form.Item name="order" label="Tartib">
+            <InputNumber min={0} style={{ width: '100%' }} />
+          </Form.Item>
+
+          <Form.Item name="featured" valuePropName="checked" label="Tanlangan">
+            <Switch />
+          </Form.Item>
+
+          <Form.Item name="visible" valuePropName="checked" label="Ko'rinadi">
+            <Switch />
+          </Form.Item>
+
+          <Form.Item>
+            <Space>
+              <Button type="primary" htmlType="submit">
+                {editingItem ? 'Yangilash' : 'Yaratish'}
+              </Button>
+              <Button
+                onClick={() => {
+                  setIsModalOpen(false)
+                  setEditingItem(null)
+                  form.resetFields()
+                }}
+              >
+                Bekor qilish
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }
