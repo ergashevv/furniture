@@ -109,26 +109,39 @@ export default function OrderPage() {
   const onSubmit = async (data: OrderFormData) => {
     setIsSubmitting(true)
     try {
+      // Prepare design files - extract URLs from uploaded files
+      const designFileUrls = uploadedFiles.map((file) => file.url)
+
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...data,
-          designFiles: uploadedFiles,
+          customerName: data.customerName,
+          email: data.email,
+          phone: data.phone || null,
+          address: data.address || null,
+          productName: data.productName || null,
+          description: data.description,
+          designFiles: designFileUrls,
         }),
       })
 
-      if (response.ok) {
+      const result = await response.json()
+
+      if (response.ok && result.success) {
         reset()
         setUploadedFiles([])
         if (fileInputRef.current) {
           fileInputRef.current.value = ''
         }
+        showNotification('Buyurtma muvaffaqiyatli qabul qilindi!', 'success')
         router.push('/order/success')
       } else {
-        showNotification('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
+        const errorMessage = result.error || 'Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.'
+        console.error('Order submission error:', result)
+        showNotification(errorMessage, 'error')
       }
     } catch (error) {
       console.error('Order submission error:', error)

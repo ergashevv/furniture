@@ -1,0 +1,172 @@
+{
+  "nav": {
+    "home": "Bosh Sahifa",
+    "products": "Mahsulotlar",
+    "services": "Xizmatlar",
+    "gallery": "Galereya",
+    "whyUs": "Nima Uchun Biz",
+    "contact": "Aloqa"
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "error": "Xatolik",
+    "success": "Muvaffaqiyatli",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish",
+    "edit": "Tahrirlash",
+    "add": "Qo'shish",
+    "search": "Qidirish",
+    "filter": "Filtrlash",
+    "sort": "Tartiblash",
+    "close": "Yopish",
+    "back": "Orqaga",
+    "next": "Keyingi",
+    "previous": "Oldingi",
+    "submit": "Yuborish",
+    "continue": "Davom etish",
+    "readMore": "Batafsil",
+    "viewAll": "Barchasini ko'rish",
+    "home": "Bosh sahifa",
+    "menu": "Menu"
+  },
+  "home": {
+    "hero": {
+      "subtitle": "Premium Mebel",
+      "title": "Bayramona\ninteryer",
+      "cta": "KO'PROQ KO'RISH"
+    },
+    "services": {
+      "freeDelivery": "Bepul yetkazish",
+      "warranty": "3 yil kafolat",
+      "return": "14 kun qaytarish",
+      "installation": "Tez o'rnatish"
+    },
+    "whatLookingFor": "Nima qidiryapsiz?",
+    "categories": {
+      "title": "Bizning yo'nalishlarimiz",
+      "description": "Maxsus mebellarni ko'rish uchun yo'nalishni tanlang"
+    },
+    "popularProducts": {
+      "title": "Mashhur mahsulotlar",
+      "viewAll": "Barchasini ko'rish"
+    },
+    "collections": {
+      "title": "To'plamlar",
+      "description": "Bizning eng mashhur mebel to'plamlari"
+    },
+    "customOrder": {
+      "title": "Maxsus buyurtma",
+      "description": "O'z xohishingizga mos mebel buyurtma qiling",
+      "button": "Buyurtma berish"
+    },
+    "ourWorks": {
+      "title": "Bizning ishlarimiz",
+      "viewAll": "Barcha loyihalar"
+    },
+    "stats": {
+      "experience": "Yillik tajriba",
+      "customers": "Mamnun mijozlar",
+      "projects": "Bajarilgan loyihalar",
+      "quality": "Sifat kafolati"
+    },
+    "contactCta": {
+      "title": "Biz bilan bog'laning",
+      "description": "Savollaringiz bormi? Bizga yozing va biz tez orada javob beramiz",
+      "button": "Aloqa"
+    }
+  },
+  "products": {
+    "title": "Mahsulotlar",
+    "all": "Barcha mahsulotlar",
+    "new": "Yangi",
+    "from": "From",
+    "noProducts": "Mahsulotlar topilmadi"
+  },
+  "services": {
+    "title": "Xizmatlar",
+    "description": "Bizning xizmatlarimiz"
+  },
+  "gallery": {
+    "title": "Galereya",
+    "allProjects": "Barcha loyihalar"
+  },
+  "contact": {
+    "title": "Aloqa",
+    "subtitle": "Biz bilan bog'laning",
+    "form": {
+      "name": "Ismingiz",
+      "email": "Email",
+      "phone": "Telefon raqam",
+      "subject": "Mavzu",
+      "message": "Xabar",
+      "send": "Xabar yuborish",
+      "sending": "Yuborilmoqda...",
+      "success": "Xabar muvaffaqiyatli yuborildi!",
+      "error": "Xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
+    }
+  },
+  "cart": {
+    "title": "Savatcha",
+    "empty": "Savatcha bo'sh",
+    "continue": "Xarid qilishni davom ettirish",
+    "items": "ta mahsulot",
+    "total": "Jami",
+    "checkout": "Buyurtma berish"
+  },
+  "checkout": {
+    "title": "Buyurtma berish",
+    "personalInfo": "Shaxsiy ma'lumotlar",
+    "paymentMethod": "To'lov usuli",
+    "cash": "Naqd pul",
+    "card": "Plastik karta",
+    "name": "Ismingiz",
+    "phone": "Telefon raqam",
+    "address": "Manzil",
+    "comment": "Qo'shimcha izoh",
+    "submit": "Buyurtmani tasdiqlash",
+    "submitting": "Yuborilmoqda...",
+    "backToCart": "Savatchaga qaytish"
+  },
+  "order": {
+    "title": "Maxsus buyurtma",
+    "form": {
+      "name": "Ismingiz",
+      "phone": "Telefon raqam",
+      "email": "Email",
+      "description": "Buyurtma haqida ma'lumot",
+      "files": "Dizayn fayllari",
+      "submit": "Buyurtma yuborish"
+    }
+  },
+  "success": {
+    "title": "Buyurtmangiz qabul qilindi!",
+    "message": "Rahmat! Sizning buyurtmangiz muvaffaqiyatli qabul qilindi. Tez orada operatorlarimiz siz bilan bog'lanishadi.",
+    "nextSteps": "Keyingi qadamlar:",
+    "steps": {
+      "call": "Tasdiqlash qo'ng'irog'i",
+      "callDesc": "Operatorimiz 30 daqiqa ichida qo'ng'iroq qiladi",
+      "preparation": "Buyurtma tayyorlanadi",
+      "preparationDesc": "1-3 kun ichida mahsulot tayyorlanadi",
+      "delivery": "Yetkazib berish",
+      "deliveryDesc": "Manzilingizga bepul yetkazamiz"
+    },
+    "contact": "Savollaringiz bo'lsa, biz bilan bog'laning:",
+    "home": "Bosh sahifa",
+    "continueShopping": "Xarid qilishni davom ettirish"
+  },
+  "footer": {
+    "quickLinks": "TEZKOR HAVOLALAR",
+    "services": "XIZMATLARIMIZ",
+    "contact": "ALOQA MA'LUMOTLARI",
+    "about": "Biz haqimizda",
+    "faq": "FAQ",
+    "interiorDesign": "Interer dizayn",
+    "design3d": "3D Dizayn",
+    "customOrder": "Maxsus buyurtma",
+    "delivery": "Yetkazib berish",
+    "terms": "Foydalanish shartlari",
+    "privacy": "Maxfiylik siyosati",
+    "copyright": "Barcha huquqlar himoyalangan."
+  }
+}

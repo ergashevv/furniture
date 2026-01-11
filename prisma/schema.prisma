@@ -9,19 +9,25 @@ datasource db {
 
 model Category {
   id          String    @id @default(cuid())
-  name        String
+  nameUz      String
+  nameRu      String
   slug        String    @unique
-  description String?
+  descriptionUz String?
+  descriptionRu String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   products    Product[]
+
+  @@map("Category")
 }
 
 model Product {
   id          String    @id @default(cuid())
-  name        String
+  nameUz      String
+  nameRu      String
   slug        String    @unique
-  description String
+  descriptionUz String
+  descriptionRu String
   price       Float?
   originalPrice Float?
   imageUrl    String?
@@ -36,12 +42,16 @@ model Product {
   warranty    String?
   colors      String[]  @default([])
   category    Category? @relation(fields: [categoryId], references: [id])
+
+  @@map("Product")
 }
 
 model GalleryItem {
   id          String   @id @default(cuid())
-  title       String
-  description String?
+  titleUz     String
+  titleRu     String
+  descriptionUz String?
+  descriptionRu String?
   imageUrl    String
   videoUrl    String?
   category    String?
@@ -50,6 +60,8 @@ model GalleryItem {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("GalleryItem")
 }
 
 model Order {
@@ -68,6 +80,7 @@ model Order {
 
   @@index([status])
   @@index([createdAt])
+  @@map("Order")
 }
 
 model Admin {
@@ -76,13 +89,17 @@ model Admin {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("Admin")
 }
 
 model Service {
   id          String   @id @default(cuid())
-  name        String
+  nameUz      String
+  nameRu      String
   slug        String   @unique
-  description String
+  descriptionUz String
+  descriptionRu String
   icon        String?
   price       String?
   features    String[] @default([])
@@ -90,12 +107,16 @@ model Service {
   visible     Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("Service")
 }
 
 model Store {
   id           String   @id @default(cuid())
-  name         String
-  address      String
+  nameUz       String
+  nameRu       String
+  addressUz    String
+  addressRu    String
   phone        String?
   email        String?
   workingHours String?
@@ -105,13 +126,16 @@ model Store {
   visible      Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@map("Store")
 }
 
 model Review {
   id           String   @id @default(cuid())
   customerName String
   rating       Int      @default(5)
-  comment      String
+  commentUz    String
+  commentRu    String
   location     String?
   avatar       String?
   visible      Boolean  @default(true)
@@ -119,6 +143,8 @@ model Review {
   order        Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@map("Review")
 }
 
 model ContactMessage {
@@ -131,19 +157,27 @@ model ContactMessage {
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("ContactMessage")
 }
 
 model Banner {
   id          String   @id @default(cuid())
-  title       String
-  subtitle    String?
-  description String?
+  titleUz     String
+  titleRu     String
+  subtitleUz  String?
+  subtitleRu  String?
+  descriptionUz String?
+  descriptionRu String?
   imageUrl    String
-  buttonText  String?
+  buttonTextUz  String?
+  buttonTextRu  String?
   buttonLink  String?
   overlay     Float    @default(0.5)
   visible     Boolean  @default(true)
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("Banner")
 }
