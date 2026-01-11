@@ -1,8 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { useEffect, useState, useTransition } from 'react'
 import { ConfigProvider, Layout, Menu, theme, Spin } from 'antd'
 import type { MenuProps } from 'antd'
 import {
@@ -32,6 +31,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [collapsed, setCollapsed] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
+  const [isPending, startTransition] = useTransition()
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken()
@@ -53,57 +53,57 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     {
       key: '/dashboard',
       icon: <HomeOutlined />,
-      label: <Link href="/dashboard">Bosh sahifa</Link>,
+      label: 'Bosh sahifa',
     },
     {
       key: '/dashboard/products',
       icon: <ShoppingOutlined />,
-      label: <Link href="/dashboard/products">Mahsulotlar</Link>,
+      label: 'Mahsulotlar',
     },
     {
       key: '/dashboard/orders',
       icon: <ShoppingCartOutlined />,
-      label: <Link href="/dashboard/orders">Buyurtmalar</Link>,
+      label: 'Buyurtmalar',
     },
     {
       key: '/dashboard/categories',
       icon: <AppstoreOutlined />,
-      label: <Link href="/dashboard/categories">Kategoriyalar</Link>,
+      label: 'Kategoriyalar',
     },
     {
       key: '/dashboard/gallery',
       icon: <PictureOutlined />,
-      label: <Link href="/dashboard/gallery">Galereya</Link>,
+      label: 'Galereya',
     },
     {
       key: '/dashboard/banner',
       icon: <FileTextOutlined />,
-      label: <Link href="/dashboard/banner">Bannerlar</Link>,
+      label: 'Bannerlar',
     },
     {
       key: '/dashboard/services',
       icon: <CustomerServiceOutlined />,
-      label: <Link href="/dashboard/services">Xizmatlar</Link>,
+      label: 'Xizmatlar',
     },
     {
       key: '/dashboard/stores',
       icon: <ShopOutlined />,
-      label: <Link href="/dashboard/stores">Filiallar</Link>,
+      label: 'Filiallar',
     },
     {
       key: '/dashboard/messages',
       icon: <MessageOutlined />,
-      label: <Link href="/dashboard/messages">Xabarlar</Link>,
+      label: 'Xabarlar',
     },
     {
       key: '/dashboard/reviews',
       icon: <StarOutlined />,
-      label: <Link href="/dashboard/reviews">Sharhlar</Link>,
+      label: 'Sharhlar',
     },
     {
       key: '/dashboard/settings',
       icon: <SettingOutlined />,
-      label: <Link href="/dashboard/settings">Sozlamalar</Link>,
+      label: 'Sozlamalar',
     },
     {
       type: 'divider',
@@ -120,6 +120,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (key === 'logout') {
       localStorage.removeItem('dashboard_auth')
       router.push('/dashboard/login')
+    } else {
+      startTransition(() => {
+        router.push(key as string)
+      })
     }
   }
 
@@ -157,9 +161,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             itemSelectedColor: '#0F1F2E',
             itemHoverBg: 'rgba(15, 31, 46, 0.04)',
             itemActiveBg: 'rgba(15, 31, 46, 0.12)',
+            itemMarginInline: 8,
+            itemBorderRadius: 6,
           },
           Button: {
             primaryColor: '#ffffff',
+          },
+          Card: {
+            borderRadiusLG: 12,
           },
         },
       }}
