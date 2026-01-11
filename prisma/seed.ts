@@ -945,6 +945,195 @@ async function main() {
 
   console.log(`✅ Created ${orders.length} sample orders`)
 
+  // Create Services
+  const services = await Promise.all([
+    prisma.service.create({
+      data: {
+        name: 'Maxsus Dizayn',
+        slug: 'custom-design',
+        description: 'Professional dizaynerlar bilan shaxsiy dizayn xizmati. Har bir loyiha individual yondashuv bilan ishlanadi.',
+        icon: '🎨',
+        price: 'Narx: loyihaga bog\'liq',
+        features: ['Shaxsiy dizayn', 'Professional dizaynerlar', '3D vizualizatsiya', 'Bepul konsultatsiya'],
+        order: 1,
+        visible: true,
+      },
+    }),
+    prisma.service.create({
+      data: {
+        name: 'Yetkazib Berish',
+        slug: 'delivery',
+        description: 'O\'zbekiston bo\'ylab tezkor va xavfsiz yetkazib berish xizmati. Barcha shaharlarga yetkazamiz.',
+        icon: '🚚',
+        price: 'Narx: manzilga bog\'liq',
+        features: ['Tezkor yetkazib berish', 'Xavfsiz', 'Barcha shaharlar', 'Bepul qadoqlash'],
+        order: 2,
+        visible: true,
+      },
+    }),
+    prisma.service.create({
+      data: {
+        name: 'O\'rnatish Xizmati',
+        slug: 'installation',
+        description: 'Professional o\'rnatish xizmati. Mahsulotlarni xavfsiz va to\'g\'ri o\'rnatamiz.',
+        icon: '🔧',
+        price: 'Narx: loyihaga bog\'liq',
+        features: ['Professional o\'rnatish', 'Xavfsiz', 'Tezkor', 'Kafolat bilan'],
+        order: 3,
+        visible: true,
+      },
+    }),
+    prisma.service.create({
+      data: {
+        name: 'Kafolat va Xizmat',
+        slug: 'warranty',
+        description: '1-3 yil kafolat. Kafolat davrida yuzaga kelgan muammolarni bepul hal qilamiz.',
+        icon: '🛡️',
+        price: '1-3 yil kafolat',
+        features: ['1-3 yil kafolat', 'Bepul ta\'mirlash', '24/7 qo\'llab-quvvatlash', 'Sifat kafolati'],
+        order: 4,
+        visible: true,
+      },
+    }),
+    prisma.service.create({
+      data: {
+        name: 'Konsultatsiya',
+        slug: 'consultation',
+        description: 'Bepul konsultatsiya xizmati. Dizayn, material tanlash va boshqa masalalar bo\'yicha yordam.',
+        icon: '💬',
+        price: 'Bepul',
+        features: ['Bepul konsultatsiya', 'Professional maslahat', 'Uyda ko\'rib chiqish', 'Dizayn takliflari'],
+        order: 5,
+        visible: true,
+      },
+    }),
+  ])
+
+  console.log(`✅ Created ${services.length} services`)
+
+  // Create Stores
+  const stores = await Promise.all([
+    prisma.store.create({
+      data: {
+        name: 'Bosh Ofis',
+        address: 'Toshkent, Yunusobod tumani, Amir Temur ko\'chasi 15',
+        phone: '+998 90 123 45 67',
+        email: 'info@furniglass.uz',
+        workingHours: 'Du-Ju: 09:00 - 19:00, Sha-Yak: 10:00 - 17:00',
+        latitude: 41.3119,
+        longitude: 69.2404,
+        order: 1,
+        visible: true,
+      },
+    }),
+    prisma.store.create({
+      data: {
+        name: 'Ko\'rgazma Zali',
+        address: 'Toshkent, Chilonzor tumani, Bunyodkor ko\'chasi 42',
+        phone: '+998 90 123 45 68',
+        email: 'showroom@furniglass.uz',
+        workingHours: 'Du-Yak: 10:00 - 20:00',
+        latitude: 41.2891,
+        longitude: 69.2042,
+        order: 2,
+        visible: true,
+      },
+    }),
+    prisma.store.create({
+      data: {
+        name: 'Samarqand Filiali',
+        address: 'Samarqand, Registon ko\'chasi 25',
+        phone: '+998 66 234 56 78',
+        email: 'samarkand@furniglass.uz',
+        workingHours: 'Du-Yak: 09:00 - 18:00',
+        latitude: 39.6542,
+        longitude: 66.9597,
+        order: 3,
+        visible: true,
+      },
+    }),
+  ])
+
+  console.log(`✅ Created ${stores.length} stores`)
+
+  // Create Reviews
+  const reviews = await Promise.all([
+    prisma.review.create({
+      data: {
+        customerName: 'Akmal Karimov',
+        rating: 5,
+        comment: 'Ajoyib xizmat! Mahsulotlar sifatli va professional o\'rnatildi. Tavsiya qilaman!',
+        location: 'Toshkent',
+        avatar: null,
+        visible: true,
+        featured: true,
+        order: 1,
+      },
+    }),
+    prisma.review.create({
+      data: {
+        customerName: 'Malika Toshmatova',
+        rating: 5,
+        comment: 'Zarif dizayn va yuqori sifat. Yashash xonam endi juda chiroyli ko\'rinadi.',
+        location: 'Samarqand',
+        avatar: null,
+        visible: true,
+        featured: true,
+        order: 2,
+      },
+    }),
+    prisma.review.create({
+      data: {
+        customerName: 'Farhod Rahimov',
+        rating: 5,
+        comment: 'Ofis mebellari ajoyib! Professional yondashuv va tezkor yetkazib berish.',
+        location: 'Toshkent',
+        avatar: null,
+        visible: true,
+        featured: false,
+        order: 3,
+      },
+    }),
+    prisma.review.create({
+      data: {
+        customerName: 'Dilshoda Yunusova',
+        rating: 4,
+        comment: 'Yotoq xonasi mebellari juda chiroyli. Kafolat xizmati ham qulay.',
+        location: 'Buxoro',
+        avatar: null,
+        visible: true,
+        featured: false,
+        order: 4,
+      },
+    }),
+    prisma.review.create({
+      data: {
+        customerName: 'Javohir Saidov',
+        rating: 5,
+        comment: 'Oshxona oroli ajoyib! Material sifatli va dizayn zamonaviy.',
+        location: 'Andijon',
+        avatar: null,
+        visible: true,
+        featured: true,
+        order: 5,
+      },
+    }),
+    prisma.review.create({
+      data: {
+        customerName: 'Nigina Alieva',
+        rating: 5,
+        comment: 'Ergonomic ofis stuli juda qulay. Uzoq vaqt ishlashda ham qulay.',
+        location: 'Namangan',
+        avatar: null,
+        visible: true,
+        featured: false,
+        order: 6,
+      },
+    }),
+  ])
+
+  console.log(`✅ Created ${reviews.length} reviews`)
+
   // Create Admin User with hashed password
   const hashedPassword = await bcrypt.hash('admin123', 10)
   const admin = await prisma.admin.create({
@@ -961,6 +1150,9 @@ async function main() {
   console.log(`   - Categories: ${categories.length}`)
   console.log(`   - Products: ${allProducts.length} (${diningProducts.length} dining, ${livingProducts.length} living, ${bedroomProducts.length} bedroom, ${officeProducts.length} office)`)
   console.log(`   - Gallery Items: ${allGalleryItems.length} (${diningGallery.length} dining, ${livingGallery.length} living, ${bedroomGallery.length} bedroom, ${officeGallery.length} office)`)
+  console.log(`   - Services: ${services.length}`)
+  console.log(`   - Stores: ${stores.length}`)
+  console.log(`   - Reviews: ${reviews.length}`)
   console.log(`   - Orders: ${orders.length}`)
   console.log(`   - Admin: 1`)
 }
