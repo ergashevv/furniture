@@ -74,7 +74,7 @@ export default function CheckoutPage() {
 
       if (response.ok) {
         clearCart()
-        showNotification('Buyurtmangiz muvaffaqiyatli qabul qilindi!', 'success', 5000)
+        // Navigate to success page - notification will be shown there
         router.push('/checkout/success')
       } else {
         showNotification('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
