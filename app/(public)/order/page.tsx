@@ -128,9 +128,7 @@ export default function OrderPage() {
         }),
       })
 
-      const result = await response.json()
-
-      if (response.ok && result.success) {
+      if (response.ok) {
         reset()
         setUploadedFiles([])
         if (fileInputRef.current) {
@@ -139,6 +137,7 @@ export default function OrderPage() {
         showNotification('Buyurtma muvaffaqiyatli qabul qilindi!', 'success')
         router.push('/order/success')
       } else {
+        const result = await response.json()
         const errorMessage = result.error || 'Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.'
         console.error('Order submission error:', result)
         showNotification(errorMessage, 'error')
