@@ -227,7 +227,7 @@ export default function StoresPage() {
                     : 'bg-gray-100 text-gray-800'
                 }`}
               >
-                {store.visible ? 'Ko&apos;rinadi' : 'Yashirin'}
+                {store.visible ? "Ko'rinadi" : "Yashirin"}
               </span>
               <div className="flex gap-2">
                 <button
@@ -240,7 +240,7 @@ export default function StoresPage() {
                   onClick={() => handleDelete(store.id)}
                   className="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
                 >
-                  O&apos;chirish
+                  {"O'chirish"}
                 </button>
               </div>
             </div>
@@ -361,7 +361,7 @@ export default function StoresPage() {
                     className="w-5 h-5 text-primary border-primary/20 rounded focus:ring-primary"
                   />
                   <label htmlFor="visible" className="text-primary font-medium">
-                    Ko&apos;rinadi
+                    {"Ko'rinadi"}
                   </label>
                 </div>
               </div>

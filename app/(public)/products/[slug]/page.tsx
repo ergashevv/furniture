@@ -14,10 +14,15 @@ interface Product {
   slug: string
   description: string
   price: number | null
+  originalPrice: number | null
   imageUrl: string | null
   images: string[]
   featured: boolean
   visible: boolean
+  size: string | null
+  material: string | null
+  warranty: string | null
+  colors: string[]
   category: {
     id: string
     name: string
@@ -36,6 +41,8 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true)
   const [loadingRelated, setLoadingRelated] = useState(false)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [selectedColor, setSelectedColor] = useState<string>('')
+  const [quantity, setQuantity] = useState(1)
 
   async function fetchRelatedProducts(productId: string, categoryId: string | null) {
     if (!categoryId) return
@@ -234,39 +241,153 @@ export default function ProductDetailPage() {
                 <h1 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
                   {product.name}
                 </h1>
+
+                {/* Price Section */}
                 {product.price && (
                   <div className="mb-6">
-                    <span className="text-3xl font-serif font-bold text-primary">
-                      ${product.price}
-                    </span>
+                    <div className="text-sm text-text-light mb-2">Tavsiya narxi</div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      {product.originalPrice && product.originalPrice > product.price && (
+                        <span className="text-xl text-text-light line-through">
+                          ${product.originalPrice.toLocaleString()}
+                        </span>
+                      )}
+                      <span className="text-3xl font-serif font-bold text-primary">
+                        From ${product.price.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="text-sm text-text-light mt-1">
+                      ≈ {(product.price * 13000).toLocaleString()} so&apos;m
+                    </div>
                   </div>
                 )}
+
+                {/* Product Details */}
+                {(product.size || product.material || product.warranty) && (
+                  <div className="mb-6 space-y-3">
+                    <h3 className="text-lg font-semibold text-primary mb-3">Xususiyatlar</h3>
+                    <div className="space-y-2">
+                      {product.size && (
+                        <div className="flex items-center gap-3">
+                          <span className="text-text-light font-medium min-w-[100px]">O&apos;lcham:</span>
+                          <span className="text-text">{product.size}</span>
+                        </div>
+                      )}
+                      {product.material && (
+                        <div className="flex items-center gap-3">
+                          <span className="text-text-light font-medium min-w-[100px]">Material:</span>
+                          <span className="text-text">{product.material}</span>
+                        </div>
+                      )}
+                      {product.warranty && (
+                        <div className="flex items-center gap-3">
+                          <span className="text-text-light font-medium min-w-[100px]">Kafolat:</span>
+                          <span className="text-text">{product.warranty}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Colors */}
+                {product.colors && product.colors.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-primary mb-3">Ranglar</h3>
+                    <div className="flex gap-3 flex-wrap">
+                      {product.colors.map((color, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setSelectedColor(color)}
+                          className={`w-12 h-12 rounded-full border-2 transition-all ${
+                            selectedColor === color
+                              ? 'border-primary scale-110'
+                              : 'border-gray-300 hover:border-gray-400'
+                          }`}
+                          style={{ backgroundColor: color }}
+                          aria-label={`Select color ${color}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Description */}
                 <div className="prose max-w-none mb-8">
                   <p className="text-text-light text-lg leading-relaxed whitespace-pre-line">
                     {product.description}
                   </p>
                 </div>
+
+                {/* Quantity Selector */}
+                {product.price && (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-primary mb-3">Miqdor</h3>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                        className="w-10 h-10 border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors font-semibold"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        min="1"
+                        value={quantity}
+                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="w-20 h-10 border-2 border-primary/20 text-center rounded-lg focus:outline-none focus:border-primary transition-colors font-semibold"
+                      />
+                      <button
+                        onClick={() => setQuantity((q) => q + 1)}
+                        className="w-10 h-10 border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors font-semibold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
                 <div className="mt-auto space-y-4">
                   {product.price && (
-                    <button
-                      onClick={() => {
-                        addToCart({
-                          id: product.id,
-                          name: product.name,
-                          slug: product.slug,
-                          price: product.price!,
-                          imageUrl: product.imageUrl,
-                        })
-                        showNotification('Savatchaga qo\'shildi!', 'success')
-                      }}
-                      className="block w-full bg-primary text-white text-center py-4 rounded-none hover:bg-secondary transition-colors font-semibold uppercase tracking-wide"
-                    >
-                      Savatchaga qo&apos;shish
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => {
+                          for (let i = 0; i < quantity; i++) {
+                            addToCart({
+                              id: product.id,
+                              name: product.name,
+                              slug: product.slug,
+                              price: product.price!,
+                              imageUrl: product.imageUrl,
+                            })
+                          }
+                          showNotification(`Mahsulot savatchaga qo'shildi!`, 'success')
+                          setQuantity(1)
+                        }}
+                        className="flex-1 bg-primary text-white text-center py-4 rounded-lg hover:bg-primary-dark transition-colors font-semibold"
+                      >
+                        Savatchaga qo&apos;shish
+                      </button>
+                      <button className="w-14 h-14 border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors flex items-center justify-center">
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   )}
                   <Link
                     href="/products"
-                    className="block w-full bg-background-dark text-primary text-center py-4 rounded-none hover:bg-primary/5 transition-colors font-semibold border border-primary/10"
+                    className="block w-full bg-background-dark text-primary text-center py-4 rounded-lg hover:bg-primary/5 transition-colors font-semibold border border-primary/10"
                   >
                     Barcha mahsulotlar
                   </Link>

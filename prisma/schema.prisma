@@ -23,6 +23,7 @@ model Product {
   slug        String    @unique
   description String
   price       Float?
+  originalPrice Float?
   imageUrl    String?
   categoryId  String?
   featured    Boolean   @default(false)
@@ -30,6 +31,10 @@ model Product {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   images      String[]  @default([])
+  size        String?
+  material    String?
+  warranty    String?
+  colors      String[]  @default([])
   category    Category? @relation(fields: [categoryId], references: [id])
 }
 
@@ -126,4 +131,19 @@ model ContactMessage {
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Banner {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  description String?
+  imageUrl    String
+  buttonText  String?
+  buttonLink  String?
+  overlay     Float    @default(0.5)
+  visible     Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

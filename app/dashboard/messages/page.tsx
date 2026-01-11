@@ -203,7 +203,7 @@ export default function MessagesPage() {
                     onClick={() => handleDelete(selectedMessage.id)}
                     className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
                   >
-                    O&apos;chirish
+                    {"O'chirish"}
                   </button>
                 </div>
               </div>

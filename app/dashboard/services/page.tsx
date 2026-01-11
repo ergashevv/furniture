@@ -216,7 +216,7 @@ export default function ServicesPage() {
                     : 'bg-gray-100 text-gray-800'
                 }`}
               >
-                {service.visible ? 'Ko&apos;rinadi' : 'Yashirin'}
+                {service.visible ? "Ko'rinadi" : "Yashirin"}
               </span>
               <div className="flex gap-2">
                 <button

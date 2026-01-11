@@ -172,7 +172,7 @@ export default function CategoriesPage() {
                   onClick={() => handleDelete(category.id)}
                   className="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
                 >
-                  O&apos;chirish
+                  {"O'chirish"}
                 </button>
               </div>
             </div>

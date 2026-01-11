@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -17,10 +17,19 @@ const orderSchema = z.object({
 
 type OrderFormData = z.infer<typeof orderSchema>
 
+interface UploadedFile {
+  url: string
+  name: string
+  type: string
+}
+
 export default function OrderPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
+  const [isUploading, setIsUploading] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const {
     register,
@@ -31,14 +40,14 @@ export default function OrderPage() {
     resolver: zodResolver(orderSchema),
   })
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || files.length === 0) return
+  const handleFileUpload = async (files: FileList | File[]) => {
+    const fileArray = Array.from(files)
+    if (fileArray.length === 0) return
 
-    setIsSubmitting(true)
+    setIsUploading(true)
     try {
       const formData = new FormData()
-      Array.from(files).forEach((file) => {
+      fileArray.forEach((file) => {
         formData.append('files', file)
       })
 
@@ -49,13 +58,49 @@ export default function OrderPage() {
 
       if (response.ok) {
         const data = await response.json()
-        setUploadedFiles((prev) => [...prev, ...data.urls])
+        const newFiles: UploadedFile[] = fileArray.map((file, index) => ({
+          url: data.urls[index],
+          name: file.name,
+          type: file.type,
+        }))
+        setUploadedFiles((prev) => [...prev, ...newFiles])
+      } else {
+        const errorData = await response.json()
+        console.error('Upload error:', errorData.error)
       }
     } catch (error) {
       console.error('Upload error:', error)
     } finally {
-      setIsSubmitting(false)
+      setIsUploading(false)
     }
+  }
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      handleFileUpload(e.target.files)
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    if (e.dataTransfer.files) {
+      handleFileUpload(e.dataTransfer.files)
+    }
+  }
+
+  const removeFile = (url: string) => {
+    setUploadedFiles((prev) => prev.filter((file) => file.url !== url))
   }
 
   const onSubmit = async (data: OrderFormData) => {
@@ -76,6 +121,9 @@ export default function OrderPage() {
         setSubmitSuccess(true)
         reset()
         setUploadedFiles([])
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ''
+        }
       }
     } catch (error) {
       console.error('Order submission error:', error)
@@ -274,19 +322,125 @@ export default function OrderPage() {
                   Upload sketches, photos, reference images, or any design files that will help
                   us understand your vision.
                 </p>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*,.pdf"
-                  onChange={handleFileUpload}
-                  className="w-full px-4 py-3 rounded-xl border border-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary transition-all"
-                  disabled={isSubmitting}
-                />
+                {/* Upload Area */}
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-200 ${
+                    isDragging
+                      ? 'border-primary bg-primary/5'
+                      : 'border-gray-300 hover:border-primary/50 hover:bg-gray-50'
+                  } ${isUploading ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
+                  onClick={() => !isUploading && fileInputRef.current?.click()}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*,.pdf"
+                    onChange={handleFileInputChange}
+                    className="hidden"
+                    disabled={isSubmitting || isUploading}
+                  />
+
+                  <div className="text-center">
+                    {isUploading ? (
+                      <>
+                        <div className="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                        <p className="text-text font-medium">Uploading files...</p>
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="mx-auto h-12 w-12 text-gray-400 mb-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                          />
+                        </svg>
+                        <p className="text-text font-medium mb-1">
+                          {isDragging ? 'Drop files here' : 'Click to upload or drag and drop'}
+                        </p>
+                        <p className="text-text-light text-sm">
+                          PNG, JPG, PDF up to 10MB (multiple files allowed)
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Uploaded Files Preview */}
                 {uploadedFiles.length > 0 && (
-                  <div className="mt-4">
-                    <p className="text-sm text-text-light mb-2">
-                      Uploaded files: {uploadedFiles.length}
+                  <div className="mt-6">
+                    <p className="text-sm font-medium text-text mb-3">
+                      Uploaded files ({uploadedFiles.length})
                     </p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {uploadedFiles.map((file, index) => (
+                        <div
+                          key={index}
+                          className="relative group rounded-lg overflow-hidden border border-gray-200 bg-gray-50"
+                        >
+                          {file.type.startsWith('image/') ? (
+                            <img
+                              src={file.url}
+                              alt={file.name}
+                              className="w-full h-32 object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-32 flex items-center justify-center bg-gray-100">
+                              <svg
+                                className="w-12 h-12 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                                />
+                              </svg>
+                            </div>
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              removeFile(file.url)
+                            }}
+                            className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                            type="button"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                          <div className="p-2 bg-white">
+                            <p className="text-xs text-text truncate" title={file.name}>
+                              {file.name}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

@@ -157,7 +157,7 @@ export default function ProductsPage() {
                     onClick={() => handleDelete(product.id)}
                     className="px-2 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-xs font-medium"
                   >
-                    O&apos;chirish
+                    {"O'chirish"}
                   </button>
                 </div>
               </div>

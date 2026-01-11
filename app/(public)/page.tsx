@@ -38,24 +38,40 @@ interface GalleryItem {
   order: number
 }
 
+interface Banner {
+  id: string
+  title: string
+  subtitle: string | null
+  description: string | null
+  imageUrl: string
+  buttonText: string | null
+  buttonLink: string | null
+  overlay: number
+  visible: boolean
+  order: number
+}
+
 export default function HomePage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
+  const [banner, setBanner] = useState<Banner | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [categoriesRes, productsRes, galleryRes] = await Promise.all([
+        const [categoriesRes, productsRes, galleryRes, bannerRes] = await Promise.all([
           fetch('/api/categories'),
           fetch('/api/products?featured=true&visible=true'),
           fetch('/api/gallery?visible=true&featured=true'),
+          fetch('/api/banner?includeHidden=false'),
         ])
 
         const categoriesData = await categoriesRes.json()
         const productsData = await productsRes.json()
         const galleryData = await galleryRes.json()
+        const bannerData = await bannerRes.json()
 
         if (categoriesData.success) {
           setCategories(categoriesData.categories.slice(0, 3)) // First 3 categories
@@ -67,6 +83,11 @@ export default function HomePage() {
 
         if (galleryData.success) {
           setGalleryItems(galleryData.items.slice(0, 6)) // First 6 featured gallery items
+        }
+
+        if (bannerData.success && bannerData.banners.length > 0) {
+          // Get the first visible banner (ordered by order field)
+          setBanner(bannerData.banners[0])
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -116,44 +137,69 @@ export default function HomePage() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1920&q=80')",
+            backgroundImage: banner
+              ? `url('${banner.imageUrl}')`
+              : "url('https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1920&q=80')",
           }}
         >
-          <div className="absolute inset-0 bg-black/50" />
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundColor: `rgba(0, 0, 0, ${banner ? banner.overlay : 0.5})`,
+            }}
+          />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="text-white">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-sm uppercase tracking-wider mb-4 text-gray-300"
-            >
-              ELEGANT INTERYER, UNUTILMAS LAHZALAR
-            </motion.p>
+            {banner?.subtitle && (
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-sm uppercase tracking-wider mb-4 text-gray-300"
+              >
+                {banner.subtitle}
+              </motion.p>
+            )}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-6 leading-tight"
             >
-              Bayramona
-              <br />
-              interyer
+              {banner ? banner.title : 'Bayramona\ninteryer'}
             </motion.h1>
+            {banner?.description && (
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="text-lg md:text-xl mb-6 text-gray-200"
+              >
+                {banner.description}
+              </motion.p>
+            )}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <Link
-                href="/order"
-                className="inline-block bg-white text-gray-900 px-8 py-4 rounded-none border-2 border-white hover:bg-transparent hover:text-white transition-all duration-300 font-semibold uppercase tracking-wide"
-              >
-                Ko&apos;proq ko&apos;rish →
-              </Link>
+              {banner?.buttonText && banner?.buttonLink ? (
+                <Link
+                  href={banner.buttonLink}
+                  className="inline-block bg-white text-gray-900 px-8 py-4 rounded-none border-2 border-white hover:bg-transparent hover:text-white transition-all duration-300 font-semibold uppercase tracking-wide"
+                >
+                  {banner.buttonText} →
+                </Link>
+              ) : (
+                <Link
+                  href="/order"
+                  className="inline-block bg-white text-gray-900 px-8 py-4 rounded-none border-2 border-white hover:bg-transparent hover:text-white transition-all duration-300 font-semibold uppercase tracking-wide"
+                >
+                  Ko&apos;proq ko&apos;rish →
+                </Link>
+              )}
             </motion.div>
           </div>
         </div>
