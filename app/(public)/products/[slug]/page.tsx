@@ -373,9 +373,13 @@ export default function ProductDetailPage() {
                           showNotification(`Mahsulot savatchaga qo'shildi!`, 'success')
                           setQuantity(1)
                         }}
-                        className="flex-1 bg-primary text-white text-center py-4 rounded-lg hover:bg-primary-dark transition-colors font-semibold"
+                        className={`flex-1 text-center py-4 rounded-lg transition-colors font-semibold ${
+                          isInCart
+                            ? 'bg-green-600 text-white hover:bg-green-700'
+                            : 'bg-primary text-white hover:bg-primary-dark'
+                        }`}
                       >
-                        Savatchaga qo&apos;shish
+                        {isInCart ? `Savatchada (${cartQuantity})` : "Savatchaga qo'shish"}
                       </button>
                       <button className="w-14 h-14 border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors flex items-center justify-center">
                         <svg
