@@ -13,6 +13,7 @@ import { useNotification } from '@/components/Notification'
 
 const checkoutSchema = z.object({
   customerName: z.string().min(2, 'Ism kamida 2 ta belgi bo\'lishi kerak'),
+  email: z.string().email('To\'g\'ri email manzil kiriting').min(1, 'Email manzil kiritilishi kerak'),
   phone: z.string().min(9, 'Telefon raqami to\'liq kiritilishi kerak'),
   address: z.string().min(5, 'Manzil kamida 5 ta belgi bo\'lishi kerak'),
   paymentMethod: z.enum(['cash', 'card'], {
@@ -54,9 +55,9 @@ export default function CheckoutPage() {
     try {
       const orderData = {
         customerName: data.customerName,
+        email: data.email,
         phone: data.phone,
         address: data.address,
-        email: '', // Not required in checkout
         productName: cartItems.map((item) => `${item.name} x${item.quantity}`).join(', '),
         description: `To'lov usuli: ${data.paymentMethod === 'cash' ? 'Naqd pul' : 'Plastik karta'}${
           data.comment ? `\nQo'shimcha izoh: ${data.comment}` : ''
@@ -144,6 +145,22 @@ export default function CheckoutPage() {
                     />
                     {errors.customerName && (
                       <p className="mt-1 text-red-500 text-sm">{errors.customerName.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-primary font-medium mb-2">
+                      Email manzil *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      {...register('email')}
+                      className="w-full px-4 py-3 border-2 border-primary/20 rounded-lg focus:outline-none focus:border-primary transition-colors bg-background"
+                      placeholder="example@email.com"
+                    />
+                    {errors.email && (
+                      <p className="mt-1 text-red-500 text-sm">{errors.email.message}</p>
                     )}
                   </div>
 
