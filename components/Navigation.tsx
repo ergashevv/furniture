@@ -29,6 +29,18 @@ function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isMobileMenuOpen])
+
   const isHomePage = pathname === '/'
 
   const navLinks = [
@@ -41,101 +53,131 @@ function Navigation() {
   ]
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-background/95 backdrop-blur-md shadow-soft' : isHomePage ? 'bg-transparent' : 'bg-background/95 backdrop-blur-md'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center">
-            <FurniGlassLogo 
-              width={150} 
-              height={60} 
-              priority 
-              className="h-auto" 
-              variant={isScrolled || !isHomePage ? 'default' : 'white'} 
-            />
-          </Link>
+    <>
+      {/* Desktop Top Navigation */}
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? 'bg-background/95 backdrop-blur-md shadow-soft' : isHomePage ? 'bg-transparent' : 'bg-background/95 backdrop-blur-md'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <Link href="/" className="flex items-center">
+              <FurniGlassLogo 
+                width={150} 
+                height={60} 
+                priority 
+                className="h-auto" 
+                variant={isScrolled || !isHomePage ? 'default' : 'white'} 
+              />
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`relative px-1 py-2 font-medium transition-all duration-200 ${
-                    isScrolled || !isHomePage
-                      ? isActive
-                        ? 'text-secondary'
-                        : 'text-text hover:text-secondary'
-                      : isActive
-                        ? 'text-white'
-                        : 'text-white/90 hover:text-white'
-                  }`}
-                >
-                  {link.label}
-                  {isActive && (
-                    <span
-                      className={`absolute bottom-0 left-0 right-0 h-0.5 ${
-                        isScrolled || !isHomePage ? 'bg-secondary' : 'bg-white'
-                      }`}
-                    />
-                  )}
-                </Link>
-              )
-            })}
+            {/* Desktop Navigation */}
+            <div className="flex items-center space-x-6 lg:space-x-8">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`relative px-1 py-2 font-medium transition-all duration-200 ${
+                      isScrolled || !isHomePage
+                        ? isActive
+                          ? 'text-secondary'
+                          : 'text-text hover:text-secondary'
+                        : isActive
+                          ? 'text-white'
+                          : 'text-white/90 hover:text-white'
+                    }`}
+                  >
+                    {link.label}
+                    {isActive && (
+                      <span
+                        className={`absolute bottom-0 left-0 right-0 h-0.5 ${
+                          isScrolled || !isHomePage ? 'bg-secondary' : 'bg-white'
+                        }`}
+                      />
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Cart Icon Desktop */}
+            <Link
+              href="/cart"
+              className={`relative ml-4 ${isScrolled || !isHomePage ? 'text-text hover:text-secondary' : 'text-white hover:text-white/80'} transition-colors duration-200`}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems > 9 ? '9+' : totalItems}
+                </span>
+              )}
+            </Link>
           </div>
+        </div>
+      </motion.nav>
 
-          {/* Cart Icon Desktop */}
-          <Link
-            href="/cart"
-            className={`hidden md:flex relative ml-4 ${isScrolled || !isHomePage ? 'text-text hover:text-secondary' : 'text-white hover:text-white/80'} transition-colors duration-200`}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+      {/* Mobile Top Header (Simplified - Logo + Cart only) */}
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`md:hidden fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? 'bg-background/95 backdrop-blur-md shadow-soft' : isHomePage ? 'bg-transparent' : 'bg-background/95 backdrop-blur-md'
+        }`}
+      >
+        <div className="px-4 sm:px-6">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/" className="flex items-center">
+              <FurniGlassLogo 
+                width={120} 
+                height={48} 
+                priority 
+                className="h-auto" 
+                variant={isScrolled || !isHomePage ? 'default' : 'white'} 
               />
-            </svg>
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                {totalItems > 9 ? '9+' : totalItems}
-              </span>
-            )}
-          </Link>
+            </Link>
 
-          {/* Cart Icon Mobile */}
-          <Link
-            href="/cart"
-            className={`md:hidden relative mr-2 ${isScrolled || !isHomePage ? 'text-primary' : 'text-white'}`}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-              />
-            </svg>
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                {totalItems > 9 ? '9+' : totalItems}
-              </span>
-            )}
-          </Link>
+            {/* Cart Icon Mobile */}
+            <Link
+              href="/cart"
+              className={`relative ${isScrolled || !isHomePage ? 'text-primary' : 'text-white'} transition-colors duration-200`}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems > 9 ? '9+' : totalItems}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
+      </motion.nav>
 
-          {/* Mobile Menu Button */}
+      {/* Mobile Bottom Navigation Bar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-primary/10 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] safe-area-bottom">
+        <div className="px-4 py-2">
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`md:hidden p-2 ${isScrolled || !isHomePage ? 'text-primary' : 'text-white'}`}
-            aria-label="Toggle menu"
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-primary text-white rounded-xl font-medium transition-all duration-200 active:scale-95 hover:bg-primary/90"
+            aria-label="Open menu"
           >
             <svg
               className="w-6 h-6"
@@ -146,48 +188,111 @@ function Navigation() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              {isMobileMenuOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
+              <path d="M4 6h16M4 12h16M4 18h16" />
             </svg>
+            <span>Menu</span>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Bottom Sheet Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background border-t border-primary/10"
-          >
-            <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden fixed inset-0 bg-black/50 z-[60]"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+
+            {/* Bottom Sheet */}
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="md:hidden fixed bottom-0 left-0 right-0 z-[70] bg-background rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col safe-area-bottom"
+            >
+              {/* Handle Bar */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-12 h-1.5 bg-primary/20 rounded-full" />
+              </div>
+
+              {/* Header */}
+              <div className="px-6 pb-4 border-b border-primary/10">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-serif font-bold text-primary">Menu</h2>
+                  <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block px-3 py-2 rounded-lg font-medium transition-colors duration-200 ${
-                      isActive
-                        ? 'bg-primary/10 text-secondary'
-                        : 'text-text hover:bg-primary/5 hover:text-secondary'
-                    }`}
+                    className="p-2 -mr-2 text-text hover:text-primary transition-colors duration-200"
+                    aria-label="Close menu"
                   >
-                    {link.label}
-                  </Link>
-                )
-              })}
-            </div>
-          </motion.div>
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Menu Items */}
+              <div className="flex-1 overflow-y-auto px-4 py-4">
+                <div className="space-y-2">
+                  {navLinks.map((link) => {
+                    const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`block px-4 py-4 rounded-xl font-medium transition-all duration-200 ${
+                          isActive
+                            ? 'bg-primary/10 text-secondary border-2 border-primary/20'
+                            : 'text-text hover:bg-primary/5 hover:text-secondary active:scale-95'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-base">{link.label}</span>
+                          {isActive && (
+                            <svg
+                              className="w-5 h-5 text-secondary"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Bottom Padding for Safe Area */}
+              <div className="h-4" />
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </>
   )
 }
 

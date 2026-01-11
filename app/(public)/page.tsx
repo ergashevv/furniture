@@ -612,15 +612,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Mobile Sticky CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-primary text-white p-4 z-40 md:hidden shadow-lg">
-        <Link
-          href="/order"
-          className="block text-center font-semibold uppercase tracking-wide"
-        >
-          Buyurtma berish →
-        </Link>
-      </div>
     </>
   )
 }
