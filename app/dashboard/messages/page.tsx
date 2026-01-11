@@ -169,7 +169,7 @@ export default function MessagesPage() {
             onClick={() => handleViewMessage(record)}
             size="small"
           >
-            Ko'rish
+            {"Ko'rish"}
           </Button>
           {!record.read && (
             <Button
@@ -177,7 +177,7 @@ export default function MessagesPage() {
               onClick={() => handleMarkAsRead(record.id)}
               size="small"
             >
-              O'qildi
+              {"O'qildi"}
             </Button>
           )}
           <Button

@@ -184,6 +184,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               background: '#ffffff',
               borderRight: '1px solid #e8e8e8',
               boxShadow: '2px 0 8px rgba(0, 0, 0, 0.04)',
+              position: 'fixed',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              overflow: 'auto',
             }}
           >
             <div style={{ padding: '20px 16px', textAlign: 'center', borderBottom: '1px solid #f0f0f0' }}>
@@ -202,7 +207,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               }}
             />
           </Sider>
-          <Layout>
+          <Layout style={{ marginLeft: collapsed ? 80 : 260, transition: 'margin-left 0.2s' }}>
             <Header
               style={{
                 padding: '0 24px',
@@ -211,6 +216,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 alignItems: 'center',
                 borderBottom: '1px solid #e8e8e8',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                position: 'sticky',
+                top: 0,
+                zIndex: 10,
               }}
             >
               {collapsed ? (
@@ -226,16 +234,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   style={{ fontSize: 20, cursor: 'pointer', color: '#0F1F2E' }}
                 />
               )}
+              {isPending && (
+                <Spin size="small" style={{ marginLeft: 16 }} />
+              )}
             </Header>
             <Content
               style={{
                 margin: '24px',
-                padding: 0,
-                minHeight: 280,
-                background: 'transparent',
+                padding: '24px',
+                minHeight: 'calc(100vh - 112px)',
+                background: '#ffffff',
+                borderRadius: 12,
+                overflow: 'auto',
               }}
             >
-              {children}
+              {isPending ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+                  <Spin size="large" />
+                </div>
+              ) : (
+                children
+              )}
             </Content>
           </Layout>
         </Layout>
