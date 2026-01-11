@@ -33,7 +33,7 @@ interface Product {
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const { addToCart } = useCart()
+  const { addToCart, cartItems } = useCart()
   const { showNotification } = useNotification()
   const slug = typeof params?.slug === 'string' ? params.slug : ''
   const [product, setProduct] = useState<Product | null>(null)
@@ -43,6 +43,11 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [selectedColor, setSelectedColor] = useState<string>('')
   const [quantity, setQuantity] = useState(1)
+
+  // Check if product is in cart
+  const isInCart = product ? cartItems.some((item) => item.id === product.id) : false
+  const cartItem = product ? cartItems.find((item) => item.id === product.id) : null
+  const cartQuantity = cartItem?.quantity || 0
 
   async function fetchRelatedProducts(productId: string, categoryId: string | null) {
     if (!categoryId) return
