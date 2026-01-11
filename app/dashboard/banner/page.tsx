@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { Button, Card, Table, Tag, Space, Modal, Form, Input, InputNumber, Switch, Image, message, Spin, Empty } from 'antd'
+import type { ColumnsType } from 'antd/es/table'
+import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
-import Modal from '@/components/Modal'
-import Pagination from '@/components/Pagination'
 
 interface Banner {
   id: string
@@ -23,30 +23,14 @@ interface Banner {
 export default function BannerPage() {
   const [banners, setBanners] = useState<Banner[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const bannersPerPage = 10
-  const [showModal, setShowModal] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null)
-  const [formData, setFormData] = useState({
-    title: '',
-    subtitle: '',
-    description: '',
-    imageUrl: '',
-    buttonLink: '',
-    buttonText: '',
-    visible: true,
-    order: 0,
-  })
+  const [form] = Form.useForm()
   const { showNotification } = useNotification()
 
   useEffect(() => {
     fetchBanners()
   }, [])
-
-  const indexOfLastBanner = currentPage * bannersPerPage
-  const indexOfFirstBanner = indexOfLastBanner - bannersPerPage
-  const currentBanners = banners.slice(indexOfFirstBanner, indexOfLastBanner)
-  const totalPages = Math.ceil(banners.length / bannersPerPage)
 
   const fetchBanners = async () => {
     try {
@@ -57,13 +41,13 @@ export default function BannerPage() {
       }
     } catch (error) {
       console.error('Failed to fetch banners:', error)
+      message.error('Bannerlarni yuklashda xatolik')
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (values: any) => {
     try {
       const url = editingBanner ? `/api/banner/${editingBanner.id}` : '/api/banner'
       const method = editingBanner ? 'PATCH' : 'POST'
@@ -72,12 +56,12 @@ export default function BannerPage() {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          subtitle: formData.subtitle || null,
-          description: formData.description || null,
-          buttonLink: formData.buttonLink || null,
-          buttonText: formData.buttonText || null,
-          order: parseInt(formData.order.toString()) || 0,
+          ...values,
+          subtitle: values.subtitle || null,
+          description: values.description || null,
+          buttonLink: values.buttonLink || null,
+          buttonText: values.buttonText || null,
+          order: values.order || 0,
         }),
       })
 
@@ -86,31 +70,22 @@ export default function BannerPage() {
           editingBanner ? 'Banner yangilandi' : 'Banner muvaffaqiyatli yaratildi',
           'success'
         )
-        setShowModal(false)
+        setIsModalOpen(false)
         setEditingBanner(null)
-        setFormData({
-          title: '',
-          subtitle: '',
-          description: '',
-          imageUrl: '',
-          buttonText: '',
-          buttonLink: '',
-          visible: true,
-          order: 0,
-        })
+        form.resetFields()
         fetchBanners()
       } else {
-        showNotification('Xatolik yuz berdi', 'error')
+        message.error('Xatolik yuz berdi')
       }
     } catch (error) {
       console.error('Failed to save banner:', error)
-      showNotification('Xatolik yuz berdi', 'error')
+      message.error('Xatolik yuz berdi')
     }
   }
 
   const handleEdit = (banner: Banner) => {
     setEditingBanner(banner)
-    setFormData({
+    form.setFieldsValue({
       title: banner.title,
       subtitle: banner.subtitle || '',
       description: banner.description || '',
@@ -120,308 +95,222 @@ export default function BannerPage() {
       visible: banner.visible,
       order: banner.order,
     })
-    setShowModal(true)
+    setIsModalOpen(true)
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Banner o'chirilishini tasdiqlaysizmi?")) return
+    Modal.confirm({
+      title: "Banner o'chirilishini tasdiqlaysizmi?",
+      okText: "Ha",
+      okType: 'danger',
+      cancelText: "Yo'q",
+      onOk: async () => {
+        try {
+          const response = await fetch(`/api/banner/${id}`, {
+            method: 'DELETE',
+          })
 
-    try {
-      const response = await fetch(`/api/banner/${id}`, {
-        method: 'DELETE',
-      })
-
-      if (response.ok) {
-        showNotification('Banner o\'chirildi', 'success')
-        fetchBanners()
-      } else {
-        showNotification('Xatolik yuz berdi', 'error')
-      }
-    } catch (error) {
-      console.error('Failed to delete banner:', error)
-      showNotification('Xatolik yuz berdi', 'error')
-    }
+          if (response.ok) {
+            showNotification('Banner o\'chirildi', 'success')
+            fetchBanners()
+          } else {
+            message.error('Xatolik yuz berdi')
+          }
+        } catch (error) {
+          console.error('Failed to delete banner:', error)
+          message.error('Xatolik yuz berdi')
+        }
+      },
+    })
   }
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="text-text-light">Yuklanmoqda...</p>
-        </div>
-      </div>
-    )
-  }
+  const columns: ColumnsType<Banner> = [
+    {
+      title: 'Rasm',
+      dataIndex: 'imageUrl',
+      key: 'imageUrl',
+      width: 120,
+      render: (url: string) => (
+        <Image
+          src={url}
+          alt="Banner"
+          width={100}
+          height={60}
+          style={{ objectFit: 'cover', borderRadius: 4 }}
+        />
+      ),
+    },
+    {
+      title: 'Sarlavha',
+      dataIndex: 'title',
+      key: 'title',
+      ellipsis: true,
+    },
+    {
+      title: 'Tugma matni',
+      dataIndex: 'buttonText',
+      key: 'buttonText',
+      render: (text: string) => text || '-',
+    },
+    {
+      title: 'Tartib',
+      dataIndex: 'order',
+      key: 'order',
+      width: 80,
+      sorter: (a, b) => a.order - b.order,
+    },
+    {
+      title: 'Holat',
+      dataIndex: 'visible',
+      key: 'visible',
+      width: 100,
+      render: (visible: boolean) => (
+        <Tag color={visible ? 'green' : 'default'}>
+          {visible ? 'Ko\'rinadi' : 'Yashirin'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Amallar',
+      key: 'actions',
+      width: 150,
+      render: (_, record) => (
+        <Space>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+            size="small"
+          >
+            Tahrir
+          </Button>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
+            size="small"
+          >
+            O'chirish
+          </Button>
+        </Space>
+      ),
+    },
+  ]
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 className="text-4xl font-serif font-bold text-primary mb-2">Bannerlar</h1>
-          <p className="text-text-light">Bannerlarni boshqaring</p>
+          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Bannerlar</h1>
+          <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>Bannerlarni boshqaring</p>
         </div>
-        <button
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
           onClick={() => {
             setEditingBanner(null)
-            setFormData({
-              title: '',
-              subtitle: '',
-              description: '',
-              imageUrl: '',
-              buttonLink: '',
-              buttonText: '',
-              visible: true,
-              order: 0,
-            })
-            setShowModal(true)
+            form.resetFields()
+            setIsModalOpen(true)
           }}
-          className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors flex items-center gap-2"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
           Yangi banner
-        </button>
+        </Button>
       </div>
 
-      {banners.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-soft p-12 text-center">
-          <p className="text-text-light text-lg">Bannerlar topilmadi. Birinchi bannerni qo&apos;shing.</p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {currentBanners.map((banner) => (
-              <div
-                key={banner.id}
-                className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 border border-gray-100"
-              >
-                <div className="aspect-video bg-background-dark relative">
-                  {banner.imageUrl ? (
-                    <Image
-                      src={banner.imageUrl}
-                      alt={banner.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <svg
-                        className="w-16 h-16 text-gray-300"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                  {!banner.visible && (
-                    <div className="absolute top-2 right-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                        Yashirin
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-primary text-lg mb-1 line-clamp-1">
-                    {banner.title}
-                  </h3>
-                  {banner.subtitle && (
-                    <p className="text-sm text-text-light mb-2 line-clamp-1">{banner.subtitle}</p>
-                  )}
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                    <span
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        banner.visible
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}
-                    >
-                      {banner.visible ? "Ko'rinadi" : 'Yashirin'}
-                    </span>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(banner)}
-                        className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors text-sm font-medium"
-                      >
-                        Tahrirlash
-                      </button>
-                      <button
-                        onClick={() => handleDelete(banner.id)}
-                        className="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
-                      >
-                        {"O'chirish"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+      <Card>
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '50px 0' }}>
+            <Spin size="large" />
           </div>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={paginate}
+        ) : banners.length === 0 ? (
+          <Empty description="Bannerlar topilmadi" />
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={banners}
+            rowKey="id"
+            pagination={{
+              pageSize: 10,
+              showSizeChanger: true,
+              showTotal: (total) => `Jami ${total} ta`,
+            }}
           />
-        </>
-      )}
+        )}
+      </Card>
 
-      {/* Modal */}
       <Modal
-        isOpen={showModal}
-        onClose={() => {
-          setShowModal(false)
-          setEditingBanner(null)
-          setFormData({
-            title: '',
-            subtitle: '',
-            description: '',
-            imageUrl: '',
-            buttonLink: '',
-            buttonText: '',
-            visible: true,
-            order: 0,
-          })
-        }}
         title={editingBanner ? "Bannerni tahrirlash" : "Yangi banner"}
-        size="lg"
+        open={isModalOpen}
+        onCancel={() => {
+          setIsModalOpen(false)
+          setEditingBanner(null)
+          form.resetFields()
+        }}
+        footer={null}
+        width={800}
       >
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Sarlavha <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
-              placeholder="Banner sarlavhasi"
-            />
-          </div>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+        >
+          <Form.Item
+            name="title"
+            label="Sarlavha"
+            rules={[{ required: true, message: 'Sarlavha kiritish majburiy' }]}
+          >
+            <Input placeholder="Banner sarlavhasi" />
+          </Form.Item>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Pastki sarlavha</label>
-            <input
-              type="text"
-              value={formData.subtitle}
-              onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
-              placeholder="Pastki sarlavha (ixtiyoriy)"
-            />
-          </div>
+          <Form.Item name="subtitle" label="Pastki sarlavha">
+            <Input placeholder="Pastki sarlavha (ixtiyoriy)" />
+          </Form.Item>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Tavsif</label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none bg-white text-gray-900"
-              placeholder="Banner tavsifi (ixtiyoriy)"
-            />
-          </div>
+          <Form.Item name="description" label="Tavsif">
+            <Input.TextArea rows={3} placeholder="Banner tavsifi (ixtiyoriy)" />
+          </Form.Item>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Rasm URL <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="url"
-              required
-              value={formData.imageUrl}
-              onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
-              placeholder="https://example.com/image.jpg"
-            />
-          </div>
+          <Form.Item
+            name="imageUrl"
+            label="Rasm URL"
+            rules={[{ required: true, message: 'Rasm URL kiritish majburiy' }]}
+          >
+            <Input placeholder="https://example.com/image.jpg" />
+          </Form.Item>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Tugma matni</label>
-              <input
-                type="text"
-                value={formData.buttonText}
-                onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
-                placeholder="Ko'proq ko'rish"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Tugma linki</label>
-              <input
-                type="text"
-                value={formData.buttonLink}
-                onChange={(e) => setFormData({ ...formData, buttonLink: e.target.value })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
-                placeholder="/order"
-              />
-            </div>
-          </div>
+          <Form.Item name="buttonText" label="Tugma matni">
+            <Input placeholder="Ko'proq ko'rish" />
+          </Form.Item>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Tartib</label>
-            <input
-              type="number"
-              value={formData.order}
-              onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
-            />
-          </div>
+          <Form.Item name="buttonLink" label="Tugma linki">
+            <Input placeholder="/order" />
+          </Form.Item>
 
-          <div className="flex items-end">
-            <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <input
-                type="checkbox"
-                checked={formData.visible}
-                onChange={(e) => setFormData({ ...formData, visible: e.target.checked })}
-                className="w-5 h-5 text-primary border-2 border-gray-300 rounded focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer"
-              />
-              <span className="text-sm font-medium text-gray-700">{"Ko'rinadi"}</span>
-            </label>
-          </div>
+          <Form.Item name="order" label="Tartib">
+            <InputNumber min={0} style={{ width: '100%' }} />
+          </Form.Item>
 
-          <div className="flex gap-3 pt-4 border-t border-gray-200">
-            <button
-              type="submit"
-              className="flex-1 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors shadow-sm hover:shadow-md"
-            >
-              {editingBanner ? 'Yangilash' : 'Yaratish'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setShowModal(false)
-                setEditingBanner(null)
-                setFormData({
-                  title: '',
-                  subtitle: '',
-                  description: '',
-                  imageUrl: '',
-                  buttonLink: '',
-                  buttonText: '',
-                  visible: true,
-                  order: 0,
-                })
-              }}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-            >
-              Bekor qilish
-            </button>
-          </div>
-        </form>
+          <Form.Item name="visible" valuePropName="checked" label="Ko'rinadi">
+            <Switch />
+          </Form.Item>
+
+          <Form.Item>
+            <Space>
+              <Button type="primary" htmlType="submit">
+                {editingBanner ? 'Yangilash' : 'Yaratish'}
+              </Button>
+              <Button
+                onClick={() => {
+                  setIsModalOpen(false)
+                  setEditingBanner(null)
+                  form.resetFields()
+                }}
+              >
+                Bekor qilish
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   )
