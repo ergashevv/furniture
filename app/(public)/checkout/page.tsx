@@ -45,10 +45,7 @@ export default function CheckoutPage() {
   const paymentMethod = watch('paymentMethod')
 
   // Redirect to cart if empty
-  if (cartItems.length === 0) {
-    router.push('/cart')
-    return null
-  }
+
 
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true)
