@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import ScrollReveal from '@/components/ScrollReveal'
+import { useNotification } from '@/components/Notification'
 
 const orderSchema = z.object({
   customerName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -30,6 +31,7 @@ export default function OrderPage() {
   const [isUploading, setIsUploading] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const { showNotification } = useNotification()
 
   const {
     register,
@@ -119,14 +121,18 @@ export default function OrderPage() {
 
       if (response.ok) {
         setSubmitSuccess(true)
+        showNotification('Buyurtmangiz muvaffaqiyatli qabul qilindi!', 'success', 5000)
         reset()
         setUploadedFiles([])
         if (fileInputRef.current) {
           fileInputRef.current.value = ''
         }
+      } else {
+        showNotification('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
       }
     } catch (error) {
       console.error('Order submission error:', error)
+      showNotification('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
     } finally {
       setIsSubmitting(false)
     }

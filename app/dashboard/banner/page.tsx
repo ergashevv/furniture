@@ -94,8 +94,7 @@ export default function BannerPage() {
           description: '',
           imageUrl: '',
           buttonText: '',
-          buttonLink: '',
-          overlay: 0.5,
+          link: '',
           visible: true,
           order: 0,
         })
@@ -360,36 +359,22 @@ export default function BannerPage() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">Tugma linki</label>
               <input
                 type="text"
-                value={formData.buttonLink}
-                onChange={(e) => setFormData({ ...formData, buttonLink: e.target.value })}
+                value={formData.link}
+                onChange={(e) => setFormData({ ...formData, link: e.target.value })}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
                 placeholder="/order"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Overlay (0-1)</label>
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                max="1"
-                value={formData.overlay}
-                onChange={(e) => setFormData({ ...formData, overlay: parseFloat(e.target.value) || 0.5 })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Tartib</label>
-              <input
-                type="number"
-                value={formData.order}
-                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Tartib</label>
+            <input
+              type="number"
+              value={formData.order}
+              onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
+            />
           </div>
 
           <div className="flex items-end">
