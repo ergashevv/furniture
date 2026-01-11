@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
         subtitleRu: subtitleRu || subtitleUz || null,
         descriptionUz: descriptionUz || null,
         descriptionRu: descriptionRu || descriptionUz || null,
-        imageUrl,
+        imageUrl: imageUrl || '',
         buttonTextUz: buttonTextUz || null,
         buttonTextRu: buttonTextRu || buttonTextUz || null,
         buttonLink: buttonLink || null,
