@@ -185,7 +185,7 @@ export default function ReviewsPage() {
             onClick={() => handleDelete(record.id)}
             size="small"
           >
-            O'chirish
+            {"O'chirish"}
           </Button>
         </Space>
       ),
