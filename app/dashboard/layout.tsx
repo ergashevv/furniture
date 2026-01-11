@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useState } from 'react'
 import { ConfigProvider, Layout, Menu, theme, Spin } from 'antd'
 import type { MenuProps } from 'antd'
 import {
@@ -31,10 +31,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [collapsed, setCollapsed] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
-  const [isPending, startTransition] = useTransition()
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken()
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -121,9 +117,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       localStorage.removeItem('dashboard_auth')
       router.push('/dashboard/login')
     } else {
-      startTransition(() => {
-        router.push(key as string)
-      })
+      router.push(key as string)
     }
   }
 
@@ -234,9 +228,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   style={{ fontSize: 20, cursor: 'pointer', color: '#0F1F2E' }}
                 />
               )}
-              {isPending && (
-                <Spin size="small" style={{ marginLeft: 16 }} />
-              )}
             </Header>
             <Content
               style={{
@@ -248,13 +239,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 overflow: 'auto',
               }}
             >
-              {isPending ? (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-                  <Spin size="large" />
-                </div>
-              ) : (
-                children
-              )}
+              {children}
             </Content>
           </Layout>
         </Layout>

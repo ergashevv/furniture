@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Button, Card, Table, Tag, Space, Modal, Form, Input, InputNumber, Switch, Image, message, Spin, Empty } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 import { useNotification } from '@/components/Notification'
+
+const { Search } = Input
 
 interface GalleryItem {
   id: string
@@ -24,6 +26,7 @@ export default function GalleryPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null)
+  const [searchText, setSearchText] = useState('')
   const [form] = Form.useForm()
   const { showNotification } = useNotification()
 
@@ -32,6 +35,7 @@ export default function GalleryPage() {
   }, [])
 
   const fetchItems = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch('/api/gallery')
       const data = await response.json()
@@ -45,6 +49,17 @@ export default function GalleryPage() {
       setIsLoading(false)
     }
   }
+
+  const filteredItems = useMemo(() => {
+    if (!searchText.trim()) return items
+    const searchLower = searchText.toLowerCase()
+    return items.filter(
+      (item) =>
+        item.title.toLowerCase().includes(searchLower) ||
+        (item.description && item.description.toLowerCase().includes(searchLower)) ||
+        (item.category && item.category.toLowerCase().includes(searchLower))
+    )
+  }, [items, searchText])
 
   const handleSubmit = async (values: any) => {
     try {
@@ -198,22 +213,33 @@ export default function GalleryPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Galereya</h1>
           <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>Galereya elementlarini boshqaring</p>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingItem(null)
-            form.resetFields()
-            setIsModalOpen(true)
-          }}
-        >
-          Yangi element
-        </Button>
+        <Space>
+          <Search
+            placeholder="Qidirish..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            style={{ width: 300 }}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingItem(null)
+              form.resetFields()
+              setIsModalOpen(true)
+            }}
+          >
+            Yangi element
+          </Button>
+        </Space>
       </div>
 
       <Card>
@@ -221,12 +247,12 @@ export default function GalleryPage() {
           <div style={{ textAlign: 'center', padding: '50px 0' }}>
             <Spin size="large" />
           </div>
-        ) : items.length === 0 ? (
-          <Empty description="Elementlar topilmadi" />
+        ) : filteredItems.length === 0 ? (
+          <Empty description={searchText ? "Qidiruv natijalari topilmadi" : "Elementlar topilmadi"} />
         ) : (
           <Table
             columns={columns}
-            dataSource={items}
+            dataSource={filteredItems}
             rowKey="id"
             pagination={{
               pageSize: 10,
