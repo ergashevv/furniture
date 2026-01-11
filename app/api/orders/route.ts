@@ -29,6 +29,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!description || typeof description !== 'string' || description.trim().length < 10) {
+      return NextResponse.json(
+        { success: false, error: 'Description is required and must be at least 10 characters' },
+        { status: 400 }
+      )
+    }
+
     // Convert designFiles to array of strings (URLs)
     let designFilesArray: string[] = []
     if (designFiles) {
