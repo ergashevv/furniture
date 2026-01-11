@@ -16,7 +16,7 @@ export default function PublicLayout({
     <CartProvider>
       <NotificationProvider>
         <Navigation />
-          <main className="min-h-screen  md:pt-20 pb-20 md:pb-0">{children}</main>
+          <main className="min-h-screen">{children}</main>
         <Footer />
       </NotificationProvider>
     </CartProvider>
