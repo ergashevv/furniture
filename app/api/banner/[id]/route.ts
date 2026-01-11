@@ -33,7 +33,7 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json()
-    const { title, subtitle, description, imageUrl, link, buttonText, visible, order } = body
+    const { title, subtitle, description, imageUrl, buttonLink, buttonText, visible, order } = body
 
     const banner = await prisma.banner.update({
       where: { id: params.id },
@@ -42,7 +42,7 @@ export async function PATCH(
         ...(subtitle !== undefined && { subtitle }),
         ...(description !== undefined && { description }),
         ...(imageUrl && { imageUrl }),
-        ...(link !== undefined && { link }),
+        ...(buttonLink !== undefined && { buttonLink }),
         ...(buttonText !== undefined && { buttonText }),
         ...(visible !== undefined && { visible }),
         ...(order !== undefined && { order }),

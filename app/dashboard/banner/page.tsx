@@ -12,7 +12,7 @@ interface Banner {
   subtitle: string | null
   description: string | null
   imageUrl: string
-  link: string | null
+  buttonLink: string | null
   buttonText: string | null
   visible: boolean
   order: number
@@ -32,7 +32,7 @@ export default function BannerPage() {
     subtitle: '',
     description: '',
     imageUrl: '',
-    link: '',
+    buttonLink: '',
     buttonText: '',
     visible: true,
     order: 0,
@@ -75,7 +75,7 @@ export default function BannerPage() {
           ...formData,
           subtitle: formData.subtitle || null,
           description: formData.description || null,
-          link: formData.link || null,
+          buttonLink: formData.buttonLink || null,
           buttonText: formData.buttonText || null,
           order: parseInt(formData.order.toString()) || 0,
         }),
@@ -94,7 +94,7 @@ export default function BannerPage() {
           description: '',
           imageUrl: '',
           buttonText: '',
-          link: '',
+          buttonLink: '',
           visible: true,
           order: 0,
         })
@@ -115,7 +115,7 @@ export default function BannerPage() {
       subtitle: banner.subtitle || '',
       description: banner.description || '',
       imageUrl: banner.imageUrl,
-      link: banner.link || '',
+      buttonLink: banner.buttonLink || '',
       buttonText: banner.buttonText || '',
       visible: banner.visible,
       order: banner.order,
@@ -171,7 +171,7 @@ export default function BannerPage() {
               subtitle: '',
               description: '',
               imageUrl: '',
-              link: '',
+              buttonLink: '',
               buttonText: '',
               visible: true,
               order: 0,
@@ -288,7 +288,7 @@ export default function BannerPage() {
             subtitle: '',
             description: '',
             imageUrl: '',
-            link: '',
+            buttonLink: '',
             buttonText: '',
             visible: true,
             order: 0,
@@ -363,8 +363,8 @@ export default function BannerPage() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">Tugma linki</label>
               <input
                 type="text"
-                value={formData.link}
-                onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+                value={formData.buttonLink}
+                onChange={(e) => setFormData({ ...formData, buttonLink: e.target.value })}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white text-gray-900"
                 placeholder="/order"
               />
@@ -410,7 +410,7 @@ export default function BannerPage() {
                   subtitle: '',
                   description: '',
                   imageUrl: '',
-                  link: '',
+                  buttonLink: '',
                   buttonText: '',
                   visible: true,
                   order: 0,
