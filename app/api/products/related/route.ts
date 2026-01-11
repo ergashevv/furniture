@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { parseJsonArray } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,14 +47,7 @@ export async function GET(request: NextRequest) {
       ],
     })
 
-    // Convert JSON strings back to arrays for response
-    type ProductType = (typeof products)[0]
-    const formattedProducts = products.map((product: ProductType) => ({
-      ...product,
-      images: parseJsonArray(product.images),
-    }))
-
-    return NextResponse.json({ success: true, products: formattedProducts })
+    return NextResponse.json({ success: true, products })
   } catch (error) {
     console.error('Related products fetch error:', error)
     return NextResponse.json(

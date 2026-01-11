@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { parseJsonArray, stringifyJsonArray } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,7 +22,7 @@ export async function POST(request: NextRequest) {
         address: address || null,
         productName: productName || null,
         description: description || null,
-        designFiles: stringifyJsonArray(designFiles || []),
+              designFiles: designFiles || [],
         status: 'pending',
       },
     })
@@ -48,14 +47,7 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     })
 
-    // Convert JSON strings back to arrays for response
-    type OrderType = (typeof orders)[0]
-    const formattedOrders = orders.map((order: OrderType) => ({
-      ...order,
-      designFiles: parseJsonArray(order.designFiles),
-    }))
-
-    return NextResponse.json({ success: true, orders: formattedOrders })
+          return NextResponse.json({ success: true, orders })
   } catch (error) {
     console.error('Orders fetch error:', error)
     return NextResponse.json(

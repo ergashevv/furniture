@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -24,10 +24,10 @@ model Product {
   id          String    @id @default(cuid())
   name        String
   slug        String    @unique
-  description String
+  description String    @db.Text
   price       Float?
   imageUrl    String?
-  images      String    @default("[]") // JSON string for SQLite compatibility
+  images      String[]  @default([])
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id])
   featured    Boolean   @default(false)
@@ -39,7 +39,7 @@ model Product {
 model GalleryItem {
   id          String   @id @default(cuid())
   title       String
-  description String?
+  description String?  @db.Text
   imageUrl    String
   videoUrl    String?
   category    String?
@@ -55,12 +55,12 @@ model Order {
   customerName  String
   email         String
   phone         String?
-  address       String?
+  address       String?  @db.Text
   productName   String?
-  description   String?
-  designFiles   String   @default("[]") // JSON string for SQLite compatibility
+  description   String?  @db.Text
+  designFiles   String[] @default([])
   status        String   @default("pending") // pending, in_progress, completed, cancelled
-  notes         String?
+  notes         String?  @db.Text
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -80,10 +80,10 @@ model Service {
   id          String   @id @default(cuid())
   name        String
   slug        String   @unique
-  description String
+  description String   @db.Text
   icon        String?  // Icon name or emoji
   price       String?  // Price as string (e.g., "BEPUL", "Narx: loyihaga bog'liq")
-  features    String   @default("[]") // JSON string for SQLite compatibility
+  features    String[] @default([])
   order       Int      @default(0)
   visible     Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -91,18 +91,18 @@ model Service {
 }
 
 model Store {
-  id          String   @id @default(cuid())
-  name        String
-  address     String
-  phone       String?
-  email       String?
-  workingHours String? // e.g., "9:00-18:00"
-  latitude    Float?
-  longitude   Float?
-  order       Int      @default(0)
-  visible     Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  address      String   @db.Text
+  phone        String?
+  email        String?
+  workingHours String?  // e.g., "9:00-18:00"
+  latitude     Float?
+  longitude    Float?
+  order        Int      @default(0)
+  visible      Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Review {
@@ -125,7 +125,7 @@ model ContactMessage {
   email     String?
   phone     String?
   subject   String?
-  message   String
+  message   String   @db.Text
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

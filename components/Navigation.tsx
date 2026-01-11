@@ -4,11 +4,13 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
+import { useCart } from '@/contexts/CartContext'
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { totalItems } = useCart()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +47,7 @@ export default function Navigation() {
                 isScrolled || !isHomePage ? 'text-primary' : 'text-white'
               }`}
             >
-              Artisan
+              Furni Glass
             </span>
           </Link>
 
@@ -63,6 +65,26 @@ export default function Navigation() {
               </Link>
             ))}
           </div>
+
+          {/* Cart Icon Mobile */}
+          <Link
+            href="/cart"
+            className={`md:hidden relative mr-2 ${isScrolled || !isHomePage ? 'text-primary' : 'text-white'}`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems > 9 ? '9+' : totalItems}
+                </span>
+              )}
+          </Link>
 
           {/* Mobile Menu Button */}
           <button

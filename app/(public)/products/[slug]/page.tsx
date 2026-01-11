@@ -245,12 +245,23 @@ export default function ProductDetailPage() {
                   </p>
                 </div>
                 <div className="mt-auto space-y-4">
-                  <Link
-                    href="/order"
-                    className="block w-full bg-primary text-white text-center py-4 rounded-none hover:bg-secondary transition-colors font-semibold uppercase tracking-wide"
-                  >
-                    Buyurtma berish
-                  </Link>
+                  {product.price && (
+                    <button
+                      onClick={() => {
+                        addToCart({
+                          id: product.id,
+                          name: product.name,
+                          slug: product.slug,
+                          price: product.price!,
+                          imageUrl: product.imageUrl,
+                        })
+                        alert('Savatchaga qo\'shildi!')
+                      }}
+                      className="block w-full bg-primary text-white text-center py-4 rounded-none hover:bg-secondary transition-colors font-semibold uppercase tracking-wide"
+                    >
+                      Savatchaga qo&apos;shish
+                    </button>
+                  )}
                   <Link
                     href="/products"
                     className="block w-full bg-background-dark text-primary text-center py-4 rounded-none hover:bg-primary/5 transition-colors font-semibold border border-primary/10"

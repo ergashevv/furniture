@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { parseJsonArray, stringifyJsonArray } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,14 +8,7 @@ export async function GET(request: NextRequest) {
       orderBy: { order: 'asc' },
     })
 
-    type ServiceType = (typeof services)[0]
-
-    const formattedServices = services.map((service: ServiceType) => ({
-      ...service,
-      features: parseJsonArray(service.features),
-    }))
-
-    return NextResponse.json({ success: true, services: formattedServices })
+    return NextResponse.json({ success: true, services })
   } catch (error) {
     console.error('Services fetch error:', error)
     return NextResponse.json(
@@ -38,7 +30,7 @@ export async function POST(request: NextRequest) {
         description,
         icon: icon || null,
         price: price || null,
-        features: stringifyJsonArray(features || []),
+        features: features || [],
         order: order || 0,
         visible: visible !== false,
       },

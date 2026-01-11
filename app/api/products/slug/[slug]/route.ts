@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { parseJsonArray } from '@/lib/utils'
 
 export async function GET(
   request: NextRequest,
@@ -21,13 +20,7 @@ export async function GET(
       )
     }
 
-    // Convert JSON string back to array for response
-    const formattedProduct = {
-      ...product,
-      images: parseJsonArray(product.images),
-    }
-
-    return NextResponse.json({ success: true, product: formattedProduct })
+          return NextResponse.json({ success: true, product })
   } catch (error) {
     console.error('Product fetch error:', error)
     return NextResponse.json(

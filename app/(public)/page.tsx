@@ -203,8 +203,52 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Search Section - "Nima qidiryapsiz?" */}
       <section className="py-20 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
+                Nima qidiryapsiz?
+              </h2>
+            </div>
+          </ScrollReveal>
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : (
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+              {categories.map((category) => (
+                <ScrollReveal key={category.id} delay={0.1}>
+                  <Link
+                    href={`/products?category=${category.slug}`}
+                    className="flex-shrink-0 w-48 aspect-square bg-background-dark rounded-2xl p-6 flex flex-col justify-between hover:shadow-medium transition-shadow duration-300 group"
+                  >
+                    <div className="aspect-square bg-gray-100 rounded-lg mb-4 relative overflow-hidden">
+                      {categoryImages[category.slug] && (
+                        <Image
+                          src={categoryImages[category.slug]}
+                          alt={category.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="192px"
+                        />
+                      )}
+                    </div>
+                    <h3 className="text-lg font-serif font-semibold text-primary group-hover:text-secondary transition-colors">
+                      {category.name}
+                    </h3>
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Categories Section */}
+      <section className="py-20 px-4 bg-background">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-12">
