@@ -87,7 +87,7 @@ export default function ProductsPage() {
           />
         ) : (
           <div style={{ width: 80, height: 80, background: '#f0f0f0', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ color: '#bfbfbf' }}>Rasm yo'q</span>
+            <span style={{ color: '#bfbfbf' }}>{"Rasm yo'q"}</span>
           </div>
         )
       ),
@@ -144,7 +144,7 @@ export default function ProductsPage() {
             onClick={() => handleDelete(record.id)}
             size="small"
           >
-            O'chirish
+            {"O'chirish"}
           </Button>
         </Space>
       ),

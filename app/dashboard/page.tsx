@@ -1,7 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Card, Row, Col, Statistic, Spin, Space } from 'antd'
+import {
+  ShoppingCartOutlined,
+  ShoppingOutlined,
+  AppstoreOutlined,
+  PictureOutlined,
+  CustomerServiceOutlined,
+  ShopOutlined,
+  StarOutlined,
+  MessageOutlined,
+  ClockCircleOutlined,
+  MailOutlined,
+} from '@ant-design/icons'
+import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
@@ -16,6 +29,8 @@ export default function DashboardPage() {
     pendingOrders: 0,
     unreadMessages: 0,
   })
+  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -67,252 +82,122 @@ export default function DashboardPage() {
         })
       } catch (error) {
         console.error('Failed to fetch stats:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchStats()
   }, [])
 
-  const statCards = [
-    { 
-      label: 'Jami Buyurtmalar', 
-      value: stats.orders, 
-      color: 'from-blue-500 to-blue-600',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-        </svg>
-      ),
-      href: '/dashboard/orders'
-    },
-    { 
-      label: 'Kutilayotgan', 
-      value: stats.pendingOrders, 
-      color: 'from-amber-500 to-orange-600',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      href: '/dashboard/orders?status=pending'
-    },
-    { 
-      label: 'Mahsulotlar', 
-      value: stats.products, 
-      color: 'from-primary to-primary-dark',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-      ),
-      href: '/dashboard/products'
-    },
-    { 
-      label: 'Kategoriyalar', 
-      value: stats.categories, 
-      color: 'from-purple-500 to-purple-600',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-        </svg>
-      ),
-      href: '/dashboard/categories'
-    },
-    { 
-      label: 'Galereya', 
-      value: stats.galleryItems, 
-      color: 'from-secondary to-secondary-dark',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      ),
-      href: '/dashboard/gallery'
-    },
-    { 
-      label: 'Xizmatlar', 
-      value: stats.services, 
-      color: 'from-green-500 to-green-600',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      href: '/dashboard/services'
-    },
-    { 
-      label: 'Filiallar', 
-      value: stats.stores, 
-      color: 'from-indigo-500 to-indigo-600',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-      href: '/dashboard/stores'
-    },
-    { 
-      label: 'Sharhlar', 
-      value: stats.reviews, 
-      color: 'from-pink-500 to-pink-600',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-        </svg>
-      ),
-      href: '/dashboard/reviews'
-    },
-    { 
-      label: 'Xabarlar', 
-      value: stats.messages, 
-      color: 'from-teal-500 to-teal-600',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      href: '/dashboard/messages',
-      badge: stats.unreadMessages > 0 ? stats.unreadMessages : undefined
-    },
-  ]
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '100px 0' }}>
+        <Spin size="large" />
+      </div>
+    )
+  }
 
-  const quickActions = [
-    { 
-      href: '/dashboard/products/new', 
-      label: 'Yangi mahsulot', 
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-        </svg>
-      ),
-      color: 'bg-primary hover:bg-primary-dark'
+  const statCards = [
+    {
+      title: 'Jami Buyurtmalar',
+      value: stats.orders,
+      icon: <ShoppingCartOutlined style={{ fontSize: 32, color: '#1890ff' }} />,
+      onClick: () => router.push('/dashboard/orders'),
+      color: '#1890ff',
     },
-    { 
-      href: '/dashboard/categories', 
-      label: 'Kategoriyalar', 
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-        </svg>
-      ),
-      color: 'bg-purple-500 hover:bg-purple-600'
+    {
+      title: 'Kutilayotgan',
+      value: stats.pendingOrders,
+      icon: <ClockCircleOutlined style={{ fontSize: 32, color: '#faad14' }} />,
+      onClick: () => router.push('/dashboard/orders?status=pending'),
+      color: '#faad14',
     },
-    { 
-      href: '/dashboard/gallery', 
-      label: 'Galereya', 
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      ),
-      color: 'bg-secondary hover:bg-secondary-dark'
+    {
+      title: 'Mahsulotlar',
+      value: stats.products,
+      icon: <ShoppingOutlined style={{ fontSize: 32, color: '#1a472a' }} />,
+      onClick: () => router.push('/dashboard/products'),
+      color: '#1a472a',
     },
-    { 
-      href: '/dashboard/services', 
-      label: 'Xizmatlar', 
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      color: 'bg-green-500 hover:bg-green-600'
+    {
+      title: 'Kategoriyalar',
+      value: stats.categories,
+      icon: <AppstoreOutlined style={{ fontSize: 32, color: '#722ed1' }} />,
+      onClick: () => router.push('/dashboard/categories'),
+      color: '#722ed1',
     },
-    { 
-      href: '/dashboard/orders?status=pending', 
-      label: 'Buyurtmalar', 
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-        </svg>
-      ),
-      color: 'bg-blue-500 hover:bg-blue-600'
+    {
+      title: 'Galereya',
+      value: stats.galleryItems,
+      icon: <PictureOutlined style={{ fontSize: 32, color: '#eb2f96' }} />,
+      onClick: () => router.push('/dashboard/gallery'),
+      color: '#eb2f96',
     },
-    { 
-      href: '/dashboard/messages', 
-      label: 'Xabarlar', 
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      color: 'bg-teal-500 hover:bg-teal-600',
-      badge: stats.unreadMessages > 0 ? stats.unreadMessages : undefined
+    {
+      title: 'Xizmatlar',
+      value: stats.services,
+      icon: <CustomerServiceOutlined style={{ fontSize: 32, color: '#52c41a' }} />,
+      onClick: () => router.push('/dashboard/services'),
+      color: '#52c41a',
+    },
+    {
+      title: 'Filiallar',
+      value: stats.stores,
+      icon: <ShopOutlined style={{ fontSize: 32, color: '#2f54eb' }} />,
+      onClick: () => router.push('/dashboard/stores'),
+      color: '#2f54eb',
+    },
+    {
+      title: 'Sharhlar',
+      value: stats.reviews,
+      icon: <StarOutlined style={{ fontSize: 32, color: '#f5222d' }} />,
+      onClick: () => router.push('/dashboard/reviews'),
+      color: '#f5222d',
+    },
+    {
+      title: 'Xabarlar',
+      value: stats.messages,
+      icon: <MessageOutlined style={{ fontSize: 32, color: '#13c2c2' }} />,
+      onClick: () => router.push('/dashboard/messages'),
+      color: '#13c2c2',
+    },
+    {
+      title: 'O\'qilmagan',
+      value: stats.unreadMessages,
+      icon: <MailOutlined style={{ fontSize: 32, color: '#fa8c16' }} />,
+      onClick: () => router.push('/dashboard/messages'),
+      color: '#fa8c16',
     },
   ]
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-4xl font-serif font-bold text-primary mb-2">Dashboard</h1>
-        <p className="text-text-light">Boshqaruv paneliga xush kelibsiz</p>
+      <div style={{ marginBottom: 24 }}>
+        <h1 style={{ margin: 0, fontSize: 28, fontWeight: 600 }}>Bosh sahifa</h1>
+        <p style={{ margin: '8px 0 0 0', color: '#8c8c8c', fontSize: 16 }}>
+          Dashboard statistikasi
+        </p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-        {statCards.map((stat) => (
-          <Link
-            key={stat.label}
-            href={stat.href || '#'}
-            className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-primary/20 group"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className={`p-3 rounded-lg bg-gradient-to-br ${stat.color} text-white`}>
-                {stat.icon}
-              </div>
-              {stat.badge && (
-                <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                  {stat.badge}
-                </span>
-              )}
-            </div>
-            <div className="text-3xl font-bold text-primary mb-1">{stat.value}</div>
-            <div className="text-text-light text-sm font-medium">{stat.label}</div>
-          </Link>
-        ))}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
-        <h2 className="text-xl font-semibold text-primary mb-4">Tezkor amallar</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {quickActions.map((action) => (
-            <Link
-              key={action.href}
-              href={action.href}
-              className={`${action.color} text-white rounded-lg p-4 flex items-center gap-3 transition-all duration-200 shadow-sm hover:shadow-md`}
+      <Row gutter={[16, 16]}>
+        {statCards.map((card, index) => (
+          <Col xs={24} sm={12} lg={8} xl={6} key={index}>
+            <Card
+              hoverable
+              onClick={card.onClick}
+              style={{ cursor: 'pointer', height: '100%' }}
             >
-              {action.icon}
-              <span className="font-medium">{action.label}</span>
-              {action.badge && (
-                <span className="ml-auto bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-full">
-                  {action.badge}
-                </span>
-              )}
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Welcome Card */}
-      <div className="bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 rounded-xl p-6 border border-primary/10">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-primary/10 rounded-lg">
-            <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold text-primary mb-2">
-              Xush kelibsiz!
-            </h2>
-            <p className="text-text-light leading-relaxed">
-              Bu yerdan mahsulotlar, buyurtmalar, galereya va sozlamalarni boshqarishingiz mumkin. 
-              Tezkor amallar panelidan foydalanib, yangi elementlar qo&apos;shish yoki mavjudlarini tahrirlash mumkin.
-            </p>
-          </div>
-        </div>
-      </div>
+              <Statistic
+                title={card.title}
+                value={card.value}
+                prefix={card.icon}
+                valueStyle={{ color: card.color, fontWeight: 600 }}
+              />
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </div>
   )
 }
