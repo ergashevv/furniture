@@ -19,11 +19,18 @@ interface Product {
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
   const { showNotification } = useNotification()
 
   useEffect(() => {
     fetchProducts()
   }, [])
+
+  const totalPages = Math.ceil(products.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentProducts = products.slice(startIndex, endIndex)
 
   const fetchProducts = async () => {
     try {
@@ -75,15 +82,16 @@ export default function ProductsPage() {
       </div>
 
       {products.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-soft p-12 text-center">
-          <p className="text-text-light text-lg">Mahsulotlar topilmadi. Birinchi mahsulotni qo&apos;shing.</p>
+        <div className="bg-white rounded-2xl shadow-soft p-8 text-center">
+          <p className="text-text-light">Mahsulotlar topilmadi. Birinchi mahsulotni qo&apos;shing.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-6">
+            {currentProducts.map((product) => (
             <div
               key={product.id}
-              className="bg-white rounded-2xl shadow-soft overflow-hidden hover:shadow-medium transition-shadow duration-200"
+              className="bg-white rounded-xl shadow-soft overflow-hidden hover:shadow-medium transition-shadow duration-200"
             >
               {/* Product Image */}
               <div className="aspect-square bg-background-dark relative overflow-hidden">
@@ -96,7 +104,7 @@ export default function ProductsPage() {
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <svg
-                      className="w-16 h-16 text-text-light/30"
+                      className="w-10 h-10 text-text-light/30"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -111,15 +119,15 @@ export default function ProductsPage() {
                   </div>
                 )}
                 {product.featured && (
-                  <div className="absolute top-3 left-3">
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-secondary text-white">
+                  <div className="absolute top-2 left-2">
+                    <span className="px-2 py-0.5 rounded text-xs font-medium bg-secondary text-white">
                       Yangi
                     </span>
                   </div>
                 )}
                 {!product.visible && (
-                  <div className="absolute top-3 right-3">
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-500 text-white">
+                  <div className="absolute top-2 right-2">
+                    <span className="px-2 py-0.5 rounded text-xs font-medium bg-gray-500 text-white">
                       Yashirin
                     </span>
                   </div>
@@ -127,27 +135,27 @@ export default function ProductsPage() {
               </div>
 
               {/* Product Info */}
-              <div className="p-5">
-                <h3 className="font-semibold text-primary text-lg mb-1 line-clamp-2">{product.name}</h3>
-                <p className="text-sm text-text-light mb-3 line-clamp-1">{product.slug}</p>
+              <div className="p-3">
+                <h3 className="font-semibold text-primary text-sm mb-1 line-clamp-1">{product.name}</h3>
+                <p className="text-xs text-text-light mb-2 line-clamp-1">{product.slug}</p>
                 
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-xl font-bold text-primary">
-                    {product.price ? `${product.price.toLocaleString()} so&apos;m` : 'Narx belgilanmagan'}
+                <div className="mb-3">
+                  <div className="text-sm font-bold text-primary">
+                    {product.price ? `${product.price.toLocaleString()} so&apos;m` : 'Narx yok'}
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-2 pt-4 border-t border-primary/10">
+                <div className="flex gap-2">
                   <Link
                     href={`/dashboard/products/${product.id}`}
-                    className="flex-1 bg-primary text-white text-center px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors text-sm font-medium"
+                    className="flex-1 bg-primary text-white text-center px-2 py-1.5 rounded-lg hover:bg-primary-dark transition-colors text-xs font-medium"
                   >
                     Tahrirlash
                   </Link>
                   <button
                     onClick={() => handleDelete(product.id)}
-                    className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
+                    className="px-2 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-xs font-medium"
                   >
                     O&apos;chirish
                   </button>
@@ -155,7 +163,53 @@ export default function ProductsPage() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-2 rounded-lg border border-primary/20 text-primary hover:bg-primary/5 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Oldingi
+              </button>
+              {[...Array(totalPages)].map((_, i) => {
+                const page = i + 1
+                if (
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === page
+                          ? 'bg-primary text-white'
+                          : 'border border-primary/20 text-primary hover:bg-primary/5'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                } else if (page === currentPage - 2 || page === currentPage + 2) {
+                  return <span key={page} className="text-text-light">...</span>
+                }
+                return null
+              })}
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-3 py-2 rounded-lg border border-primary/20 text-primary hover:bg-primary/5 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Keyingi
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

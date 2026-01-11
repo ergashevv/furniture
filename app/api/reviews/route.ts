@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const reviews = await prisma.review.findMany({
       where: {
         ...(featured === 'true' && { featured: true }),
-        ...(visible === 'true' && { visible: true }),
+        ...(visible === 'false' ? {} : visible === 'true' ? { visible: true } : {}),
       },
       orderBy: { order: 'asc' },
     })

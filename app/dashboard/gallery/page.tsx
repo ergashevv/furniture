@@ -19,6 +19,8 @@ interface GalleryItem {
 export default function GalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
   const [showModal, setShowModal] = useState(false)
   const { showNotification } = useNotification()
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null)
@@ -36,6 +38,11 @@ export default function GalleryPage() {
   useEffect(() => {
     fetchItems()
   }, [])
+
+  const totalPages = Math.ceil(items.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentItems = items.slice(startIndex, endIndex)
 
   const fetchItems = async () => {
     try {

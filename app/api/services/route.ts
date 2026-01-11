@@ -3,8 +3,11 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url)
+    const visible = searchParams.get('visible')
+
     const services = await prisma.service.findMany({
-      where: { visible: true },
+      where: visible === 'false' ? undefined : { visible: true },
       orderBy: { order: 'asc' },
     })
 
