@@ -1,9 +1,21 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
 import ScrollReveal from '@/components/ScrollReveal'
 
 export default function CheckoutSuccessPage() {
+  const [showSuccessPopup, setShowSuccessPopup] = useState(true)
+
+  // Auto-hide popup after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSuccessPopup(false)
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [])
+
   const steps = [
     {
       number: '1',
@@ -24,6 +36,68 @@ export default function CheckoutSuccessPage() {
 
   return (
     <div className="pt-20 min-h-screen bg-background">
+      {/* Success Popup Notification */}
+      <AnimatePresence>
+        {showSuccessPopup && (
+          <motion.div
+            initial={{ opacity: 0, y: -100, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -50, scale: 0.9 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed top-24 left-1/2 -translate-x-1/2 z-50"
+          >
+            <div className="bg-white rounded-2xl shadow-2xl p-6 border-2 border-green-500 min-w-[320px] max-w-md">
+              <div className="flex items-start gap-4">
+                <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <motion.svg
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2, type: 'spring', damping: 10 }}
+                    className="w-8 h-8 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <motion.path
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ delay: 0.3, duration: 0.5 }}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={3}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </motion.svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-green-700 mb-1">
+                    Buyurtma qabul qilindi!
+                  </h3>
+                  <p className="text-sm text-text-light">
+                    Tez orada siz bilan bog&apos;lanamiz
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowSuccessPopup(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              {/* Progress bar */}
+              <motion.div
+                initial={{ width: '100%' }}
+                animate={{ width: '0%' }}
+                transition={{ duration: 5, ease: 'linear' }}
+                className="h-1 bg-green-500 rounded-full mt-4"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-4xl mx-auto px-4 py-20">
         <ScrollReveal>
           <div className="text-center mb-12">

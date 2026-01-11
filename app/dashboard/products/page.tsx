@@ -141,7 +141,7 @@ export default function ProductsPage() {
                 
                 <div className="mb-3">
                   <div className="text-sm font-bold text-primary">
-                    {product.price ? `${product.price.toLocaleString()} so&apos;m` : 'Narx yok'}
+                    {product.price ? `${product.price.toLocaleString()} so`m` : 'Narx yok'}
                   </div>
                 </div>
 

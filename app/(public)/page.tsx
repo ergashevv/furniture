@@ -44,9 +44,8 @@ interface Banner {
   subtitle: string | null
   description: string | null
   imageUrl: string
+  link: string | null
   buttonText: string | null
-  buttonLink: string | null
-  overlay: number
   visible: boolean
   order: number
 }
@@ -186,9 +185,9 @@ export default function HomePage() {
               transition={{ duration: 0.5, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
               style={{ willChange: 'transform, opacity' }}
             >
-              {banner?.buttonText && banner?.buttonLink ? (
+              {banner?.buttonText ? (
                 <Link
-                  href={banner.buttonLink}
+                  href={banner.link || '/order'}
                   className="inline-block bg-white text-gray-900 px-8 py-4 rounded-none border-2 border-white hover:bg-transparent hover:text-white transition-all duration-300 font-semibold uppercase tracking-wide"
                 >
                   {banner.buttonText} →
@@ -198,7 +197,7 @@ export default function HomePage() {
                   href="/order"
                   className="inline-block bg-white text-gray-900 px-8 py-4 rounded-none border-2 border-white hover:bg-transparent hover:text-white transition-all duration-300 font-semibold uppercase tracking-wide"
                 >
-                  Ko&apos;proq ko&apos;rish →
+                  KO&apos;PROQ KO&apos;RISH →
                 </Link>
               )}
             </motion.div>

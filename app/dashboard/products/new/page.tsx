@@ -289,7 +289,7 @@ export default function NewProductPage() {
               onChange={(e) => setFormData({ ...formData, visible: e.target.checked })}
               className="w-5 h-5 text-primary border-primary/20 rounded focus:ring-primary"
             />
-            <span className="text-sm font-medium text-primary">Ko&apos;rinadi</span>
+            <span className="text-sm font-medium text-primary">Ko`rinadi</span>
           </label>
         </div>
 

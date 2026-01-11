@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useNotification } from '@/components/Notification'
 import Modal from '@/components/Modal'
 import Pagination from '@/components/Pagination'
@@ -200,10 +201,12 @@ export default function BannerPage() {
               >
                 <div className="aspect-video bg-background-dark relative">
                   {banner.imageUrl ? (
-                    <img
+                    <Image
                       src={banner.imageUrl}
                       alt={banner.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">

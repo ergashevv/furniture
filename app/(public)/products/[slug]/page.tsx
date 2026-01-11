@@ -261,7 +261,7 @@ export default function ProductDetailPage() {
                       </span>
                     </div>
                     <div className="text-sm text-text-light mt-1">
-                      ≈ {(product.price * 13000).toLocaleString()} so&apos;m
+                      ≈ {(product.price * 13000).toLocaleString()} so`m
                     </div>
                   </div>
                 )}

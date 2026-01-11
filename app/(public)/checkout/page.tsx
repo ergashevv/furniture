@@ -74,13 +74,14 @@ export default function CheckoutPage() {
 
       if (response.ok) {
         clearCart()
+        showNotification('Buyurtmangiz muvaffaqiyatli qabul qilindi!', 'success', 5000)
         router.push('/checkout/success')
       } else {
-        alert('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.')
+        showNotification('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
       }
     } catch (error) {
       console.error('Error submitting order:', error)
-      alert('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.')
+      showNotification('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
     } finally {
       setIsSubmitting(false)
     }
@@ -275,7 +276,7 @@ export default function CheckoutPage() {
                         <p className="text-sm font-medium text-primary truncate">{item.name}</p>
                         <p className="text-xs text-text-light">{item.quantity} dona</p>
                         <p className="text-sm font-semibold text-primary">
-                          {item.price.toLocaleString()} so&apos;m
+                          {item.price.toLocaleString()} so`m
                         </p>
                       </div>
                     </div>
@@ -284,7 +285,7 @@ export default function CheckoutPage() {
                 <div className="space-y-3 mb-6 pt-4 border-t border-primary/10">
                   <div className="flex justify-between text-text-light">
                     <span>Mahsulotlar ({cartItems.length})</span>
-                    <span className="font-medium text-primary">{totalPrice.toLocaleString()} so&apos;m</span>
+                    <span className="font-medium text-primary">{totalPrice.toLocaleString()} so`m</span>
                   </div>
                   <div className="flex justify-between text-text-light">
                     <span>Yetkazib berish</span>
@@ -294,7 +295,7 @@ export default function CheckoutPage() {
                     <div className="flex justify-between">
                       <span className="text-lg font-semibold text-primary">Jami:</span>
                       <span className="text-lg font-bold text-primary">
-                        {totalPrice.toLocaleString()} so&apos;m
+                        {totalPrice.toLocaleString()} so`m
                       </span>
                     </div>
                   </div>

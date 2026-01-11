@@ -89,10 +89,10 @@ export default function CartPage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-primary font-bold text-lg mb-2">
-                            {item.price.toLocaleString()} so&apos;m
+                            {item.price.toLocaleString()} so`m
                           </p>
                           <p className="text-text-light text-sm">
-                            Jami: {(item.price * item.quantity).toLocaleString()} so&apos;m
+                            Jami: {(item.price * item.quantity).toLocaleString()} so`m
                           </p>
                         </div>
                         <div className="flex items-center gap-4">
@@ -165,7 +165,7 @@ export default function CartPage() {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-text-light">
                     <span>Mahsulotlar ({cartItems.length})</span>
-                    <span className="font-medium text-primary">{totalPrice.toLocaleString()} so&apos;m</span>
+                    <span className="font-medium text-primary">{totalPrice.toLocaleString()} so`m</span>
                   </div>
                   <div className="flex justify-between text-text-light">
                     <span>Yetkazib berish</span>
@@ -175,7 +175,7 @@ export default function CartPage() {
                     <div className="flex justify-between">
                       <span className="text-lg font-semibold text-primary">Jami:</span>
                       <span className="text-lg font-bold text-primary">
-                        {totalPrice.toLocaleString()} so&apos;m
+                        {totalPrice.toLocaleString()} so`m
                       </span>
                     </div>
                   </div>
