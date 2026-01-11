@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,22 +21,22 @@ model Product {
   id          String    @id @default(cuid())
   name        String
   slug        String    @unique
-  description String    @db.Text
+  description String
   price       Float?
   imageUrl    String?
-  images      String[]  @default([])
   categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
   featured    Boolean   @default(false)
   visible     Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  images      String[]  @default([])
+  category    Category? @relation(fields: [categoryId], references: [id])
 }
 
 model GalleryItem {
   id          String   @id @default(cuid())
   title       String
-  description String?  @db.Text
+  description String?
   imageUrl    String
   videoUrl    String?
   category    String?
@@ -51,18 +48,18 @@ model GalleryItem {
 }
 
 model Order {
-  id            String   @id @default(cuid())
-  customerName  String
-  email         String
-  phone         String?
-  address       String?  @db.Text
-  productName   String?
-  description   String?  @db.Text
-  designFiles   String[] @default([])
-  status        String   @default("pending") // pending, in_progress, completed, cancelled
-  notes         String?  @db.Text
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  customerName String
+  email        String
+  phone        String?
+  address      String?
+  productName  String?
+  description  String?
+  designFiles  String[] @default([])
+  status       String   @default("pending")
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([status])
   @@index([createdAt])
@@ -80,9 +77,9 @@ model Service {
   id          String   @id @default(cuid())
   name        String
   slug        String   @unique
-  description String   @db.Text
-  icon        String?  // Icon name or emoji
-  price       String?  // Price as string (e.g., "BEPUL", "Narx: loyihaga bog'liq")
+  description String
+  icon        String?
+  price       String?
   features    String[] @default([])
   order       Int      @default(0)
   visible     Boolean  @default(true)
@@ -93,10 +90,10 @@ model Service {
 model Store {
   id           String   @id @default(cuid())
   name         String
-  address      String   @db.Text
+  address      String
   phone        String?
   email        String?
-  workingHours String?  // e.g., "9:00-18:00"
+  workingHours String?
   latitude     Float?
   longitude    Float?
   order        Int      @default(0)
@@ -106,17 +103,17 @@ model Store {
 }
 
 model Review {
-  id          String   @id @default(cuid())
+  id           String   @id @default(cuid())
   customerName String
-  rating      Int      @default(5) // 1-5 stars
-  comment     String
-  location    String?  // e.g., "Toshkent"
-  avatar      String?  // Initial letter for avatar
-  visible     Boolean  @default(true)
-  featured    Boolean  @default(false)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  rating       Int      @default(5)
+  comment      String
+  location     String?
+  avatar       String?
+  visible      Boolean  @default(true)
+  featured     Boolean  @default(false)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model ContactMessage {
@@ -125,7 +122,7 @@ model ContactMessage {
   email     String?
   phone     String?
   subject   String?
-  message   String   @db.Text
+  message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

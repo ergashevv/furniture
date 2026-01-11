@@ -18,8 +18,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ success: true, items })
   } catch (error) {
     console.error('Gallery fetch error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch gallery items' },
+      { success: false, error: 'Failed to fetch gallery items', details: errorMessage },
       { status: 500 }
     )
   }

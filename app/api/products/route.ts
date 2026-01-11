@@ -21,8 +21,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ success: true, products })
   } catch (error) {
     console.error('Products fetch error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch products' },
+      { success: false, error: 'Failed to fetch products', details: errorMessage },
       { status: 500 }
     )
   }
