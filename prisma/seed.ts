@@ -1,0 +1,969 @@
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+async function main() {
+  console.log('🧹 Cleaning database...')
+
+  // Delete all data in correct order (due to foreign keys)
+  await prisma.order.deleteMany()
+  await prisma.product.deleteMany()
+  await prisma.galleryItem.deleteMany()
+  await prisma.category.deleteMany()
+  await prisma.admin.deleteMany()
+
+  console.log('✅ Database cleaned')
+
+  console.log('🌱 Starting seed with real images...')
+
+  // Create Categories
+  const categories = await Promise.all([
+    prisma.category.create({
+      data: {
+        name: 'Ovqatlanish Xonasi',
+        slug: 'dining',
+        description: 'Zamonaviy va shinam ovqatlanish xonasi mebellari',
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: 'Yashash Xonasi',
+        slug: 'living',
+        description: 'Qulay va zamonaviy yashash xonasi mebellari',
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: 'Yotoq Xonasi',
+        slug: 'bedroom',
+        description: 'Hashamatli yotoq xonasi mebellari',
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: 'Ofis',
+        slug: 'office',
+        description: 'Professional ofis mebellari',
+      },
+    }),
+  ])
+
+  console.log(`✅ Created ${categories.length} categories`)
+
+  const diningCategory = categories.find((c) => c.slug === 'dining')!
+  const livingCategory = categories.find((c) => c.slug === 'living')!
+  const bedroomCategory = categories.find((c) => c.slug === 'bedroom')!
+  const officeCategory = categories.find((c) => c.slug === 'office')!
+
+  // Create Products - Dining (6 products)
+  const diningProducts = await Promise.all([
+    prisma.product.create({
+      data: {
+        name: 'Elegant Dining Set',
+        slug: 'elegant-dining-set',
+        description:
+          'Zamonaviy eleganlik va an\'anaviy hunarmandchilikni uyg\'unlashtirgan ovqatlanish to\'plami. Premium eman yog\'ochdan yasalgan, qo\'lda ishlangan detallar bilan. 8 kishilik to\'plam.',
+        price: 4500.0,
+        imageUrl: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200&q=80',
+          'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=1200&q=80',
+          'https://images.unsplash.com/photo-1484100356142-db6ab6244067?w=1200&q=80',
+        ]),
+        categoryId: diningCategory.id,
+        featured: true,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Kitchen Island',
+        slug: 'kitchen-island',
+        description:
+          'Xona va o\'tirish joylari bilan maxsus oshxona oroli. Premium materiallardan yasalgan, ixtiyoriy marmar yoki granit ustun bilan. Zamonaviy oshxonalar uchun mukammal markaziy element.',
+        price: 3500.0,
+        imageUrl: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=1200&q=80',
+          'https://images.unsplash.com/photo-1556912173-67134ec7a69d?w=1200&q=80',
+          'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=1200&q=80',
+        ]),
+        categoryId: diningCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Modern Dining Chairs',
+        slug: 'modern-dining-chairs',
+        description:
+          'Zamonaviy dizayndagi ovqatlanish stullari. Ergonomik dizayn, qulay o\'tirish va mustahkam konstruksiya. 6 dona to\'plam.',
+        price: 1800.0,
+        imageUrl: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=1200&q=80',
+          'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=1200&q=80',
+        ]),
+        categoryId: diningCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Extendable Dining Table',
+        slug: 'extendable-dining-table',
+        description:
+          'Kengaytiriladigan ovqatlanish stoli. 6 kishidan 10 kishigacha kengaytiriladi. Premium yog\'och materiallardan yasalgan.',
+        price: 3200.0,
+        imageUrl: 'https://images.unsplash.com/photo-1484100356142-db6ab6244067?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1484100356142-db6ab6244067?w=1200&q=80',
+          'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200&q=80',
+        ]),
+        categoryId: diningCategory.id,
+        featured: true,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Bar Stool Collection',
+        slug: 'bar-stool-collection',
+        description:
+          'Zamonaviy bar stullari to\'plami. O\'zgaruvchan balandlik, premium materiallar. 4 dona to\'plam.',
+        price: 1200.0,
+        imageUrl: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200&q=80',
+        ]),
+        categoryId: diningCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Buffet Cabinet',
+        slug: 'buffet-cabinet',
+        description:
+          'Hashamatli buffet shkafi. Keng saqlash maydoni, zarif dizayn. Premium yog\'och va shisha bilan.',
+        price: 2800.0,
+        imageUrl: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=1200&q=80',
+        ]),
+        categoryId: diningCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+  ])
+
+  // Create Products - Living (6 products)
+  const livingProducts = await Promise.all([
+    prisma.product.create({
+      data: {
+        name: 'Modern Sofa Collection',
+        slug: 'modern-sofa-collection',
+        description:
+          'Zamonaviy divan dizayni, premium mato bilan. Chuqur o\'tirish, yumshoq yostiqlar va zarif chiziqlar bilan. Ko\'plab mato variantlari va ranglarda mavjud.',
+        price: 3200.0,
+        imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=80',
+          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',
+          'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80',
+        ]),
+        categoryId: livingCategory.id,
+        featured: true,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Coffee Table Set',
+        slug: 'coffee-table-set',
+        description:
+          'Mos keladigan yon stollar bilan zamonaviy qahva stoli. Toza chiziqlar va premium yog\'och konstruksiya. Har qanday yashash xonasiga mukammal to\'ldiruvchi.',
+        price: 1200.0,
+        imageUrl: 'https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=1200&q=80',
+          'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80',
+          'https://images.unsplash.com/photo-1579656592043-0d1c23b5d1f9?w=1200&q=80',
+        ]),
+        categoryId: livingCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Sectional Sofa',
+        slug: 'sectional-sofa',
+        description:
+          'Katta sectional divan. Modulyar dizayn, turli konfiguratsiyalarda o\'rnatilishi mumkin. Premium mato va yumshoq yostiqlar.',
+        price: 4500.0,
+        imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',
+          'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80',
+        ]),
+        categoryId: livingCategory.id,
+        featured: true,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Recliner Chair',
+        slug: 'recliner-chair',
+        description:
+          'Qulay va funksional recliner stul. Elektr boshqaruvi, massage funksiyasi. Premium teri bilan.',
+        price: 2200.0,
+        imageUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80',
+        ]),
+        categoryId: livingCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'TV Stand Console',
+        slug: 'tv-stand-console',
+        description:
+          'Zamonaviy TV standi. Keng saqlash, sim boshqaruvi. Premium yog\'och materiallar.',
+        price: 1500.0,
+        imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80',
+        ]),
+        categoryId: livingCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Accent Chair Set',
+        slug: 'accent-chair-set',
+        description:
+          'Zarif accent stullar to\'plami. Turli ranglar va matolar. 2 dona to\'plam.',
+        price: 1800.0,
+        imageUrl: 'https://images.unsplash.com/photo-1579656592043-0d1c23b5d1f9?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1579656592043-0d1c23b5d1f9?w=1200&q=80',
+        ]),
+        categoryId: livingCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+  ])
+
+  // Create Products - Bedroom (6 products)
+  const bedroomProducts = await Promise.all([
+    prisma.product.create({
+      data: {
+        name: 'Luxury Bed Frame',
+        slug: 'luxury-bed-frame',
+        description:
+          'Premium yong\'oq yog\'ochidan qo\'lda yasalgan yotoq ramkasi. Zarif bosh taxta dizayni va mustahkam konstruksiya. King va queen o\'lchamlarda mavjud.',
+        price: 2800.0,
+        imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80',
+          'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80',
+          'https://images.unsplash.com/photo-1616628188467-c7ed714d3ee3?w=1200&q=80',
+        ]),
+        categoryId: bedroomCategory.id,
+        featured: true,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Wardrobe Collection',
+        slug: 'wardrobe-collection',
+        description:
+          'Keng ichki bo\'linmalar va zamonaviy dizayn bilan hashamatli garderob. Premium materiallar va qulay tashkilot tizimi.',
+        price: 4200.0,
+        imageUrl: 'https://images.unsplash.com/photo-1617104679057-f0121794a21c?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1617104679057-f0121794a21c?w=1200&q=80',
+          'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80',
+          'https://images.unsplash.com/photo-1616628188467-c7ed714d3ee3?w=1200&q=80',
+        ]),
+        categoryId: bedroomCategory.id,
+        featured: true,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Nightstand Set',
+        slug: 'nightstand-set',
+        description:
+          'Zarif yon stol to\'plami. Keng saqlash, zamonaviy dizayn. 2 dona to\'plam.',
+        price: 950.0,
+        imageUrl: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80',
+          'https://images.unsplash.com/photo-1616628188467-c7ed714d3ee3?w=1200&q=80',
+        ]),
+        categoryId: bedroomCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Dresser Collection',
+        slug: 'dresser-collection',
+        description:
+          'Keng saqlash bilan hashamatli dresser. Premium yog\'och, zarif detallar.',
+        price: 2100.0,
+        imageUrl: 'https://images.unsplash.com/photo-1616628188467-c7ed714d3ee3?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1616628188467-c7ed714d3ee3?w=1200&q=80',
+        ]),
+        categoryId: bedroomCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vanity Table',
+        slug: 'vanity-table',
+        description:
+          'Zarif vanity stoli. Katta oyna, saqlash bo\'limlari. Premium materiallar.',
+        price: 1800.0,
+        imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80',
+        ]),
+        categoryId: bedroomCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Bedroom Bench',
+        slug: 'bedroom-bench',
+        description:
+          'Yotoq xonasi uchun zarif bench. Premium materiallar, qulay dizayn.',
+        price: 650.0,
+        imageUrl: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80',
+        ]),
+        categoryId: bedroomCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+  ])
+
+  // Create Products - Office (6 products)
+  const officeProducts = await Promise.all([
+    prisma.product.create({
+      data: {
+        name: 'Executive Desk',
+        slug: 'executive-desk',
+        description:
+          'Keng ish maydoni bilan professional boshqaruv stoli. O\'rnatilgan sim boshqaruvi va premium yog\'och finish bilan. Uy ofislari va korporativ sozlamalar uchun ideal.',
+        price: 1900.0,
+        imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+          'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=80',
+          'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1200&q=80',
+        ]),
+        categoryId: officeCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Ergonomic Office Chair',
+        slug: 'ergonomic-office-chair',
+        description:
+          'Orqa va bo\'yin qo\'llab-quvvatlashi bilan ergonomik ofis stuli. Uzoq vaqt ishlash uchun qulay va sog\'liq uchun foydali.',
+        price: 850.0,
+        imageUrl: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=80',
+          'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1200&q=80',
+        ]),
+        categoryId: officeCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Office Storage Cabinet',
+        slug: 'office-storage-cabinet',
+        description:
+          'Keng saqlash maydoni bilan ofis shkafi. Fayllar, hujjatlar va ofis asboblari uchun.',
+        price: 1100.0,
+        imageUrl: 'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1200&q=80',
+        ]),
+        categoryId: officeCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Standing Desk',
+        slug: 'standing-desk',
+        description:
+          'Elektr boshqaruvi bilan standing desk. O\'zgaruvchan balandlik, sog\'liq uchun foydali.',
+        price: 2400.0,
+        imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+        ]),
+        categoryId: officeCategory.id,
+        featured: true,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Office Bookshelf',
+        slug: 'office-bookshelf',
+        description:
+          'Keng ofis kutubxonasi. Kitoblar, dekoratsiyalar va ofis asboblari uchun.',
+        price: 950.0,
+        imageUrl: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=80',
+        ]),
+        categoryId: officeCategory.id,
+        featured: false,
+        visible: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Meeting Table',
+        slug: 'meeting-table',
+        description:
+          'Katta meeting stoli. 8-10 kishilik. Premium materiallar, zamonaviy dizayn.',
+        price: 3200.0,
+        imageUrl: 'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1200&q=80',
+        images: JSON.stringify([
+          'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1200&q=80',
+        ]),
+        categoryId: officeCategory.id,
+        featured: true,
+        visible: true,
+      },
+    }),
+  ])
+
+  const allProducts = [
+    ...diningProducts,
+    ...livingProducts,
+    ...bedroomProducts,
+    ...officeProducts,
+  ]
+
+  console.log(`✅ Created ${allProducts.length} products`)
+
+  // Create Gallery Items - Dining (6 items)
+  const diningGallery = await Promise.all([
+    prisma.galleryItem.create({
+      data: {
+        title: 'Elegant Dining Room',
+        description: 'Zarif ovqatlanish xonasi dizayni, maxsus mebellar bilan',
+        imageUrl: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1600&q=80',
+        category: 'dining',
+        featured: true,
+        visible: true,
+        order: 1,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Kitchen Design',
+        description: 'Maxsus oshxona oroli va shkaf',
+        imageUrl: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=1600&q=80',
+        category: 'dining',
+        featured: false,
+        visible: true,
+        order: 2,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Spacious Dining Area',
+        description: 'Keng ovqatlanish maydoni, zamonaviy dizayn',
+        imageUrl: 'https://images.unsplash.com/photo-1484100356142-db6ab6244067?w=1600&q=80',
+        category: 'dining',
+        featured: false,
+        visible: true,
+        order: 3,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Modern Kitchen Island',
+        description: 'Zamonaviy oshxona oroli dizayni',
+        imageUrl: 'https://images.unsplash.com/photo-1556912173-67134ec7a69d?w=1600&q=80',
+        category: 'dining',
+        featured: true,
+        visible: true,
+        order: 4,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Formal Dining Setup',
+        description: 'Rasmiy ovqatlanish sozlanishi',
+        imageUrl: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=1600&q=80',
+        category: 'dining',
+        featured: false,
+        visible: true,
+        order: 5,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Breakfast Nook',
+        description: 'Nonushta uchun qulay burchak',
+        imageUrl: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1600&q=80',
+        category: 'dining',
+        featured: false,
+        visible: true,
+        order: 6,
+      },
+    }),
+  ])
+
+  // Create Gallery Items - Living (6 items)
+  const livingGallery = await Promise.all([
+    prisma.galleryItem.create({
+      data: {
+        title: 'Modern Living Space',
+        description: 'Zamonaviy yashash xonasi dizayni',
+        imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600&q=80',
+        category: 'living',
+        featured: true,
+        visible: true,
+        order: 1,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Living Room Collection',
+        description: 'To\'liq yashash xonasi mebellari to\'plami',
+        imageUrl: 'https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=1600&q=80',
+        category: 'living',
+        featured: false,
+        visible: true,
+        order: 2,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Elegant Living Room',
+        description: 'Zarif yashash xonasi, premium mebellar',
+        imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80',
+        category: 'living',
+        featured: true,
+        visible: true,
+        order: 3,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Cozy Living Space',
+        description: 'Qulay yashash xonasi interyeri',
+        imageUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',
+        category: 'living',
+        featured: false,
+        visible: true,
+        order: 4,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Contemporary Lounge',
+        description: 'Zamonaviy lounge sozlanishi',
+        imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1600&q=80',
+        category: 'living',
+        featured: false,
+        visible: true,
+        order: 5,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Family Room Design',
+        description: 'Oilaviy xona dizayni',
+        imageUrl: 'https://images.unsplash.com/photo-1579656592043-0d1c23b5d1f9?w=1600&q=80',
+        category: 'living',
+        featured: false,
+        visible: true,
+        order: 6,
+      },
+    }),
+  ])
+
+  // Create Gallery Items - Bedroom (6 items)
+  const bedroomGallery = await Promise.all([
+    prisma.galleryItem.create({
+      data: {
+        title: 'Luxury Bedroom',
+        description: 'Hashamatli yotoq xonasi, maxsus mebellar bilan',
+        imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1600&q=80',
+        category: 'bedroom',
+        featured: true,
+        visible: true,
+        order: 1,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Cozy Bedroom Interior',
+        description: 'Qulay va shinam yotoq xonasi interyeri',
+        imageUrl: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1600&q=80',
+        category: 'bedroom',
+        featured: true,
+        visible: true,
+        order: 2,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Master Bedroom Suite',
+        description: 'Asosiy yotoq xonasi to\'plami',
+        imageUrl: 'https://images.unsplash.com/photo-1616628188467-c7ed714d3ee3?w=1600&q=80',
+        category: 'bedroom',
+        featured: false,
+        visible: true,
+        order: 3,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Modern Bedroom Design',
+        description: 'Zamonaviy yotoq xonasi dizayni',
+        imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1600&q=80',
+        category: 'bedroom',
+        featured: false,
+        visible: true,
+        order: 4,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Elegant Bedroom',
+        description: 'Zarif yotoq xonasi sozlanishi',
+        imageUrl: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1600&q=80',
+        category: 'bedroom',
+        featured: false,
+        visible: true,
+        order: 5,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Minimalist Bedroom',
+        description: 'Minimalist yotoq xonasi dizayni',
+        imageUrl: 'https://images.unsplash.com/photo-1616628188467-c7ed714d3ee3?w=1600&q=80',
+        category: 'bedroom',
+        featured: false,
+        visible: true,
+        order: 6,
+      },
+    }),
+  ])
+
+  // Create Gallery Items - Office (6 items)
+  const officeGallery = await Promise.all([
+    prisma.galleryItem.create({
+      data: {
+        title: 'Professional Office',
+        description: 'Boshqaruv ofisi sozlanishi',
+        imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
+        category: 'office',
+        featured: false,
+        visible: true,
+        order: 1,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Minimalist Office Space',
+        description: 'Minimalist ofis makoni dizayni',
+        imageUrl: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&q=80',
+        category: 'office',
+        featured: false,
+        visible: true,
+        order: 2,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Home Office Setup',
+        description: 'Uy ofisi sozlanishi',
+        imageUrl: 'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1600&q=80',
+        category: 'office',
+        featured: true,
+        visible: true,
+        order: 3,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Executive Office',
+        description: 'Boshqaruv ofisi interyeri',
+        imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
+        category: 'office',
+        featured: true,
+        visible: true,
+        order: 4,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Modern Workspace',
+        description: 'Zamonaviy ish maydoni',
+        imageUrl: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&q=80',
+        category: 'office',
+        featured: false,
+        visible: true,
+        order: 5,
+      },
+    }),
+    prisma.galleryItem.create({
+      data: {
+        title: 'Creative Studio',
+        description: 'Ijodiy studiya sozlanishi',
+        imageUrl: 'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1600&q=80',
+        category: 'office',
+        featured: false,
+        visible: true,
+        order: 6,
+      },
+    }),
+  ])
+
+  const allGalleryItems = [
+    ...diningGallery,
+    ...livingGallery,
+    ...bedroomGallery,
+    ...officeGallery,
+  ]
+
+  console.log(`✅ Created ${allGalleryItems.length} gallery items`)
+
+  // Create Sample Orders (12 orders)
+  const orders = await Promise.all([
+    prisma.order.create({
+      data: {
+        customerName: 'Akmal Karimov',
+        email: 'akmal.karimov@example.com',
+        phone: '+998 90 123 45 67',
+        address: 'Toshkent shahar, Chilonzor tumani, Navoiy ko\'chasi 15-uy',
+        productName: 'Maxsus Ovqatlanish Stoli',
+        description:
+          '8 kishilik maxsus ovqatlanish stoli kerak. Zamonaviy dizayn bilan eman yog\'ochni afzal ko\'ramiz. O\'lchamlari: 8ft x 4ft.',
+        designFiles: JSON.stringify([]),
+        status: 'pending',
+        notes: 'Mijoz yengil eman finishni afzal ko\'radi',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Malika Toshmatova',
+        email: 'malika.t@example.com',
+        phone: '+998 91 234 56 78',
+        address: 'Samarqand shahar, Registon ko\'chasi 42-uy',
+        productName: 'Yashash Xonasi Divan To\'plami',
+        description:
+          '3 o\'rinli divan va mos keladigan qo\'llar bilan yashash xonasi to\'plami. Neytral ranglar va premium mato afzal.',
+        designFiles: JSON.stringify([]),
+        status: 'in_progress',
+        notes: 'Mato namunalari yuborildi, mijoz tasdigini kutmoqda',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Farhod Rahimov',
+        email: 'farhod.r@example.com',
+        phone: '+998 93 345 67 89',
+        productName: 'Boshqaruv Stoli',
+        description:
+          'O\'rnatilgan saqlash bilan maxsus boshqaruv stoli. Yangi ofis sozlanishi uchun oy oxirigacha kerak.',
+        designFiles: JSON.stringify([]),
+        status: 'completed',
+        notes: 'Yetkazib berildi va muvaffaqiyatli o\'rnatildi',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Dilshoda Yunusova',
+        email: 'dilshoda.y@example.com',
+        phone: '+998 94 456 78 90',
+        address: 'Buxoro shahar, Bahaouddin Naqshband ko\'chasi 78-uy',
+        productName: 'Yotoq Xonasi To\'plami',
+        description:
+          'To\'liq yotoq xonasi mebellari to\'plami: yotoq, garderob, komod. Premium materiallardan yasalgan bo\'lishi kerak.',
+        designFiles: JSON.stringify([]),
+        status: 'pending',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Javohir Saidov',
+        email: 'javohir.s@example.com',
+        phone: '+998 95 567 89 01',
+        address: 'Andijon shahar, Boburshox ko\'chasi 25-uy',
+        productName: 'Oshxona Oroli',
+        description:
+          'Oshxona oroli, marmar ustun bilan. 3-4 kishilik o\'tirish joylari. O\'lchamlari: 6ft x 3ft.',
+        designFiles: JSON.stringify([]),
+        status: 'in_progress',
+        notes: 'Marmar tanlovi tasdiqlandi, ishlab chiqarish boshlangan',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Nigina Alieva',
+        email: 'nigina.a@example.com',
+        phone: '+998 97 789 01 23',
+        address: 'Namangan shahar, Mustaqillik ko\'chasi 88-uy',
+        productName: 'Ergonomic Ofis Stuli',
+        description:
+          'Ergonomic ofis stuli, orqa qo\'llab-quvvatlash bilan. Qora rangda.',
+        designFiles: JSON.stringify([]),
+        status: 'completed',
+        notes: 'Mijozdan ijobiy feedback olindi',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Bekzod Murodov',
+        email: 'bekzod.m@example.com',
+        phone: '+998 88 890 12 34',
+        address: 'Qarshi shahar, Amir Temur ko\'chasi 12-uy',
+        productName: 'Qahva Stol To\'plami',
+        description:
+          'Qahva stoli va 2 ta yon stol. Zamonaviy dizayn, premium yog\'och.',
+        designFiles: JSON.stringify([]),
+        status: 'pending',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Sevara Qodirova',
+        email: 'sevara.q@example.com',
+        phone: '+998 99 901 23 45',
+        address: 'Farg\'ona shahar, Navoiy ko\'chasi 55-uy',
+        productName: 'Yotoq Ramkasi',
+        description:
+          'King o\'lchamdagi yotoq ramkasi. Yong\'oq yog\'och, zamonaviy dizayn.',
+        designFiles: JSON.stringify([]),
+        status: 'in_progress',
+        notes: 'Yog\'och tanlovi tasdiqlandi',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Otabek Niyozov',
+        email: 'otabek.n@example.com',
+        phone: '+998 90 012 34 56',
+        productName: 'Standing Desk',
+        description:
+          'Elektr boshqaruvi bilan standing desk. 160cm x 80cm o\'lchamda.',
+        designFiles: JSON.stringify([]),
+        status: 'pending',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Madina Yusupova',
+        email: 'madina.y@example.com',
+        phone: '+998 91 123 45 67',
+        address: 'Nukus shahar, Istiqlol ko\'chasi 33-uy',
+        productName: 'Garderob To\'plami',
+        description:
+          'Keng garderob shkafi. 3 qavatli, oq rangda. O\'lchamlari: 240cm x 200cm.',
+        designFiles: JSON.stringify([]),
+        status: 'completed',
+        notes: 'Muvaffaqiyatli o\'rnatildi',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Shoxruh Juraev',
+        email: 'shoxruh.j@example.com',
+        phone: '+998 93 234 56 78',
+        address: 'Termiz shahar, Alisher Navoiy ko\'chasi 77-uy',
+        productName: 'Sectional Divan',
+        description:
+          'Katta sectional divan. L-shape, 8 o\'rinli. Kulrang rangda.',
+        designFiles: JSON.stringify([]),
+        status: 'in_progress',
+        notes: 'Mato tanlovi yakunlandi',
+      },
+    }),
+    prisma.order.create({
+      data: {
+        customerName: 'Dilnoza Rahimova',
+        email: 'dilnoza.r@example.com',
+        phone: '+998 94 345 67 89',
+        address: 'Jizzax shahar, Mustaqillik ko\'chasi 22-uy',
+        productName: 'TV Stand',
+        description:
+          'TV standi, 65" TV uchun. Keng saqlash, zamonaviy dizayn.',
+        designFiles: JSON.stringify([]),
+        status: 'pending',
+      },
+    }),
+  ])
+
+  console.log(`✅ Created ${orders.length} sample orders`)
+
+  // Create Admin User
+  const admin = await prisma.admin.create({
+    data: {
+      username: 'admin',
+      password: 'admin123', // In production, this should be hashed
+    },
+  })
+
+  console.log(`✅ Created admin user`)
+
+  console.log('✨ Seed completed successfully!')
+  console.log(`📊 Summary:`)
+  console.log(`   - Categories: ${categories.length}`)
+  console.log(`   - Products: ${allProducts.length} (${diningProducts.length} dining, ${livingProducts.length} living, ${bedroomProducts.length} bedroom, ${officeProducts.length} office)`)
+  console.log(`   - Gallery Items: ${allGalleryItems.length} (${diningGallery.length} dining, ${livingGallery.length} living, ${bedroomGallery.length} bedroom, ${officeGallery.length} office)`)
+  console.log(`   - Orders: ${orders.length}`)
+  console.log(`   - Admin: 1`)
+}
+
+main()
+  .catch((e) => {
+    console.error('❌ Error during seed:', e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

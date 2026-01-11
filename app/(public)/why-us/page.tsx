@@ -15,25 +15,21 @@ export default function WhyUsPage() {
       title: 'Master Craftsmanship',
       description:
         'Our artisans have decades of experience creating furniture that stands the test of time.',
-      icon: '🎨',
     },
     {
       title: 'Sustainable Materials',
       description:
         'We source only ethically harvested and sustainable materials for all our pieces.',
-      icon: '🌳',
     },
     {
       title: 'Custom Design Process',
       description:
         'From concept to completion, we work closely with you to bring your vision to life.',
-      icon: '✍️',
     },
     {
       title: 'Lifetime Guarantee',
       description:
         'Every piece comes with our commitment to quality and durability that lasts generations.',
-      icon: '🛡️',
     },
   ]
 
@@ -106,7 +102,9 @@ export default function WhyUsPage() {
             {features.map((feature, index) => (
               <ScrollReveal key={feature.title} delay={index * 0.1}>
                 <div className="bg-white rounded-2xl p-8 shadow-soft">
-                  <div className="text-5xl mb-4">{feature.icon}</div>
+                  <div className="w-16 h-16 mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+                    <span className="text-primary font-bold text-xl">✓</span>
+                  </div>
                   <h3 className="text-2xl font-serif font-semibold text-primary mb-4">
                     {feature.title}
                   </h3>
@@ -130,7 +128,7 @@ export default function WhyUsPage() {
             {process.map((item, index) => (
               <ScrollReveal key={item.step} delay={index * 0.1}>
                 <div className="text-center">
-                  <div className="text-6xl font-serif font-bold text-secondary/20 mb-4">
+                  <div className="text-6xl font-serif font-bold text-primary/15 mb-4">
                     {item.step}
                   </div>
                   <h3 className="text-xl font-serif font-semibold text-primary mb-3">
@@ -145,7 +143,7 @@ export default function WhyUsPage() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-20 px-4 bg-primary text-white">
+      <section className="pt-20 pb-16 px-4 bg-primary text-white">
         <div className="max-w-4xl mx-auto text-center">
           <ScrollReveal>
             <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">

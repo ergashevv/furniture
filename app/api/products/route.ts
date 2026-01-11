@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { parseJsonArray, stringifyJsonArray } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,7 +19,14 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     })
 
-    return NextResponse.json({ success: true, products })
+    // Convert JSON strings back to arrays for response
+    type ProductType = (typeof products)[0]
+    const formattedProducts = products.map((product: ProductType) => ({
+      ...product,
+      images: parseJsonArray(product.images),
+    }))
+
+    return NextResponse.json({ success: true, products: formattedProducts })
   } catch (error) {
     console.error('Products fetch error:', error)
     return NextResponse.json(
@@ -50,7 +58,7 @@ export async function POST(request: NextRequest) {
         description,
         price: price ? parseFloat(price) : null,
         imageUrl: imageUrl || null,
-        images: images || [],
+        images: stringifyJsonArray(images || []),
         categoryId: categoryId || null,
         featured: featured || false,
         visible: visible !== false,
@@ -60,7 +68,13 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json({ success: true, product }, { status: 201 })
+    // Convert JSON string back to array for response
+    const formattedProduct = {
+      ...product,
+      images: parseJsonArray(product.images),
+    }
+
+    return NextResponse.json({ success: true, product: formattedProduct }, { status: 201 })
   } catch (error) {
     console.error('Product creation error:', error)
     return NextResponse.json(

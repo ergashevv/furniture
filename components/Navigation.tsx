@@ -3,10 +3,12 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +17,8 @@ export default function Navigation() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const isHomePage = pathname === '/'
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -29,13 +33,17 @@ export default function Navigation() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-background/95 backdrop-blur-md shadow-soft' : 'bg-transparent'
+        isScrolled ? 'bg-background/95 backdrop-blur-md shadow-soft' : isHomePage ? 'bg-transparent' : 'bg-background/95 backdrop-blur-md'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-serif font-semibold text-primary">
+            <span
+              className={`text-2xl font-serif font-semibold ${
+                isScrolled || !isHomePage ? 'text-primary' : 'text-white'
+              }`}
+            >
               Artisan
             </span>
           </Link>
@@ -46,7 +54,9 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-text hover:text-secondary transition-colors duration-200 font-medium"
+                className={`${
+                  isScrolled || !isHomePage ? 'text-text' : 'text-white'
+                } hover:text-secondary transition-colors duration-200 font-medium`}
               >
                 {link.label}
               </Link>
@@ -56,7 +66,7 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-primary"
+            className={`md:hidden p-2 ${isScrolled || !isHomePage ? 'text-primary' : 'text-white'}`}
             aria-label="Toggle menu"
           >
             <svg

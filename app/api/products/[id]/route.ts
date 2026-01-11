@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { stringifyJsonArray, parseJsonArray } from '@/lib/utils'
 
 export async function GET(
   request: NextRequest,
@@ -20,7 +21,13 @@ export async function GET(
       )
     }
 
-    return NextResponse.json({ success: true, product })
+    // Convert JSON string back to array for response
+    const formattedProduct = {
+      ...product,
+      images: parseJsonArray(product.images),
+    }
+
+    return NextResponse.json({ success: true, product: formattedProduct })
   } catch (error) {
     console.error('Product fetch error:', error)
     return NextResponse.json(
@@ -56,7 +63,7 @@ export async function PATCH(
         ...(description && { description }),
         ...(price !== undefined && { price: price ? parseFloat(price) : null }),
         ...(imageUrl !== undefined && { imageUrl }),
-        ...(images && { images }),
+        ...(images && { images: stringifyJsonArray(images) }),
         ...(categoryId !== undefined && { categoryId }),
         ...(featured !== undefined && { featured }),
         ...(visible !== undefined && { visible }),
@@ -66,7 +73,13 @@ export async function PATCH(
       },
     })
 
-    return NextResponse.json({ success: true, product })
+    // Convert JSON string back to array for response
+    const formattedProduct = {
+      ...product,
+      images: parseJsonArray(product.images),
+    }
+
+    return NextResponse.json({ success: true, product: formattedProduct })
   } catch (error) {
     console.error('Product update error:', error)
     return NextResponse.json(
