@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     })
 
-    return NextResponse.json({ success: true, orders })
+          return NextResponse.json({ success: true, orders })
   } catch (error) {
     console.error('Orders fetch error:', error)
     return NextResponse.json(

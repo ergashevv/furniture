@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getLanguageFromRequest, getFieldByLanguage } from '@/lib/i18n'
 
 export async function GET(request: NextRequest) {
   try {
+    const language = getLanguageFromRequest(request)
     const { searchParams } = new URL(request.url)
     const featured = searchParams.get('featured')
     const visible = searchParams.get('visible')
@@ -18,7 +20,36 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     })
 
-    return NextResponse.json({ success: true, products })
+    // Map products to include language-specific fields
+    const mappedProducts = products.map((product) => ({
+      id: product.id,
+      name: getFieldByLanguage(product, 'name', language),
+      slug: product.slug,
+      description: getFieldByLanguage(product, 'description', language),
+      price: product.price,
+      originalPrice: product.originalPrice,
+      imageUrl: product.imageUrl,
+      images: product.images,
+      categoryId: product.categoryId,
+      featured: product.featured,
+      visible: product.visible,
+      size: product.size,
+      material: product.material,
+      warranty: product.warranty,
+      colors: product.colors,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+      category: product.category
+        ? {
+            id: product.category.id,
+            name: getFieldByLanguage(product.category, 'name', language),
+            slug: product.category.slug,
+            description: getFieldByLanguage(product.category, 'description', language),
+          }
+        : null,
+    }))
+
+    return NextResponse.json({ success: true, products: mappedProducts })
   } catch (error) {
     console.error('Products fetch error:', error)
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
@@ -33,9 +64,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const {
-      name,
+      nameUz,
+      nameRu,
       slug,
-      description,
+      descriptionUz,
+      descriptionRu,
       price,
       originalPrice,
       imageUrl,
@@ -51,9 +84,11 @@ export async function POST(request: NextRequest) {
 
     const product = await prisma.product.create({
       data: {
-        name,
+        nameUz: nameUz || '',
+        nameRu: nameRu || nameUz || '',
         slug,
-        description,
+        descriptionUz: descriptionUz || '',
+        descriptionRu: descriptionRu || descriptionUz || '',
         price: price ? parseFloat(price) : null,
         originalPrice: originalPrice ? parseFloat(originalPrice) : null,
         imageUrl: imageUrl || null,

@@ -13,13 +13,13 @@ export default function PublicLayout({
 }) {
   return (
     <I18nProvider>
-      <CartProvider>
-        <NotificationProvider>
-          <Navigation />
+    <CartProvider>
+      <NotificationProvider>
+        <Navigation />
           <main className="min-h-screen pt-16 md:pt-20 pb-20 md:pb-0">{children}</main>
-          <Footer />
-        </NotificationProvider>
-      </CartProvider>
+        <Footer />
+      </NotificationProvider>
+    </CartProvider>
     </I18nProvider>
   )
 }

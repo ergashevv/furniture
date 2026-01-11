@@ -36,7 +36,7 @@ export default function CheckoutSuccessPage() {
           >
             <p className="text-center text-green-800 font-medium">
               Buyurtmangiz qabul qilindi! Tez orada siz bilan bog&apos;lanamiz.
-            </p>
+                  </p>
           </motion.div>
         </ScrollReveal>
 

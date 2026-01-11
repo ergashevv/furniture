@@ -8,58 +8,58 @@ datasource db {
 }
 
 model Category {
-  id          String    @id @default(cuid())
-  nameUz      String
-  nameRu      String
-  slug        String    @unique
+  id            String    @id @default(cuid())
+  nameUz        String
+  nameRu        String
+  slug          String    @unique
   descriptionUz String?
   descriptionRu String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  products    Product[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  products      Product[]
 
   @@map("Category")
 }
 
 model Product {
-  id          String    @id @default(cuid())
-  nameUz      String
-  nameRu      String
-  slug        String    @unique
+  id            String    @id @default(cuid())
+  nameUz        String
+  nameRu        String
+  slug          String    @unique
   descriptionUz String
   descriptionRu String
-  price       Float?
+  price         Float?
   originalPrice Float?
-  imageUrl    String?
-  categoryId  String?
-  featured    Boolean   @default(false)
-  visible     Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  images      String[]  @default([])
-  size        String?
-  material    String?
-  warranty    String?
-  colors      String[]  @default([])
-  category    Category? @relation(fields: [categoryId], references: [id])
+  imageUrl      String?
+  categoryId    String?
+  featured      Boolean   @default(false)
+  visible       Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  images        String[]  @default([])
+  size          String?
+  material      String?
+  warranty      String?
+  colors        String[]  @default([])
+  category      Category? @relation(fields: [categoryId], references: [id])
 
   @@map("Product")
 }
 
 model GalleryItem {
-  id          String   @id @default(cuid())
-  titleUz     String
-  titleRu     String
+  id            String   @id @default(cuid())
+  titleUz       String
+  titleRu       String
   descriptionUz String?
   descriptionRu String?
-  imageUrl    String
-  videoUrl    String?
-  category    String?
-  featured    Boolean  @default(false)
-  visible     Boolean  @default(true)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  imageUrl      String
+  videoUrl      String?
+  category      String?
+  featured      Boolean  @default(false)
+  visible       Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@map("GalleryItem")
 }
@@ -94,19 +94,19 @@ model Admin {
 }
 
 model Service {
-  id          String   @id @default(cuid())
-  nameUz      String
-  nameRu      String
-  slug        String   @unique
+  id            String   @id @default(cuid())
+  nameUz        String
+  nameRu        String
+  slug          String   @unique
   descriptionUz String
   descriptionRu String
-  icon        String?
-  price       String?
-  features    String[] @default([])
-  order       Int      @default(0)
-  visible     Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  icon          String?
+  price         String?
+  features      String[] @default([])
+  order         Int      @default(0)
+  visible       Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@map("Service")
 }
@@ -162,22 +162,22 @@ model ContactMessage {
 }
 
 model Banner {
-  id          String   @id @default(cuid())
-  titleUz     String
-  titleRu     String
-  subtitleUz  String?
-  subtitleRu  String?
+  id            String   @id @default(cuid())
+  titleUz       String
+  titleRu       String
+  subtitleUz    String?
+  subtitleRu    String?
   descriptionUz String?
   descriptionRu String?
-  imageUrl    String
+  imageUrl      String
   buttonTextUz  String?
   buttonTextRu  String?
-  buttonLink  String?
-  overlay     Float    @default(0.5)
-  visible     Boolean  @default(true)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  buttonLink    String?
+  overlay       Float    @default(0.5)
+  visible       Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@map("Banner")
 }

@@ -26,7 +26,7 @@ export default function OrderSuccessPage() {
   return (
     <div className="pt-16 md:pt-20 min-h-screen bg-background pb-20 md:pb-0">
       <div className="max-w-4xl mx-auto px-4 py-12">
-        {/* Success Banner */}
+      {/* Success Banner */}
         <ScrollReveal>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -35,13 +35,13 @@ export default function OrderSuccessPage() {
             className="bg-green-50 border-2 border-green-200 rounded-2xl p-4 mb-8"
           >
             <p className="text-center text-green-800 font-medium">
-              Buyurtmangiz qabul qilindi! Tez orada siz bilan bog&apos;lanamiz.
-            </p>
+            Buyurtmangiz qabul qilindi! Tez orada siz bilan bog&apos;lanamiz.
+          </p>
           </motion.div>
         </ScrollReveal>
 
         {/* Main Success Message */}
-        <ScrollReveal>
+          <ScrollReveal>
           <div className="text-center mb-12">
             <motion.div
               initial={{ scale: 0 }}
@@ -61,7 +61,7 @@ export default function OrderSuccessPage() {
                   strokeWidth={3}
                   d="M5 13l4 4L19 7"
                 />
-              </svg>
+                </svg>
             </motion.div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-primary mb-4">
               Buyurtmangiz qabul qilindi!
@@ -78,7 +78,7 @@ export default function OrderSuccessPage() {
             <h2 className="text-2xl md:text-3xl font-serif font-bold text-primary mb-6 md:mb-8">
               Keyingi qadamlar:
             </h2>
-            <div className="space-y-6">
+              <div className="space-y-6">
               {steps.map((step, index) => (
                 <motion.div
                   key={step.number}
@@ -104,7 +104,7 @@ export default function OrderSuccessPage() {
           </div>
         </ScrollReveal>
 
-        {/* Contact Info */}
+            {/* Contact Info */}
         <ScrollReveal delay={0.4}>
           <div className="bg-gray-50 rounded-2xl p-6 md:p-8 mb-8">
             <p className="text-center text-text-light mb-4 md:mb-6 text-base md:text-lg">
@@ -123,7 +123,7 @@ export default function OrderSuccessPage() {
                   strokeWidth={2}
                   d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                 />
-              </svg>
+                </svg>
               <a
                 href="tel:+998901234567"
                 className="text-xl md:text-2xl font-bold text-primary hover:text-secondary transition-colors"
@@ -134,13 +134,13 @@ export default function OrderSuccessPage() {
           </div>
         </ScrollReveal>
 
-        {/* Action Buttons */}
+            {/* Action Buttons */}
         <ScrollReveal delay={0.5}>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/"
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/"
               className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-secondary transition-colors font-semibold text-base md:text-lg"
-            >
+              >
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -153,13 +153,13 @@ export default function OrderSuccessPage() {
                   strokeWidth={2}
                   d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                 />
-              </svg>
-              Bosh sahifa
-            </Link>
-            <Link
-              href="/products"
+                </svg>
+                Bosh sahifa
+              </Link>
+              <Link
+                href="/products"
               className="inline-flex items-center justify-center gap-2 bg-white text-primary border-2 border-primary px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-primary/5 transition-colors font-semibold text-base md:text-lg"
-            >
+              >
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -172,11 +172,11 @@ export default function OrderSuccessPage() {
                   strokeWidth={2}
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 />
-              </svg>
-              Xarid qilishni davom ettirish
-            </Link>
-          </div>
-        </ScrollReveal>
+                </svg>
+                Xarid qilishni davom ettirish
+              </Link>
+            </div>
+          </ScrollReveal>
       </div>
     </div>
   )
