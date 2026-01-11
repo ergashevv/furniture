@@ -73,13 +73,12 @@ export default function CheckoutPage() {
         body: JSON.stringify(orderData),
       })
 
-      const result = await response.json()
-
-      if (response.ok && result.success) {
+      if (response.ok) {
         clearCart()
         showNotification('Buyurtma muvaffaqiyatli qabul qilindi!', 'success')
         router.push('/checkout/success')
       } else {
+        const result = await response.json()
         showNotification(result.error || 'Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
       }
     } catch (error) {
