@@ -254,6 +254,7 @@ export default function GalleryPage() {
             columns={columns}
             dataSource={filteredItems}
             rowKey="id"
+            scroll={{ x: 'max-content' }}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,

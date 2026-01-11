@@ -91,6 +91,7 @@ export default function ProductsPage() {
       dataIndex: 'imageUrl',
       key: 'imageUrl',
       width: 100,
+      fixed: 'left',
       render: (url: string | null) => (
         url ? (
           <Image
@@ -112,12 +113,14 @@ export default function ProductsPage() {
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
+      width: 200,
     },
     {
       title: 'Slug',
       dataIndex: 'slug',
       key: 'slug',
       ellipsis: true,
+      width: 150,
     },
     {
       title: 'Narx',
@@ -143,6 +146,7 @@ export default function ProductsPage() {
       title: 'Amallar',
       key: 'actions',
       width: 200,
+      fixed: 'right',
       render: (_, record) => (
         <Space>
           <Button
@@ -205,6 +209,7 @@ export default function ProductsPage() {
             columns={columns}
             dataSource={filteredProducts}
             rowKey="id"
+            scroll={{ x: 'max-content' }}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,

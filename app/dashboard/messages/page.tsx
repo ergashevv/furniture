@@ -259,6 +259,7 @@ export default function MessagesPage() {
             columns={columns}
             dataSource={filteredMessages}
             rowKey="id"
+            scroll={{ x: 'max-content' }}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,

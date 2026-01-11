@@ -245,6 +245,7 @@ export default function ServicesPage() {
             columns={columns}
             dataSource={filteredServices}
             rowKey="id"
+            scroll={{ x: 'max-content' }}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,

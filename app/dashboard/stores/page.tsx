@@ -253,6 +253,7 @@ export default function StoresPage() {
             columns={columns}
             dataSource={filteredStores}
             rowKey="id"
+            scroll={{ x: 'max-content' }}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,

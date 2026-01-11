@@ -217,6 +217,7 @@ export default function OrdersPage() {
             columns={columns}
             dataSource={filteredOrders}
             rowKey="id"
+            scroll={{ x: 'max-content' }}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,

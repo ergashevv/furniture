@@ -211,6 +211,7 @@ export default function CategoriesPage() {
             columns={columns}
             dataSource={filteredCategories}
             rowKey="id"
+            scroll={{ x: 'max-content' }}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,

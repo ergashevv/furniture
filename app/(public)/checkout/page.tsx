@@ -72,12 +72,14 @@ export default function CheckoutPage() {
         body: JSON.stringify(orderData),
       })
 
-      if (response.ok) {
+      const result = await response.json()
+
+      if (response.ok && result.success) {
         clearCart()
-        // Navigate to success page - notification will be shown there
+        showNotification('Buyurtma muvaffaqiyatli qabul qilindi!', 'success')
         router.push('/checkout/success')
       } else {
-        showNotification('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
+        showNotification(result.error || 'Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
       }
     } catch (error) {
       console.error('Error submitting order:', error)

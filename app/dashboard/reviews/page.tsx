@@ -250,6 +250,7 @@ export default function ReviewsPage() {
             columns={columns}
             dataSource={filteredReviews}
             rowKey="id"
+            scroll={{ x: 'max-content' }}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,
