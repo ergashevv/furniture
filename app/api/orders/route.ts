@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         phone: phone?.trim() || null,
         address: address?.trim() || null,
         productName: productName?.trim() || null,
-        description: description?.trim() || null,
+        description: description?.trim() || '',
         designFiles: designFilesArray,
         status: 'pending',
       },
