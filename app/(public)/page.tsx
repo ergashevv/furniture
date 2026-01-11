@@ -204,13 +204,16 @@ export default function HomePage() {
       </section>
 
       {/* Search Section - "Nima qidiryapsiz?" */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-24 px-4 bg-gradient-to-b from-white to-background/30">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-primary mb-4">
                 Nima qidiryapsiz?
               </h2>
+              <p className="text-text-light text-lg max-w-2xl mx-auto">
+                O&apos;z xohishingizga mos kategoriyani tanlang va ajoyib dizayn yechimlarini kashf eting
+              </p>
             </div>
           </ScrollReveal>
           {loading ? (
@@ -218,27 +221,71 @@ export default function HomePage() {
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
           ) : (
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-              {categories.map((category) => (
-                <ScrollReveal key={category.id} delay={0.1}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+              {categories.map((category, index) => (
+                <ScrollReveal key={category.id} delay={index * 0.15}>
                   <Link
                     href={`/products?category=${category.slug}`}
-                    className="flex-shrink-0 w-48 aspect-square bg-background-dark rounded-2xl p-6 flex flex-col justify-between hover:shadow-medium transition-shadow duration-300 group"
+                    className="group block h-full"
                   >
-                    <div className="aspect-square bg-gray-100 rounded-lg mb-4 relative overflow-hidden">
-                      {categoryImages[category.slug] && (
-                        <Image
-                          src={categoryImages[category.slug]}
-                          alt={category.name}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          sizes="192px"
-                        />
-                      )}
+                    <div className="relative bg-white rounded-3xl overflow-hidden shadow-soft hover:shadow-large transition-all duration-500 border border-primary/5 hover:border-primary/20 h-full flex flex-col">
+                      {/* Image Container */}
+                      <div className="relative aspect-[4/3] bg-gradient-to-br from-background-dark to-background overflow-hidden">
+                        {categoryImages[category.slug] && (
+                          <>
+                            <Image
+                              src={categoryImages[category.slug]}
+                              alt={category.name}
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                          </>
+                        )}
+                        {/* Overlay badge */}
+                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                          <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+                            Ko&apos;rish
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="p-8 flex-1 flex flex-col justify-between">
+                        <div>
+                          <h3 className="text-2xl lg:text-3xl font-serif font-bold text-primary mb-3 group-hover:text-secondary transition-colors duration-300">
+                            {category.name}
+                          </h3>
+                          {category.description && (
+                            <p className="text-text-light text-sm leading-relaxed line-clamp-2">
+                              {category.description}
+                            </p>
+                          )}
+                        </div>
+                        
+                        {/* Arrow indicator */}
+                        <div className="mt-6 flex items-center text-secondary font-medium group-hover:gap-3 gap-2 transition-all duration-300">
+                          <span className="text-sm uppercase tracking-wider">Batafsil</span>
+                          <svg
+                            className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 8l4 4m0 0l-4 4m4-4H3"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      {/* Hover border effect */}
+                      <div className="absolute inset-0 border-2 border-secondary rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none" />
                     </div>
-                    <h3 className="text-lg font-serif font-semibold text-primary group-hover:text-secondary transition-colors">
-                      {category.name}
-                    </h3>
                   </Link>
                 </ScrollReveal>
               ))}

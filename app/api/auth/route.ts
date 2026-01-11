@@ -1,28 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import * as bcrypt from 'bcryptjs'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { username, password } = body
 
-    const adminUsername = process.env.ADMIN_USERNAME
-    const adminPassword = process.env.ADMIN_PASSWORD
-
-    if (!adminUsername || !adminPassword) {
+    if (!username || !password) {
       return NextResponse.json(
-        { success: false, error: 'Admin credentials not configured' },
-        { status: 500 }
+        { success: false, error: 'Username and password are required' },
+        { status: 400 }
       )
     }
 
-    if (username === adminUsername && password === adminPassword) {
-      return NextResponse.json({ success: true })
+    // Find admin user in database
+    const admin = await prisma.admin.findUnique({
+      where: { username },
+    })
+
+    if (!admin) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid credentials' },
+        { status: 401 }
+      )
     }
 
-    return NextResponse.json(
-      { success: false, error: 'Invalid credentials' },
-      { status: 401 }
-    )
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, admin.password)
+
+    if (!isPasswordValid) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid credentials' },
+        { status: 401 }
+      )
+    }
+
+    return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Auth error:', error)
     return NextResponse.json(
