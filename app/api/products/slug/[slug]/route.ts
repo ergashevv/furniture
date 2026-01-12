@@ -9,59 +9,11 @@ export async function GET(
   try {
     const language = getLanguageFromRequest(request)
     
-    // Use select to only fetch fields that exist in database
+    // Fetch product with all fields
     const product = await prisma.product.findUnique({
       where: { slug: params.slug },
-      select: {
-        id: true,
-        nameUz: true,
-        nameRu: true,
-        slug: true,
-        descriptionUz: true,
-        descriptionRu: true,
-        price: true,
-        originalPrice: true,
-        imageUrl: true,
-        images: true,
-        categoryId: true,
-        featured: true,
-        visible: true,
-        size: true,
-        material: true,
-        warranty: true,
-        colors: true,
-        createdAt: true,
-        updatedAt: true,
-        dimensions: true,
-        weight: true,
-        deliveryInfo: true,
-        specifications: true,
-        colorVariants: true,
-        materialDetails: true,
-        assemblyRequired: true,
-        assemblyInfo: true,
-        careInstructions: true,
-        capacity: true,
-        style: true,
-        finish: true,
-        frameMaterial: true,
-        cushionMaterial: true,
-        legStyle: true,
-        seatHeight: true,
-        backSupport: true,
-        armrests: true,
-        storage: true,
-        adjustable: true,
-        category: {
-          select: {
-            id: true,
-            nameUz: true,
-            nameRu: true,
-            slug: true,
-            descriptionUz: true,
-            descriptionRu: true,
-          },
-        },
+      include: {
+        category: true,
       },
     })
 
