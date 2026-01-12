@@ -9,10 +9,39 @@ export async function GET(
   try {
     const language = getLanguageFromRequest(request)
     
+    // Use select to only fetch fields that exist in database
     const product = await prisma.product.findUnique({
       where: { slug: params.slug },
-      include: {
-        category: true,
+      select: {
+        id: true,
+        nameUz: true,
+        nameRu: true,
+        slug: true,
+        descriptionUz: true,
+        descriptionRu: true,
+        price: true,
+        originalPrice: true,
+        imageUrl: true,
+        images: true,
+        categoryId: true,
+        featured: true,
+        visible: true,
+        size: true,
+        material: true,
+        warranty: true,
+        colors: true,
+        createdAt: true,
+        updatedAt: true,
+        category: {
+          select: {
+            id: true,
+            nameUz: true,
+            nameRu: true,
+            slug: true,
+            descriptionUz: true,
+            descriptionRu: true,
+          },
+        },
       },
     })
 
@@ -39,10 +68,11 @@ export async function GET(
       material: product.material,
       warranty: product.warranty,
       colors: product.colors,
-      dimensions: (product as any).dimensions || null,
-      weight: (product as any).weight || null,
-      deliveryInfo: (product as any).deliveryInfo || null,
-      specifications: (product as any).specifications || null,
+      // New fields will be null until database migration is complete
+      dimensions: null,
+      weight: null,
+      deliveryInfo: null,
+      specifications: null,
       category: product.category
         ? {
             id: product.category.id,

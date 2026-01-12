@@ -9,13 +9,42 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured')
     const visible = searchParams.get('visible')
 
+    // Use select to only fetch fields that exist in database
     const products = await prisma.product.findMany({
       where: {
         ...(featured === 'true' && { featured: true }),
         ...(visible === 'true' && { visible: true }),
       },
-      include: {
-        category: true,
+      select: {
+        id: true,
+        nameUz: true,
+        nameRu: true,
+        slug: true,
+        descriptionUz: true,
+        descriptionRu: true,
+        price: true,
+        originalPrice: true,
+        imageUrl: true,
+        images: true,
+        categoryId: true,
+        featured: true,
+        visible: true,
+        size: true,
+        material: true,
+        warranty: true,
+        colors: true,
+        createdAt: true,
+        updatedAt: true,
+        category: {
+          select: {
+            id: true,
+            nameUz: true,
+            nameRu: true,
+            slug: true,
+            descriptionUz: true,
+            descriptionRu: true,
+          },
+        },
       },
       orderBy: { createdAt: 'desc' },
     })

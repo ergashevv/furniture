@@ -37,10 +37,30 @@ export async function GET(request: NextRequest) {
       whereClause.categoryId = categoryId
     }
 
+    // Use select to only fetch fields that exist in database
     const products = await prisma.product.findMany({
       where: whereClause,
-      include: {
-        category: true,
+      select: {
+        id: true,
+        nameUz: true,
+        nameRu: true,
+        slug: true,
+        descriptionUz: true,
+        descriptionRu: true,
+        price: true,
+        originalPrice: true,
+        imageUrl: true,
+        images: true,
+        featured: true,
+        visible: true,
+        category: {
+          select: {
+            id: true,
+            nameUz: true,
+            nameRu: true,
+            slug: true,
+          },
+        },
       },
       take: limit,
       orderBy: [
