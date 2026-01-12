@@ -28,7 +28,11 @@
     "readMore": "Batafsil",
     "viewAll": "Barchasini ko'rish",
     "home": "Bosh sahifa",
-    "menu": "Menu"
+    "menu": "Menu",
+    "backToHome": "Bosh sahifaga qaytish",
+    "decrease": "Kamaytirish",
+    "increase": "Ko'paytirish",
+    "currency": "so'm"
   },
   "home": {
     "hero": {
@@ -81,7 +85,25 @@
     "all": "Barcha mahsulotlar",
     "new": "Yangi",
     "from": "From",
-    "noProducts": "Mahsulotlar topilmadi"
+    "noProducts": "Mahsulotlar topilmadi",
+    "notFound": "Mahsulot topilmadi",
+    "notFoundDescription": "So'ralgan mahsulot mavjud emas yoki o'chirilgan.",
+    "suggestedPrice": "Tavsiya narxi",
+    "specifications": "Xususiyatlar",
+    "dimensions": "O'lchamlar",
+    "size": "O'lcham",
+    "weight": "Og'irlik",
+    "material": "Material",
+    "warranty": "Kafolat",
+    "deliveryInfo": "Yetkazib berish",
+    "colors": "Ranglar",
+    "selectColor": "Rangni tanlash",
+    "quantity": "Miqdor",
+    "favorite": "Sevimlilar",
+    "viewAll": "Barcha mahsulotlar",
+    "relatedProducts": "O'xshash mahsulotlar",
+    "noRelatedProducts": "O'xshash mahsulotlar topilmadi",
+    "viewAllInCategory": "bo'limidagi barcha mahsulotlarni ko'rish"
   },
   "services": {
     "title": "Xizmatlar",
@@ -112,7 +134,10 @@
     "continue": "Xarid qilishni davom ettirish",
     "items": "ta mahsulot",
     "total": "Jami",
-    "checkout": "Buyurtma berish"
+    "checkout": "Buyurtma berish",
+    "addToCart": "Savatchaga qo'shish",
+    "inCart": "Savatchada",
+    "added": "Mahsulot savatchaga qo'shildi!"
   },
   "checkout": {
     "title": "Buyurtma berish",

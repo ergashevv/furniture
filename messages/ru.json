@@ -28,7 +28,11 @@
     "readMore": "Подробнее",
     "viewAll": "Посмотреть все",
     "home": "Главная",
-    "menu": "Меню"
+    "menu": "Меню",
+    "backToHome": "Вернуться на главную",
+    "decrease": "Уменьшить",
+    "increase": "Увеличить",
+    "currency": "сум"
   },
   "home": {
     "hero": {
@@ -81,7 +85,25 @@
     "all": "Все продукты",
     "new": "Новый",
     "from": "От",
-    "noProducts": "Продукты не найдены"
+    "noProducts": "Продукты не найдены",
+    "notFound": "Продукт не найден",
+    "notFoundDescription": "Запрошенный продукт не существует или был удален.",
+    "suggestedPrice": "Рекомендуемая цена",
+    "specifications": "Характеристики",
+    "dimensions": "Размеры",
+    "size": "Размер",
+    "weight": "Вес",
+    "material": "Материал",
+    "warranty": "Гарантия",
+    "deliveryInfo": "Доставка",
+    "colors": "Цвета",
+    "selectColor": "Выбрать цвет",
+    "quantity": "Количество",
+    "favorite": "Избранное",
+    "viewAll": "Все продукты",
+    "relatedProducts": "Похожие продукты",
+    "noRelatedProducts": "Похожие продукты не найдены",
+    "viewAllInCategory": "категории - посмотреть все продукты"
   },
   "services": {
     "title": "Услуги",
@@ -112,7 +134,10 @@
     "continue": "Продолжить покупки",
     "items": "товаров",
     "total": "Итого",
-    "checkout": "Оформить заказ"
+    "checkout": "Оформить заказ",
+    "addToCart": "Добавить в корзину",
+    "inCart": "В корзине",
+    "added": "Продукт добавлен в корзину!"
   },
   "checkout": {
     "title": "Оформить заказ",

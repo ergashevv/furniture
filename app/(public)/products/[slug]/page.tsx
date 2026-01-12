@@ -7,6 +7,7 @@ import Link from 'next/link'
 import ScrollReveal from '@/components/ScrollReveal'
 import { useCart } from '@/contexts/CartContext'
 import { useNotification } from '@/components/Notification'
+import { useI18n } from '@/contexts/I18nContext'
 
 interface Product {
   id: string
@@ -23,6 +24,10 @@ interface Product {
   material: string | null
   warranty: string | null
   colors: string[]
+  dimensions?: string | null
+  weight?: string | null
+  deliveryInfo?: string | null
+  specifications?: any
   category: {
     id: string
     name: string
@@ -35,6 +40,7 @@ export default function ProductDetailPage() {
   const router = useRouter()
   const { addToCart, cartItems } = useCart()
   const { showNotification } = useNotification()
+  const { language, t } = useI18n()
   const slug = typeof params?.slug === 'string' ? params.slug : ''
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
@@ -55,7 +61,7 @@ export default function ProductDetailPage() {
     setLoadingRelated(true)
     try {
       const response = await fetch(
-        `/api/products/related?productId=${productId}&categoryId=${categoryId}&limit=4`
+        `/api/products/related?productId=${productId}&categoryId=${categoryId}&limit=4&lang=${language}`
       )
       const data = await response.json()
       if (data.success) {
@@ -71,7 +77,7 @@ export default function ProductDetailPage() {
   useEffect(() => {
     async function fetchProduct() {
       try {
-        const response = await fetch(`/api/products/slug/${slug}`)
+        const response = await fetch(`/api/products/slug/${slug}?lang=${language}`)
         const data = await response.json()
         if (data.success && data.product) {
           setProduct(data.product)
@@ -99,14 +105,14 @@ export default function ProductDetailPage() {
     if (slug) {
       fetchProduct()
     }
-  }, [slug])
+  }, [slug, language])
 
   if (loading) {
     return (
       <div className="pt-20 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          <p className="mt-4 text-text-light">Yuklanmoqda...</p>
+          <p className="mt-4 text-text-light">{t('common.loading')}</p>
         </div>
       </div>
     )
@@ -117,16 +123,16 @@ export default function ProductDetailPage() {
       <div className="pt-20 min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <h1 className="text-4xl font-serif font-bold text-primary mb-4">
-            Mahsulot topilmadi
+            {t('products.notFound')}
           </h1>
           <p className="text-text-light mb-8">
-            So&apos;ralgan mahsulot mavjud emas yoki o&apos;chirilgan.
+            {t('products.notFoundDescription')}
           </p>
           <Link
             href="/"
             className="inline-block bg-primary text-white px-6 py-3 rounded-none hover:bg-secondary transition-colors font-semibold"
           >
-            Bosh sahifaga qaytish
+            {t('common.backToHome')}
           </Link>
         </div>
       </div>
@@ -161,15 +167,15 @@ export default function ProductDetailPage() {
                     d="M15 19l-7-7 7-7"
                   />
                 </svg>
-                Orqaga
+                {t('common.back')}
               </button>
               <span>/</span>
               <Link href="/" className="hover:text-primary transition-colors">
-                Bosh sahifa
+                {t('nav.home')}
               </Link>
               <span>/</span>
               <Link href="/products" className="hover:text-primary transition-colors">
-                Mahsulotlar
+                {t('nav.products')}
               </Link>
               {product.category && (
                 <>
@@ -254,7 +260,7 @@ export default function ProductDetailPage() {
                 {/* Price Section */}
                 {product.price && (
                   <div className="mb-6">
-                    <div className="text-sm text-text-light mb-2">Tavsiya narxi</div>
+                    <div className="text-sm text-text-light mb-2">{t('products.suggestedPrice')}</div>
                     <div className="flex items-center gap-3 flex-wrap">
                       {product.originalPrice && product.originalPrice > product.price && (
                         <span className="text-xl text-text-light line-through">
@@ -262,35 +268,47 @@ export default function ProductDetailPage() {
                         </span>
                       )}
                       <span className="text-3xl font-serif font-bold text-primary">
-                        From ${product.price.toLocaleString()}
+                        {t('products.from')} ${product.price.toLocaleString()}
                       </span>
                     </div>
                     <div className="text-sm text-text-light mt-1">
-                      ≈ {(product.price * 13000).toLocaleString()} so`m
+                      ≈ {(product.price * 13000).toLocaleString()} {t('common.currency')}
                     </div>
                   </div>
                 )}
 
                 {/* Product Details */}
-                {(product.size || product.material || product.warranty) && (
+                {(product.size || product.material || product.warranty || product.dimensions || product.weight) && (
                   <div className="mb-6 space-y-3">
-                    <h3 className="text-lg font-semibold text-primary mb-3">Xususiyatlar</h3>
+                    <h3 className="text-lg font-semibold text-primary mb-3">{t('products.specifications')}</h3>
                     <div className="space-y-2">
+                      {product.dimensions && (
+                        <div className="flex items-center gap-3">
+                          <span className="text-text-light font-medium min-w-[120px]">{t('products.dimensions')}:</span>
+                          <span className="text-text">{product.dimensions}</span>
+                        </div>
+                      )}
                       {product.size && (
                         <div className="flex items-center gap-3">
-                          <span className="text-text-light font-medium min-w-[100px]">O&apos;lcham:</span>
+                          <span className="text-text-light font-medium min-w-[120px]">{t('products.size')}:</span>
                           <span className="text-text">{product.size}</span>
+                        </div>
+                      )}
+                      {product.weight && (
+                        <div className="flex items-center gap-3">
+                          <span className="text-text-light font-medium min-w-[120px]">{t('products.weight')}:</span>
+                          <span className="text-text">{product.weight}</span>
                         </div>
                       )}
                       {product.material && (
                         <div className="flex items-center gap-3">
-                          <span className="text-text-light font-medium min-w-[100px]">Material:</span>
+                          <span className="text-text-light font-medium min-w-[120px]">{t('products.material')}:</span>
                           <span className="text-text">{product.material}</span>
                         </div>
                       )}
                       {product.warranty && (
                         <div className="flex items-center gap-3">
-                          <span className="text-text-light font-medium min-w-[100px]">Kafolat:</span>
+                          <span className="text-text-light font-medium min-w-[120px]">{t('products.warranty')}:</span>
                           <span className="text-text">{product.warranty}</span>
                         </div>
                       )}
@@ -298,10 +316,18 @@ export default function ProductDetailPage() {
                   </div>
                 )}
 
+                {/* Delivery Info */}
+                {product.deliveryInfo && (
+                  <div className="mb-6 p-4 bg-background-dark rounded-lg border border-primary/10">
+                    <h3 className="text-lg font-semibold text-primary mb-2">{t('products.deliveryInfo')}</h3>
+                    <p className="text-text-light text-sm">{product.deliveryInfo}</p>
+                  </div>
+                )}
+
                 {/* Colors */}
                 {product.colors && product.colors.length > 0 && (
                   <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-primary mb-3">Ranglar</h3>
+                    <h3 className="text-lg font-semibold text-primary mb-3">{t('products.colors')}</h3>
                     <div className="flex gap-3 flex-wrap">
                       {product.colors.map((color, index) => (
                         <button
@@ -313,7 +339,7 @@ export default function ProductDetailPage() {
                               : 'border-gray-300 hover:border-gray-400'
                           }`}
                           style={{ backgroundColor: color }}
-                          aria-label={`Select color ${color}`}
+                          aria-label={`${t('products.selectColor')} ${color}`}
                         />
                       ))}
                     </div>
@@ -330,11 +356,12 @@ export default function ProductDetailPage() {
                 {/* Quantity Selector */}
                 {product.price && (
                   <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-primary mb-3">Miqdor</h3>
+                    <h3 className="text-lg font-semibold text-primary mb-3">{t('products.quantity')}</h3>
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                         className="w-10 h-10 border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors font-semibold"
+                        aria-label={t('common.decrease')}
                       >
                         -
                       </button>
@@ -344,10 +371,12 @@ export default function ProductDetailPage() {
                         value={quantity}
                         onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                         className="w-20 h-10 border-2 border-primary/20 text-center rounded-lg focus:outline-none focus:border-primary transition-colors font-semibold"
+                        aria-label={t('products.quantity')}
                       />
                       <button
                         onClick={() => setQuantity((q) => q + 1)}
                         className="w-10 h-10 border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors font-semibold"
+                        aria-label={t('common.increase')}
                       >
                         +
                       </button>
@@ -370,7 +399,7 @@ export default function ProductDetailPage() {
                               imageUrl: product.imageUrl,
                             })
                           }
-                          showNotification(`Mahsulot savatchaga qo'shildi!`, 'success')
+                          showNotification(t('cart.added'), 'success')
                           setQuantity(1)
                         }}
                         className={`flex-1 text-center py-4 rounded-lg transition-colors font-semibold ${
@@ -379,9 +408,12 @@ export default function ProductDetailPage() {
                             : 'bg-primary text-white hover:bg-primary-dark'
                         }`}
                       >
-                        {isInCart ? `Savatchada (${cartQuantity})` : "Savatchaga qo'shish"}
+                        {isInCart ? `${t('cart.inCart')} (${cartQuantity})` : t('cart.addToCart')}
                       </button>
-                      <button className="w-14 h-14 border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors flex items-center justify-center">
+                      <button 
+                        className="w-14 h-14 border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors flex items-center justify-center"
+                        aria-label={t('products.favorite')}
+                      >
                         <svg
                           className="w-6 h-6"
                           fill="none"
@@ -402,7 +434,7 @@ export default function ProductDetailPage() {
                     href="/products"
                     className="block w-full bg-background-dark text-primary text-center py-4 rounded-lg hover:bg-primary/5 transition-colors font-semibold border border-primary/10"
                   >
-                    Barcha mahsulotlar
+                    {t('products.viewAll')}
                   </Link>
                 </div>
               </div>
@@ -418,13 +450,13 @@ export default function ProductDetailPage() {
             <ScrollReveal>
               <div className="flex justify-between items-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary">
-                  O&apos;xshash mahsulotlar
+                  {t('products.relatedProducts')}
                 </h2>
                 <Link
                   href={`/products?category=${product.category.slug}`}
                   className="text-primary hover:text-secondary transition-colors font-medium text-sm md:text-base"
                 >
-                  Barchasini ko&apos;rish →
+                  {t('products.viewAll')} →
                 </Link>
               </div>
             </ScrollReveal>
@@ -453,7 +485,7 @@ export default function ProductDetailPage() {
                           {relatedProduct.featured && (
                             <div className="absolute top-3 left-3">
                               <span className="inline-block bg-secondary text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-                                Yangi
+                                {t('products.new')}
                               </span>
                             </div>
                           )}
@@ -465,7 +497,7 @@ export default function ProductDetailPage() {
                           {relatedProduct.price && (
                             <div className="mt-auto">
                               <span className="text-primary font-bold text-lg">
-                                ${relatedProduct.price.toLocaleString()}
+                                {t('products.from')} ${relatedProduct.price.toLocaleString()}
                               </span>
                             </div>
                           )}
@@ -477,12 +509,12 @@ export default function ProductDetailPage() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-text-light mb-4">O&apos;xshash mahsulotlar topilmadi</p>
+                <p className="text-text-light mb-4">{t('products.noRelatedProducts')}</p>
                 <Link
                   href={`/products?category=${product.category.slug}`}
                   className="inline-block text-primary hover:text-secondary transition-colors font-medium"
                 >
-                  {product.category.name} bo&apos;limidagi barcha mahsulotlarni ko&apos;rish →
+                  {product.category.name} {t('products.viewAllInCategory')} →
                 </Link>
               </div>
             )}

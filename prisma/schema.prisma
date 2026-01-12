@@ -41,6 +41,10 @@ model Product {
   material      String?
   warranty      String?
   colors        String[]  @default([])
+  dimensions    String?   // e.g., "120x80x45 cm" (Length x Width x Height)
+  weight        String?   // e.g., "25 kg"
+  deliveryInfo  String?   // Delivery time and conditions
+  specifications Json?    // Additional specifications as JSON (flexible structure)
   category      Category? @relation(fields: [categoryId], references: [id])
 
   @@map("Product")

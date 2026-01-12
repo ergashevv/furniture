@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getLanguageFromRequest, getFieldByLanguage } from '@/lib/i18n'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
+    const language = getLanguageFromRequest(request)
     const { searchParams } = new URL(request.url)
     const productId = searchParams.get('productId')
     const categoryId = searchParams.get('categoryId')
@@ -47,7 +49,28 @@ export async function GET(request: NextRequest) {
       ],
     })
 
-    return NextResponse.json({ success: true, products })
+    // Map products to include language-specific fields
+    const mappedProducts = products.map((product) => ({
+      id: product.id,
+      name: getFieldByLanguage(product, 'name', language),
+      slug: product.slug,
+      description: getFieldByLanguage(product, 'description', language),
+      price: product.price,
+      originalPrice: product.originalPrice,
+      imageUrl: product.imageUrl,
+      images: product.images,
+      featured: product.featured,
+      visible: product.visible,
+      category: product.category
+        ? {
+            id: product.category.id,
+            name: getFieldByLanguage(product.category, 'name', language),
+            slug: product.category.slug,
+          }
+        : null,
+    }))
+
+    return NextResponse.json({ success: true, products: mappedProducts })
   } catch (error) {
     console.error('Related products fetch error:', error)
     return NextResponse.json(
