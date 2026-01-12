@@ -12,36 +12,8 @@ export async function GET(
     // Use select to only fetch fields that exist in database
     const product = await prisma.product.findUnique({
       where: { slug: params.slug },
-      select: {
-        id: true,
-        nameUz: true,
-        nameRu: true,
-        slug: true,
-        descriptionUz: true,
-        descriptionRu: true,
-        price: true,
-        originalPrice: true,
-        imageUrl: true,
-        images: true,
-        categoryId: true,
-        featured: true,
-        visible: true,
-        size: true,
-        material: true,
-        warranty: true,
-        colors: true,
-        createdAt: true,
-        updatedAt: true,
-        category: {
-          select: {
-            id: true,
-            nameUz: true,
-            nameRu: true,
-            slug: true,
-            descriptionUz: true,
-            descriptionRu: true,
-          },
-        },
+      include: {
+        category: true,
       },
     })
 
@@ -68,11 +40,27 @@ export async function GET(
       material: product.material,
       warranty: product.warranty,
       colors: product.colors,
-      // New fields will be null until database migration is complete
-      dimensions: null,
-      weight: null,
-      deliveryInfo: null,
-      specifications: null,
+      // Professional furniture fields
+      dimensions: (product as any).dimensions || null,
+      weight: (product as any).weight || null,
+      deliveryInfo: (product as any).deliveryInfo || null,
+      specifications: (product as any).specifications || null,
+      colorVariants: (product as any).colorVariants || null,
+      materialDetails: (product as any).materialDetails || null,
+      assemblyRequired: (product as any).assemblyRequired ?? false,
+      assemblyInfo: (product as any).assemblyInfo || null,
+      careInstructions: (product as any).careInstructions || null,
+      capacity: (product as any).capacity || null,
+      style: (product as any).style || null,
+      finish: (product as any).finish || null,
+      frameMaterial: (product as any).frameMaterial || null,
+      cushionMaterial: (product as any).cushionMaterial || null,
+      legStyle: (product as any).legStyle || null,
+      seatHeight: (product as any).seatHeight || null,
+      backSupport: (product as any).backSupport ?? true,
+      armrests: (product as any).armrests ?? false,
+      storage: (product as any).storage ?? false,
+      adjustable: (product as any).adjustable ?? false,
       category: product.category
         ? {
             id: product.category.id,

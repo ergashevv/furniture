@@ -9,6 +9,12 @@ import { useCart } from '@/contexts/CartContext'
 import { useNotification } from '@/components/Notification'
 import { useI18n } from '@/contexts/I18nContext'
 
+interface ColorVariant {
+  name: string
+  hex: string
+  imageUrl?: string
+}
+
 interface Product {
   id: string
   name: string
@@ -28,6 +34,23 @@ interface Product {
   weight?: string | null
   deliveryInfo?: string | null
   specifications?: any
+  // Professional furniture fields
+  colorVariants?: ColorVariant[] | null
+  materialDetails?: string | null
+  assemblyRequired?: boolean
+  assemblyInfo?: string | null
+  careInstructions?: string | null
+  capacity?: string | null
+  style?: string | null
+  finish?: string | null
+  frameMaterial?: string | null
+  cushionMaterial?: string | null
+  legStyle?: string | null
+  seatHeight?: string | null
+  backSupport?: boolean
+  armrests?: boolean
+  storage?: boolean
+  adjustable?: boolean
   category: {
     id: string
     name: string
@@ -277,41 +300,146 @@ export default function ProductDetailPage() {
                   </div>
                 )}
 
-                {/* Product Details */}
-                {(product.size || product.material || product.warranty || product.dimensions || product.weight) && (
+                {/* Product Specifications - Professional furniture details */}
+                {(product.dimensions || product.weight || product.material || product.materialDetails || 
+                  product.capacity || product.style || product.finish || product.frameMaterial || 
+                  product.cushionMaterial || product.legStyle || product.seatHeight) && (
                   <div className="mb-6 space-y-3">
                     <h3 className="text-lg font-semibold text-primary mb-3">{t('products.specifications')}</h3>
                     <div className="space-y-2">
                       {product.dimensions && (
-                        <div className="flex items-center gap-3">
-                          <span className="text-text-light font-medium min-w-[120px]">{t('products.dimensions')}:</span>
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.dimensions')}:</span>
                           <span className="text-text">{product.dimensions}</span>
                         </div>
                       )}
-                      {product.size && (
-                        <div className="flex items-center gap-3">
-                          <span className="text-text-light font-medium min-w-[120px]">{t('products.size')}:</span>
-                          <span className="text-text">{product.size}</span>
-                        </div>
-                      )}
                       {product.weight && (
-                        <div className="flex items-center gap-3">
-                          <span className="text-text-light font-medium min-w-[120px]">{t('products.weight')}:</span>
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.weight')}:</span>
                           <span className="text-text">{product.weight}</span>
                         </div>
                       )}
                       {product.material && (
-                        <div className="flex items-center gap-3">
-                          <span className="text-text-light font-medium min-w-[120px]">{t('products.material')}:</span>
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.material')}:</span>
                           <span className="text-text">{product.material}</span>
                         </div>
                       )}
+                      {product.materialDetails && (
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.materialDetails')}:</span>
+                          <span className="text-text">{product.materialDetails}</span>
+                        </div>
+                      )}
+                      {product.capacity && (
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.capacity')}:</span>
+                          <span className="text-text">{product.capacity}</span>
+                        </div>
+                      )}
+                      {product.style && (
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.style')}:</span>
+                          <span className="text-text">{product.style}</span>
+                        </div>
+                      )}
+                      {product.finish && (
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.finish')}:</span>
+                          <span className="text-text">{product.finish}</span>
+                        </div>
+                      )}
+                      {product.frameMaterial && (
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.frameMaterial')}:</span>
+                          <span className="text-text">{product.frameMaterial}</span>
+                        </div>
+                      )}
+                      {product.cushionMaterial && (
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.cushionMaterial')}:</span>
+                          <span className="text-text">{product.cushionMaterial}</span>
+                        </div>
+                      )}
+                      {product.legStyle && (
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.legStyle')}:</span>
+                          <span className="text-text">{product.legStyle}</span>
+                        </div>
+                      )}
+                      {product.seatHeight && (
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.seatHeight')}:</span>
+                          <span className="text-text">{product.seatHeight}</span>
+                        </div>
+                      )}
                       {product.warranty && (
-                        <div className="flex items-center gap-3">
-                          <span className="text-text-light font-medium min-w-[120px]">{t('products.warranty')}:</span>
+                        <div className="flex items-start gap-3">
+                          <span className="text-text-light font-medium min-w-[140px]">{t('products.warranty')}:</span>
                           <span className="text-text">{product.warranty}</span>
                         </div>
                       )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Product Features - Boolean features */}
+                {(product.backSupport !== undefined || product.armrests !== undefined || 
+                  product.storage !== undefined || product.adjustable !== undefined) && (
+                  <div className="mb-6 space-y-3">
+                    <h3 className="text-lg font-semibold text-primary mb-3">{t('products.productFeatures')}</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {product.backSupport !== undefined && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-text-light font-medium">{t('products.backSupport')}:</span>
+                          <span className="text-text font-semibold">
+                            {product.backSupport ? t('products.yes') : t('products.no')}
+                          </span>
+                        </div>
+                      )}
+                      {product.armrests !== undefined && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-text-light font-medium">{t('products.armrests')}:</span>
+                          <span className="text-text font-semibold">
+                            {product.armrests ? t('products.yes') : t('products.no')}
+                          </span>
+                        </div>
+                      )}
+                      {product.storage !== undefined && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-text-light font-medium">{t('products.storage')}:</span>
+                          <span className="text-text font-semibold">
+                            {product.storage ? t('products.yes') : t('products.no')}
+                          </span>
+                        </div>
+                      )}
+                      {product.adjustable !== undefined && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-text-light font-medium">{t('products.adjustable')}:</span>
+                          <span className="text-text font-semibold">
+                            {product.adjustable ? t('products.yes') : t('products.no')}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Assembly Info */}
+                {product.assemblyRequired && (
+                  <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                    <div className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <div>
+                        <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-300 mb-1">
+                          {t('products.assemblyRequired')}
+                        </h3>
+                        {product.assemblyInfo && (
+                          <p className="text-yellow-700 dark:text-yellow-400 text-sm">{product.assemblyInfo}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -324,27 +452,18 @@ export default function ProductDetailPage() {
                   </div>
                 )}
 
-                {/* Colors */}
-                {product.colors && product.colors.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-primary mb-3">{t('products.colors')}</h3>
-                    <div className="flex gap-3 flex-wrap">
-                      {product.colors.map((color, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setSelectedColor(color)}
-                          className={`w-12 h-12 rounded-full border-2 transition-all ${
-                            selectedColor === color
-                              ? 'border-primary scale-110'
-                              : 'border-gray-300 hover:border-gray-400'
-                          }`}
-                          style={{ backgroundColor: color }}
-                          aria-label={`${t('products.selectColor')} ${color}`}
-                        />
-                      ))}
-                    </div>
+                {/* Care Instructions */}
+                {product.careInstructions && (
+                  <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-2">
+                      {t('products.careInstructions')}
+                    </h3>
+                    <p className="text-blue-700 dark:text-blue-400 text-sm whitespace-pre-line">
+                      {product.careInstructions}
+                    </p>
                   </div>
                 )}
+
 
                 {/* Description */}
                 <div className="prose max-w-none mb-8">

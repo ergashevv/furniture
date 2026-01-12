@@ -45,6 +45,23 @@ model Product {
   weight        String?   // e.g., "25 kg"
   deliveryInfo  String?   // Delivery time and conditions
   specifications Json?    // Additional specifications as JSON (flexible structure)
+  // Professional furniture fields
+  colorVariants Json?     // Array of color variants with names and images
+  materialDetails String? // Detailed material information
+  assemblyRequired Boolean @default(false) // Whether assembly is required
+  assemblyInfo   String?  // Assembly instructions or service info
+  careInstructions String? // Care and maintenance instructions
+  capacity       String?  // Capacity (e.g., "8 kishilik" for dining set)
+  style          String?  // Style (e.g., "Modern", "Classic", "Scandinavian")
+  finish         String?  // Finish type (e.g., "Matte", "Glossy", "Natural")
+  frameMaterial  String?  // Frame material (for chairs, sofas)
+  cushionMaterial String? // Cushion/filling material
+  legStyle       String?  // Leg style (for tables, chairs)
+  seatHeight     String?  // Seat height (for chairs)
+  backSupport    Boolean  @default(true) // Has back support (for chairs)
+  armrests       Boolean  @default(false) // Has armrests (for chairs, sofas)
+  storage        Boolean  @default(false) // Has storage (for tables, cabinets)
+  adjustable     Boolean  @default(false) // Is adjustable (for chairs, tables)
   category      Category? @relation(fields: [categoryId], references: [id])
 
   @@map("Product")
