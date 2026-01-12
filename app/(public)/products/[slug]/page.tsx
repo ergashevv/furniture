@@ -303,80 +303,142 @@ export default function ProductDetailPage() {
                 {/* Product Specifications - Professional furniture details */}
                 {(product.dimensions || product.weight || product.material || product.materialDetails || 
                   product.capacity || product.style || product.finish || product.frameMaterial || 
-                  product.cushionMaterial || product.legStyle || product.seatHeight) && (
-                  <div className="mb-6 space-y-3">
-                    <h3 className="text-lg font-semibold text-primary mb-3">{t('products.specifications')}</h3>
-                    <div className="space-y-2">
-                      {product.dimensions && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.dimensions')}:</span>
-                          <span className="text-text">{product.dimensions}</span>
-                        </div>
-                      )}
-                      {product.weight && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.weight')}:</span>
-                          <span className="text-text">{product.weight}</span>
-                        </div>
-                      )}
-                      {product.material && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.material')}:</span>
-                          <span className="text-text">{product.material}</span>
-                        </div>
-                      )}
+                  product.cushionMaterial || product.legStyle || product.seatHeight || product.warranty) && (
+                  <div className="mb-8">
+                    <h3 className="text-xl font-serif font-bold text-primary mb-4 flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      {t('products.specifications')}
+                    </h3>
+                    <div className="bg-background-dark rounded-xl p-5 border border-primary/10">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {product.dimensions && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.dimensions')}</span>
+                              <span className="text-text font-semibold">{product.dimensions}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.weight && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.weight')}</span>
+                              <span className="text-text font-semibold">{product.weight}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.capacity && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.capacity')}</span>
+                              <span className="text-text font-semibold">{product.capacity}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.style && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.style')}</span>
+                              <span className="text-text font-semibold">{product.style}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.finish && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.finish')}</span>
+                              <span className="text-text font-semibold">{product.finish}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.material && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.material')}</span>
+                              <span className="text-text font-semibold">{product.material}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.frameMaterial && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.frameMaterial')}</span>
+                              <span className="text-text font-semibold">{product.frameMaterial}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.cushionMaterial && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.cushionMaterial')}</span>
+                              <span className="text-text font-semibold">{product.cushionMaterial}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.legStyle && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.legStyle')}</span>
+                              <span className="text-text font-semibold">{product.legStyle}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.seatHeight && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.seatHeight')}</span>
+                              <span className="text-text font-semibold">{product.seatHeight}</span>
+                            </div>
+                          </div>
+                        )}
+                        {product.warranty && (
+                          <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                            <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            <div className="flex-1">
+                              <span className="text-text-light text-sm font-medium block mb-1">{t('products.warranty')}</span>
+                              <span className="text-text font-semibold">{product.warranty}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                       {product.materialDetails && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.materialDetails')}:</span>
-                          <span className="text-text">{product.materialDetails}</span>
-                        </div>
-                      )}
-                      {product.capacity && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.capacity')}:</span>
-                          <span className="text-text">{product.capacity}</span>
-                        </div>
-                      )}
-                      {product.style && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.style')}:</span>
-                          <span className="text-text">{product.style}</span>
-                        </div>
-                      )}
-                      {product.finish && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.finish')}:</span>
-                          <span className="text-text">{product.finish}</span>
-                        </div>
-                      )}
-                      {product.frameMaterial && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.frameMaterial')}:</span>
-                          <span className="text-text">{product.frameMaterial}</span>
-                        </div>
-                      )}
-                      {product.cushionMaterial && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.cushionMaterial')}:</span>
-                          <span className="text-text">{product.cushionMaterial}</span>
-                        </div>
-                      )}
-                      {product.legStyle && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.legStyle')}:</span>
-                          <span className="text-text">{product.legStyle}</span>
-                        </div>
-                      )}
-                      {product.seatHeight && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.seatHeight')}:</span>
-                          <span className="text-text">{product.seatHeight}</span>
-                        </div>
-                      )}
-                      {product.warranty && (
-                        <div className="flex items-start gap-3">
-                          <span className="text-text-light font-medium min-w-[140px]">{t('products.warranty')}:</span>
-                          <span className="text-text">{product.warranty}</span>
+                        <div className="mt-4 p-4 bg-primary/5 rounded-lg border border-primary/10">
+                          <span className="text-text-light text-sm font-medium block mb-2">{t('products.materialDetails')}</span>
+                          <p className="text-text leading-relaxed">{product.materialDetails}</p>
                         </div>
                       )}
                     </div>
@@ -386,38 +448,107 @@ export default function ProductDetailPage() {
                 {/* Product Features - Boolean features */}
                 {(product.backSupport !== undefined || product.armrests !== undefined || 
                   product.storage !== undefined || product.adjustable !== undefined) && (
-                  <div className="mb-6 space-y-3">
-                    <h3 className="text-lg font-semibold text-primary mb-3">{t('products.productFeatures')}</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                  <div className="mb-8">
+                    <h3 className="text-xl font-serif font-bold text-primary mb-4 flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {t('products.productFeatures')}
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       {product.backSupport !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-text-light font-medium">{t('products.backSupport')}:</span>
-                          <span className="text-text font-semibold">
-                            {product.backSupport ? t('products.yes') : t('products.no')}
+                        <div className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all ${
+                          product.backSupport 
+                            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
+                            : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                        }`}>
+                          {product.backSupport ? (
+                            <svg className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
+                          <span className={`text-sm font-semibold ${
+                            product.backSupport 
+                              ? 'text-green-800 dark:text-green-300' 
+                              : 'text-gray-600 dark:text-gray-400'
+                          }`}>
+                            {t('products.backSupport')}
                           </span>
                         </div>
                       )}
                       {product.armrests !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-text-light font-medium">{t('products.armrests')}:</span>
-                          <span className="text-text font-semibold">
-                            {product.armrests ? t('products.yes') : t('products.no')}
+                        <div className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all ${
+                          product.armrests 
+                            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
+                            : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                        }`}>
+                          {product.armrests ? (
+                            <svg className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
+                          <span className={`text-sm font-semibold ${
+                            product.armrests 
+                              ? 'text-green-800 dark:text-green-300' 
+                              : 'text-gray-600 dark:text-gray-400'
+                          }`}>
+                            {t('products.armrests')}
                           </span>
                         </div>
                       )}
                       {product.storage !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-text-light font-medium">{t('products.storage')}:</span>
-                          <span className="text-text font-semibold">
-                            {product.storage ? t('products.yes') : t('products.no')}
+                        <div className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all ${
+                          product.storage 
+                            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
+                            : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                        }`}>
+                          {product.storage ? (
+                            <svg className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
+                          <span className={`text-sm font-semibold ${
+                            product.storage 
+                              ? 'text-green-800 dark:text-green-300' 
+                              : 'text-gray-600 dark:text-gray-400'
+                          }`}>
+                            {t('products.storage')}
                           </span>
                         </div>
                       )}
                       {product.adjustable !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-text-light font-medium">{t('products.adjustable')}:</span>
-                          <span className="text-text font-semibold">
-                            {product.adjustable ? t('products.yes') : t('products.no')}
+                        <div className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all ${
+                          product.adjustable 
+                            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
+                            : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                        }`}>
+                          {product.adjustable ? (
+                            <svg className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
+                          <span className={`text-sm font-semibold ${
+                            product.adjustable 
+                              ? 'text-green-800 dark:text-green-300' 
+                              : 'text-gray-600 dark:text-gray-400'
+                          }`}>
+                            {t('products.adjustable')}
                           </span>
                         </div>
                       )}
@@ -444,23 +575,130 @@ export default function ProductDetailPage() {
                   </div>
                 )}
 
+                {/* Color Variants - Professional furniture colors */}
+                {(product.colorVariants && product.colorVariants.length > 0) || (product.colors && product.colors.length > 0) ? (
+                  <div className="mb-8">
+                    <h3 className="text-xl font-serif font-bold text-primary mb-4 flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                      </svg>
+                      {t('products.colorVariants')}
+                    </h3>
+                    {product.colorVariants && product.colorVariants.length > 0 ? (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {product.colorVariants.map((variant: ColorVariant, index: number) => (
+                          <button
+                            key={index}
+                            onClick={() => {
+                              setSelectedColor(variant.hex)
+                              if (variant.imageUrl) {
+                                setSelectedImage(variant.imageUrl)
+                              }
+                            }}
+                            className={`relative group border-2 rounded-xl overflow-hidden transition-all ${
+                              selectedColor === variant.hex
+                                ? 'border-primary scale-105 shadow-lg ring-2 ring-primary/20'
+                                : 'border-gray-300 dark:border-gray-600 hover:border-primary/50'
+                            }`}
+                          >
+                            {variant.imageUrl ? (
+                              <div className="aspect-square relative">
+                                <Image
+                                  src={variant.imageUrl}
+                                  alt={variant.name}
+                                  fill
+                                  className="object-cover"
+                                  sizes="(max-width: 768px) 50vw, 33vw"
+                                />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                              </div>
+                            ) : (
+                              <div
+                                className="aspect-square"
+                                style={{ backgroundColor: variant.hex }}
+                              />
+                            )}
+                            <div className={`absolute bottom-0 left-0 right-0 py-2 px-3 text-center transition-colors ${
+                              selectedColor === variant.hex
+                                ? 'bg-primary text-white'
+                                : 'bg-black/70 text-white group-hover:bg-black/80'
+                            }`}>
+                              <span className="text-sm font-semibold">{variant.name}</span>
+                            </div>
+                            {selectedColor === variant.hex && (
+                              <div className="absolute top-2 right-2">
+                                <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                </div>
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex gap-3 flex-wrap">
+                        {product.colors.map((color, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setSelectedColor(color)}
+                            className={`w-16 h-16 rounded-xl border-2 transition-all shadow-md ${
+                              selectedColor === color
+                                ? 'border-primary scale-110 shadow-lg ring-2 ring-primary/20'
+                                : 'border-gray-300 dark:border-gray-600 hover:border-primary/50'
+                            }`}
+                            style={{ backgroundColor: color }}
+                            aria-label={`${t('products.selectColor')} ${color}`}
+                            title={color}
+                          >
+                            {selectedColor === color && (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <svg className="w-6 h-6 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+
                 {/* Delivery Info */}
                 {product.deliveryInfo && (
-                  <div className="mb-6 p-4 bg-background-dark rounded-lg border border-primary/10">
-                    <h3 className="text-lg font-semibold text-primary mb-2">{t('products.deliveryInfo')}</h3>
-                    <p className="text-text-light text-sm">{product.deliveryInfo}</p>
+                  <div className="mb-8 p-5 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+                    <div className="flex items-start gap-3">
+                      <svg className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                      </svg>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-serif font-bold text-primary mb-2 flex items-center gap-2">
+                          {t('products.deliveryInfo')}
+                        </h3>
+                        <p className="text-text leading-relaxed">{product.deliveryInfo}</p>
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 {/* Care Instructions */}
                 {product.careInstructions && (
-                  <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-2">
-                      {t('products.careInstructions')}
-                    </h3>
-                    <p className="text-blue-700 dark:text-blue-400 text-sm whitespace-pre-line">
-                      {product.careInstructions}
-                    </p>
+                  <div className="mb-8 p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-start gap-3">
+                      <svg className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-serif font-bold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                          {t('products.careInstructions')}
+                        </h3>
+                        <p className="text-blue-700 dark:text-blue-400 leading-relaxed whitespace-pre-line">
+                          {product.careInstructions}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
 
