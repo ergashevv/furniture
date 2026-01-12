@@ -119,7 +119,7 @@ export default function SettingsPage() {
               <div style={{ background: '#f0f9ff', padding: 12, borderRadius: 4, border: '1px solid #bae6fd' }}>
                 <Text strong>Namuna:</Text>
                 <Text style={{ display: 'block', marginTop: 4 }}>
-                  $100 = {parseFloat(currencyRate) * 100} so'm
+                  $100 = {parseFloat(currencyRate) * 100} so&apos;m
                 </Text>
               </div>
             )}
