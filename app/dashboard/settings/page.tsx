@@ -33,7 +33,7 @@ export default function SettingsPage() {
   const handleSaveCurrencyRate = async () => {
     const rate = parseFloat(currencyRate)
     if (isNaN(rate) || rate <= 0) {
-      message.error('To\'g\'ri valyuta kursini kiriting')
+      message.error('To&apos;g&apos;ri valyuta kursini kiriting')
       return
     }
 
@@ -81,7 +81,7 @@ export default function SettingsPage() {
                 Valyuta Kursi
               </Title>
               <Paragraph>
-                1 AQSH dollari (USD) = so'm (UZS) kursini sozlang. Bu kurs barcha mahsulot narxlarida ko'rsatiladi.
+                1 AQSH dollari (USD) = so&apos;m (UZS) kursini sozlang. Bu kurs barcha mahsulot narxlarida ko&apos;rsatiladi.
               </Paragraph>
             </div>
             <Divider />
