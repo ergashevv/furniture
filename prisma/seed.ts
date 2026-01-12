@@ -464,6 +464,18 @@ async function main() {
 
   console.log('✅ Created admin user (username: admin, password: admin123)')
 
+  // Create Settings (Currency Rate)
+  await prisma.settings.upsert({
+    where: { key: 'currencyRate' },
+    update: { value: '13000' },
+    create: {
+      key: 'currencyRate',
+      value: '13000', // Default: 1 USD = 13000 UZS
+    },
+  })
+
+  console.log('✅ Created default currency rate (1 USD = 13000 UZS)')
+
   console.log('✅ Seed completed successfully!')
 }
 

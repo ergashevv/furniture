@@ -1,11 +1,69 @@
 'use client'
 
-import { Card, Typography, Space, Divider } from 'antd'
-import { DatabaseOutlined, CloudServerOutlined, EnvironmentOutlined } from '@ant-design/icons'
+import { useState, useEffect } from 'react'
+import { Card, Typography, Space, Divider, Input, Button, message } from 'antd'
+import { DatabaseOutlined, CloudServerOutlined, EnvironmentOutlined, DollarOutlined, SaveOutlined } from '@ant-design/icons'
 
 const { Title, Paragraph, Text } = Typography
 
 export default function SettingsPage() {
+  const [currencyRate, setCurrencyRate] = useState<string>('13000')
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const response = await fetch('/api/settings?key=currencyRate')
+        const data = await response.json()
+        if (data.success && data.setting) {
+          setCurrencyRate(data.setting.value)
+        }
+      } catch (error) {
+        console.error('Error fetching settings:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    setLoading(true)
+    fetchSettings()
+  }, [])
+
+  const handleSaveCurrencyRate = async () => {
+    const rate = parseFloat(currencyRate)
+    if (isNaN(rate) || rate <= 0) {
+      message.error('To\'g\'ri valyuta kursini kiriting')
+      return
+    }
+
+    setSaving(true)
+    try {
+      const response = await fetch('/api/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          key: 'currencyRate',
+          value: currencyRate,
+        }),
+      })
+
+      const data = await response.json()
+      if (data.success) {
+        message.success('Valyuta kursi muvaffaqiyatli yangilandi!')
+      } else {
+        message.error(data.error || 'Xatolik yuz berdi')
+      }
+    } catch (error) {
+      console.error('Error saving currency rate:', error)
+      message.error('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
@@ -14,6 +72,60 @@ export default function SettingsPage() {
       </div>
 
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        {/* Currency Rate Settings */}
+        <Card>
+          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+            <div>
+              <Title level={4}>
+                <DollarOutlined style={{ marginRight: 8 }} />
+                Valyuta Kursi
+              </Title>
+              <Paragraph>
+                1 AQSH dollari (USD) = so'm (UZS) kursini sozlang. Bu kurs barcha mahsulot narxlarida ko'rsatiladi.
+              </Paragraph>
+            </div>
+            <Divider />
+            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
+              <div style={{ flex: 1 }}>
+                <Text strong style={{ display: 'block', marginBottom: 8 }}>
+                  1 USD = ? UZS
+                </Text>
+                <Input
+                  type="number"
+                  value={currencyRate}
+                  onChange={(e) => setCurrencyRate(e.target.value)}
+                  placeholder="13000"
+                  size="large"
+                  prefix={<DollarOutlined />}
+                  style={{ width: '100%' }}
+                  disabled={loading}
+                />
+                <Text type="secondary" style={{ display: 'block', marginTop: 4, fontSize: 12 }}>
+                  Masalan: 13000, 13500, 14000
+                </Text>
+              </div>
+              <Button
+                type="primary"
+                icon={<SaveOutlined />}
+                size="large"
+                onClick={handleSaveCurrencyRate}
+                loading={saving}
+                disabled={loading}
+              >
+                Saqlash
+              </Button>
+            </div>
+            {currencyRate && !isNaN(parseFloat(currencyRate)) && (
+              <div style={{ background: '#f0f9ff', padding: 12, borderRadius: 4, border: '1px solid #bae6fd' }}>
+                <Text strong>Namuna:</Text>
+                <Text style={{ display: 'block', marginTop: 4 }}>
+                  $100 = {parseFloat(currencyRate) * 100} so'm
+                </Text>
+              </div>
+            )}
+          </Space>
+        </Card>
+
         <Card>
           <Space direction="vertical" size="middle" style={{ width: '100%' }}>
             <div>

@@ -8,6 +8,7 @@ import ScrollReveal from '@/components/ScrollReveal'
 import { useCart } from '@/contexts/CartContext'
 import { useNotification } from '@/components/Notification'
 import { useI18n } from '@/contexts/I18nContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface ColorVariant {
   name: string
@@ -64,6 +65,7 @@ export default function ProductDetailPage() {
   const { addToCart, cartItems } = useCart()
   const { showNotification } = useNotification()
   const { language, t } = useI18n()
+  const { formatUZS } = useCurrency()
   const slug = typeof params?.slug === 'string' ? params.slug : ''
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
@@ -295,7 +297,7 @@ export default function ProductDetailPage() {
                       </span>
                     </div>
                     <div className="text-sm text-text-light mt-1">
-                      ≈ {(product.price * 13000).toLocaleString()} {t('common.currency')}
+                      ≈ {formatUZS(product.price)} {t('common.currency')}
                     </div>
                   </div>
                 )}
@@ -638,17 +640,17 @@ export default function ProductDetailPage() {
                         ))}
                       </div>
                     ) : (
-                      <div className="flex gap-3 flex-wrap">
-                        {product.colors.map((color, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedColor(color)}
+                    <div className="flex gap-3 flex-wrap">
+                      {product.colors.map((color, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setSelectedColor(color)}
                             className={`w-16 h-16 rounded-xl border-2 transition-all shadow-md ${
-                              selectedColor === color
+                            selectedColor === color
                                 ? 'border-primary scale-110 shadow-lg ring-2 ring-primary/20'
                                 : 'border-gray-300 dark:border-gray-600 hover:border-primary/50'
-                            }`}
-                            style={{ backgroundColor: color }}
+                          }`}
+                          style={{ backgroundColor: color }}
                             aria-label={`${t('products.selectColor')} ${color}`}
                             title={color}
                           >

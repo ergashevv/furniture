@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import ScrollReveal from '@/components/ScrollReveal'
 import { useI18n } from '@/contexts/I18nContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface Category {
   id: string
@@ -53,6 +54,7 @@ interface Banner {
 
 export default function HomePage() {
   const { language, t } = useI18n()
+  const { formatUZS } = useCurrency()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
